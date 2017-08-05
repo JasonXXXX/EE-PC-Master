@@ -3,8 +3,8 @@ import imgUrl from '@/assets/logo.png'
 
 export default {
   //修改菜单栏状态
-  [types.UPDATE_MENU_STATE](state, menustate) {
-    state.menustate = menustate
+  [types.UPDATE_HEADER_SELECTED](state, headerSelected) {
+    state.headerSelected = headerSelected
   },
   //修改loading
   [types.UPDATE_LOADING](state, loading) {

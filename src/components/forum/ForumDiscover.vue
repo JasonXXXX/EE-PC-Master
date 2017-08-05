@@ -1,6 +1,6 @@
 <template>
 	<div>
-		
+		<forum-item v-for="item in says" :key="item.id" :item="item"></forum-item>
   </div>
 </template>
 
@@ -9,6 +9,7 @@ import types from '@/store/types'
 import atypes from '@/store/action-types'
 import { mapGetters } from 'vuex'
 import { Message } from 'element-ui'
+import ForumItem from './ForumItem'
 
 export default {
 	name: 'ForumDiscover',
@@ -19,7 +20,7 @@ export default {
 	  }
 	},
   components: {
-    Loadmore
+    ForumItem
   },
 	created() {
 	  if(this.says.length<1) {
@@ -45,11 +46,6 @@ export default {
     loadBottom() {
       this.fetchSay()
     },
-    showDetail(id, title) {
-      this.$router.push({
-        path: '/saysdetail/' + id + '/title/' + title
-      })
-    },
 	  fetchSay() {
 	  	let params = new URLSearchParams()
       params.append('message_mark', 2)
@@ -57,16 +53,10 @@ export default {
     	this.$common.http.post(this.$common.api.MessageList, params)
     	  .then(response => {
           if (this.$common.jsonUtil.jsonLength(response.data) < 5) {
-            Toast({
-              message: '数据已全部加载 :)',
-              position: 'bottom',
-              duration: 2000
-            })
+
           	this.allLoaded = true
           }
           this.$store.commit(types.ADD_FORUM_SAY, {says: response.data})
-          this.$refs.loadMore.onTopLoaded()
-          this.$refs.loadMore.onBottomLoaded()
         })
     	  .catch(error => {
     	    //测试数据
@@ -125,28 +115,6 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-  .says-title {
-    margin-top: 5%;
-		padding: 0 8px 8px 8px;
-    font-size: 18px;
-  }
+<style scoped>
 
-  .wrap-ul {
-		display: flex;
-    margin: 0 auto;
-		padding: 0 8px 4px 8px;
-    width: 100%;  
-    border-bottom: 1px solid #AAAAAA;
-    overflow: hidden;  
-  }
-
-  .wrap-li {
-    display: inline-block;
-		padding: 0 4px;
-    font-size: 13px;
-		text-align: left;
-		text-overflow: ellipsis;
-    list-style-type: none;
-  }
 </style>

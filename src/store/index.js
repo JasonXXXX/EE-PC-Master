@@ -12,7 +12,7 @@ import imgUrl from '@/assets/logo.png'
 Vue.use(Vuex)
 
 const state = {
-  menustate: false,
+  headerSelected: 'forum',
   loading: true,
   user: {
     user: localStorage.getItem(Storage.user) || 2,

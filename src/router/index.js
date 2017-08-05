@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import App from '@/App'
+import Fake from '~/fake/Fake'
 
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ export default new Router({
       children: [
         {
           path: '',
+          name: 'Fake',
+          component: Fake
+        },
+        {
+          path: 'home',
           component: resolve => require(['~/home/Home'], resolve),
           children: [
             {
@@ -44,7 +50,17 @@ export default new Router({
                   component: resolve => require(['~/forum/ForumDiscover'], resolve)
                 }
               ]
-            }
+            },
+            {
+              path: 'news',
+              name: 'News',
+              component: resolve => require(['~/forum/NewsDetail'], resolve)
+            },
+            {
+              path: 'discover',
+              name: 'Discover',
+              component: resolve => require(['~/forum/DiscoverDetail'], resolve)
+            },
           ]
         },
       ]

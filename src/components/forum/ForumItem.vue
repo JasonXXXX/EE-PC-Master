@@ -1,7 +1,7 @@
 <template>
   <div class="wrap">
     <div class="wrap-summary">
-      <p class="wrap-summary-title">{{item.title}}</p>
+      <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
       <p class="wrap-summary-detail">
         <i class="el-icon-star-on wrap-summary-detail-star_count"></i>
         <span class="wrap-summary-detail-star_count">{{item.message_like}}</span>
@@ -17,7 +17,7 @@
     display: flex;
     margin: 0;
     padding: 12px;
-    width: 100%;
+    border-bottom: .5px solid #BDBDBD;
   }
 
   .wrap-summary {
@@ -52,6 +52,11 @@
 <script>
 export default {
   name: 'ForumItem',
-  props: ['item']
+  props: ['item'],
+  methods: {
+    routerToDetail () {
+      this.$router.push('/home/' + (this.item.mark==1? 'news': 'discover'))
+    }
+  }
 }
 </script>

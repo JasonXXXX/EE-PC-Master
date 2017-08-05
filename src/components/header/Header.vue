@@ -2,7 +2,7 @@
   <div class="header">
     <div class="wrap">
       <img class="logo" :src="logo">
-      <el-tabs class="wrap-tab" v-model="activeName" @tab-click="handleClick">
+      <el-tabs class="wrap-tab" v-model="headerSelected" @tab-click="handleClick">
         <el-tab-pane label="论坛" name="forum"></el-tab-pane>
         <el-tab-pane label="教师" name="teacher"></el-tab-pane>
         <el-tab-pane label="课程观看" name="course"></el-tab-pane>
@@ -42,19 +42,26 @@
 
 <script>
 import logo from '@/assets/icon.png'
+import { mapGetters } from 'vuex'
+import types from '@/store/types'
 
 export default {
   name: 'Header',
   data () {
     return {
-      activeName: 'forum',
       logo: logo
     }
   },
   methods: {
     handleClick (tab, event) {
-      this.$router.push('/' + tab.name)
+      this.$store.commit(types.UPDATE_HEADER_SELECTED, tab.name)
+      this.$router.push('/home/' + tab.name)
     }
+  },
+  computed: {
+    ...mapGetters([
+      'headerSelected'
+    ])
   }
 }
 </script>

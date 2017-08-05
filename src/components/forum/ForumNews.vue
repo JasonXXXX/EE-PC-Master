@@ -21,7 +21,6 @@ export default {
 		ForumItem
   },
 	created () {
-		console.log('aaa')
 	  if(this.news.length<1) {
 	  	this.fetchNews()
 	  }
@@ -121,28 +120,6 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-  .news-title {
-    margin-top: 5%;
-		padding: 0 8px 8px 8px;
-    font-size: 18px;
-  }
+<style scoped>
 
-  .wrap-ul {
-		display: flex;
-    margin: 0 auto;
-		padding: 0 8px 4px 8px;
-    width: 100%;
-    border-bottom: 1px solid #AAAAAA;
-    overflow: hidden;
-  }
-
-  .wrap-li {
-    display: inline-block;
-		padding: 0 4px;
-    font-size: 13px;
-		text-align: left;
-		text-overflow: ellipsis;
-    list-style-type: none;
-  }
 </style>

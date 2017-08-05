@@ -6,13 +6,14 @@ const state = {
   says: [],
   news: [],
   favoriteList: loadFavorite(),
+  forumState: '1'
 
 }
 
 const getters = {
   says: state => state.says,
   news: state => state.news,
-  newsDetail: state => state.newsDetail,
+  forumState: state => state.forumState,
   favoriteList: state => state.favoriteList,
 }
 
@@ -48,6 +49,9 @@ const mutations = {
   },
   [types.SET_FAVORITE_LIST](state, list) {
     state.favoriteList = list
+  },
+  [types.UPDATE_FORUM_STATE] (state, forumState) {
+    state.forumState = forumState
   }
 }
 

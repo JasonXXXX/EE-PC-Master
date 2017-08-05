@@ -1,6 +1,6 @@
 export default {
   //获取菜单栏状态[show/hide]
-  menuState: state => state.menustate,
+  headerSelected: state => state.headerSelected,
   user: state => state.user,
   loading: state => state.loading,
 }
