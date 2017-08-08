@@ -85,88 +85,10 @@ export default {
     showDetail(course_id, content) {
       //动态指定路由地址，并传递参数
       this.$router.push({
-        path: '/microlecturedetail/' + course_id + '/title/' + content 
+        path: '/microlecturedetail/' + course_id + '/title/' + content
       });
     },
-    fetchData() {
-      let params = new URLSearchParams()
-      params.append('studentid', this.getUser.userid)
-      params.append('index', this.microlecture.length)
-      params.append('isdone1', 1)
-      this.$common.http.post(this.$common.api.CourseList, params)
-        .then(response => {
-          if (this.$common.jsonUtil.jsonLength(response.data) < 5) {
-            Toast({
-              message: '数据已全部加载 :)',
-              position: 'bottom',
-              duration: 2000
-            })
-            this.allLoaded = true
-          }
-          this.$store.commit(types.ADD_CBROOM_MICROLECTURE, { microlectures: response.data })
-          this.$refs.loadMore.onTopLoaded()
-          this.$refs.loadMore.onBottomLoaded()
-        })
-        .catch(error => {
-          //测试数据
-          let microlectures = [{
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
-          }, 
-          {
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
 
-          },
-          {
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
-
-          },
-          {
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
-
-          },
-          {
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
-
-          },
-          {
-            course_id: 1,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be
-
-          }]
-          this.$store.commit(types.ADD_CBROOM_MICROLECTURE, { microlectures: microlectures })
-          this.$refs.loadMore.onTopLoaded()
-          this.$refs.loadMore.onBottomLoaded()
-        })
-    }
   },
   computed: {
     ...mapGetters([

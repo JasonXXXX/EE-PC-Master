@@ -12,6 +12,14 @@
         </li>
       </div>
       <p class="article-content" v-text="detail.content"></p>
+      <div class="article-control">
+        <span class="article-icon-wrap" @click.stop="toggleLike"><icon :name="like" class="article-icon"></icon><span>点赞</span></span>
+        <span class="article-icon-wrap" @click.stop="toggleStar" style="flex: 1;"><icon :name="star" class="article-icon"></icon><span>收藏</span></span>
+        <span class="article-icon-wrap" @click.stop="toggleComment" v-if="!writeComment"><icon name="commenting-o" class="article-icon"></icon><span>评论</span></span>
+        <el-button class="article-comment-button" type="primary" v-if="writeComment">发表评论</el-button>
+      </div>
+      <textarea class="article-comment-ta" v-model.trim="comment" v-if="writeComment" placeholder="随便说点什么吧~" maxlength="100"></textarea>
+      <span class="article-comment-hint" v-if="writeComment">{{comment.length}}/{{$common.wordCountLimit.comment}}</span>
     </article>
     <div class="wrap-comment">
       <comment-item v-for="comment in detail.comment_views" :comment="comment" :key="comment.id"></comment-item>
@@ -70,7 +78,52 @@
   .article-content {
     text-indent: 32px;
     line-height: 28px;
+    font-size: 17px;
     color: #424242;
+  }
+
+  .article-control {
+    display: flex;
+    align-items: center;
+  }
+
+  .article-icon-wrap {
+    display: flex;
+    align-items: center;
+    margin: 8px 8px 0 0;
+    font-size: 13px;
+    color: #919191;
+    transition: color .8s ease;
+  }
+
+  .article-icon-wrap:hover {
+    color: #2070FF;
+  }
+
+  .article-icon {
+    margin: 0 4px;
+  }
+
+  .article-comment-button {
+    font-size: 13px;
+    padding:6px 12px;
+  }
+
+  .article-comment-ta {
+    margin: 12px -12px 0 -12px;
+    padding: 12px;
+    width: 100%;
+    line-height: 24px;
+    font-size: 15px;
+    color: #424242;
+    outline: none;
+    border: none;
+    border-top: .5px solid #CDCDCD;
+  }
+
+  .article-comment-hint {
+    color: #959595;
+    font-size: 13px;
   }
 </style>
 
@@ -79,6 +132,11 @@ import router from '@/router/index'
 import types from '@/store/types'
 import atypes from '@/store/action-types'
 import { mapGetters } from 'vuex'
+import 'vue-awesome/icons/heart-o'
+import 'vue-awesome/icons/heart'
+import 'vue-awesome/icons/star-o'
+import 'vue-awesome/icons/star'
+import 'vue-awesome/icons/commenting-o'
 import CommentItem from './ForumCommentItem'
 import Convert from '@/common/util/convert.js'
 
@@ -96,7 +154,11 @@ export default {
         sender_name: '',
         title: ''
       },
-      commentText: ''
+      commentText: '',
+      like: 'heart-o',
+      star: 'star-o',
+      writeComment: false,
+      comment: ''
     }
   },
   components: {
@@ -108,6 +170,15 @@ export default {
   methods: {
     back () {
       this.$router.back()
+    },
+    toggleLike () {
+      this.like = this.like==='heart-o'? 'heart': 'heart-o'
+    },
+    toggleStar () {
+      this.star = this.star==='star-o'? 'star': 'star-o'
+    },
+    toggleComment () {
+      this.writeComment = !this.writeComment
     },
     getMyTime() {
       let now = new Date()
@@ -244,6 +315,12 @@ export default {
       'favoriteList',
       'user'
     ])
+  },
+  watch: {
+    'like': (newVal, oldVal) => {
+    },
+    'star': (newVal, oldVal) => {
+    }
   }
 }
 </script>

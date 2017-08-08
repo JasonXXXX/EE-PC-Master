@@ -1,16 +1,13 @@
 import types from '@/store/types'
 
 const state = {
-  microlecture: [],
-  curriculum: [],
-  //记录当前浏览的记录
-  isdone1: 1
+  cbcourses: [],
+  cbroomState: 1
 }
 
 const getters = {
-  microlecture: state => state.microlecture,
-  curriculum: state => state.curriculum,
-  isdone1: state => state.isdone1
+  cbcourses: state => state.cbcourses,
+  cbroomState: state => state.cbroomState
 }
 
 const actions = {
@@ -19,27 +16,19 @@ const actions = {
 
 const mutations = {
   //给数组添加元素
-  [types.ADD_CBROOM_MICROLECTURE](state, { microlectures }) {
-    for (let i = 0; i < microlectures.length; i++) {
-      state.microlecture.push(Object.freeze(microlectures[i]))
-    }
-  },
-  //给数组添加元素
-  [types.ADD_CBROOM_CURRICULUM](state, { curriculums }) {
-    for (let i = 0; i < curriculums.length; i++) {
-      state.curriculum.push(Object.freeze(curriculums[i]))
-    }
+  [types.ADD_CBROOM_MICROLECTURE](state, courses) {
+    courses.forEach(item => {
+      state.cbcourses.push(Object.freeze(item))
+    })
   },
   //更新课程类别
-  [types.UPDATE_CBROOM_ISDONE](state, isdone1) {
-    state.isdone1 = isdone1;
+  [types.UPDATE_CBROOM_ISDONE](state, cbroomState) {
+    state.cbroomState = cbroomState;
   },
   //清空数组
   [types.CLEAR_CBROOM_CBROOM](state) {
-    state.microlecture.splice(0,state.microlecture.length)
-    state.curriculum.splice(0, state.curriculum.length)
-    state.isdone1 = 1
-    console.log('课程已清除')
+    state.cbcourses.splice(0,state.cbcourses.length)
+    state.cbroomState = 1
   }
 }
 

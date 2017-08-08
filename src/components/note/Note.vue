@@ -1,112 +1,80 @@
 <template>
-  <div style="margin-top: 5rem;width: 100%;">
-    <div class="title">
-      <router-link class="router-link" to="/home/forum" replace><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></router-link>
-      <span>笔记</span>
-    </div>
-    <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="8">
-      <div class="list-title-item" v-for="note in getNotes" :key="note.id" @click="showDetail(note)">
-        <div class="list-title-item-left">{{ note.title }}</div>
-        <div class="list-title-item-right">{{ note.set_time }}</div>
-      </div>
-    </div>
-    <div class="snote-a" @click="add">+</div>
+  <div>
+    <header class="header">
+      <el-checkbox v-model="selectall" @change="handleSelectAll">全选</el-checkbox>
+      <el-button class="header-delete" type="primary" size="small" :disabled="!noteSelected.length" @click="handleDeleteSelected">删除所选</el-button>
+    </header>
+    <note-item v-for="item in notes" :key="item.id" :item="item"></note-item>
   </div>
 </template>
 
 <style scoped>
-.list-title-item {
-  display: flex;
-  align-items: center;
-  padding: 1.2rem .8rem;
-  width: 100%;
-}
+  .header {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 4px 0;
+    padding: 4px 8px 8px 8px;
+    border-bottom: .5px solid #BDBDBD;
+  }
 
-.list-title-item-left {
-  flex: 1;
-  padding-right: .8rem;
-  overflow-x: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 16px;
-}
-
-.list-title-item-right {
-  white-space: nowrap;
-  color: #999;
-  font-size: 12px;
-}
-
-.snote-a {
-  position: fixed;
-  right: 24px;
-  bottom: 36px;
-  border-radius: 50%;
-  background-color: #FFFFFF;
-  box-shadow: 2px 2px 16px #AAA;
-  width: 48px;
-  height: 48px;
-  text-align: center;
-  line-height: 48px;
-  font-size: 3rem;
-  z-index: 5;
-}
-
-.snote-a>span {
-  padding: 0;
-  margin: 0;
-  line-height: 48px;
-  font-size: 32px;
-}
+   .header-delete {
+    margin: 0 12px 0 0;
+    padding: 4px 12px;
+  }
 </style>
 
 <script>
-import types from '@/store/types'
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { InfiniteScroll, Toast } from 'mint-ui'
-
-Vue.use(InfiniteScroll)
+import types from '@/store/types'
+import NoteItem from './NoteItem'
 
 export default {
   name: 'Note',
-  data() {
+  data () {
     return {
-      ifNoMore: false,
-      loading: false
+      selectall: false
     }
   },
-  mounted() {
+  components: {
+    NoteItem
   },
-  beforeRouteLeave(to, from, next) {
-    if (to.path==='/home') {
-      this.$store.commit(types.CLEAR_NOTE_NOTES)
+  created () {
+    if (this.notes.length === 0) {
+      this.fetchNotes()
     }
-    next()
   },
   methods: {
-    del() {
-
-    },
-    loadMore() {
-      if(this.getNotes.length<1) {
-        this.fetchData();
+    handleSelectAll (event) {
+      if (this.selectall) {
+        this.$store.commit(types.NOTE_SELECT_ALL)
+      } else {
+        this.$store.commit(types.NOTE_SELECT_NONE)
       }
     },
-    showDetail(note) {
-      this.$store.commit(types.UPDATE_NOTE_NOTE, {note: note})
-      this.$router.push('/notedetail')
+    handleDeleteSelected () {
+      this.$confirm('此操作将会删除所有选中的笔记,是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.homeworkSelected.forEach(item => {
+          this.$store.commit(types.DELETE_NOTE_NOTE, item)
+        });
+
+        this.$message({
+          type: 'success',
+          message: '该答案已清空!'
+        })
+      }).catch(() => {
+      })
     },
-    add() {
-      this.$router.push('/addnote')
-    },
-    fetchData() {
+    fetchNotes() {
       this.loading = true;
-      this.$common.http.get(this.$common.api.StudentNoteList+'?studentid='+this.getUser.userid+'$index='+this.getUser.index)
+      this.$common.http.get(this.$common.api.StudentNoteList+'?studentid='+this.user.userid+'$index='+this.user.index)
         .then(response => {
           this.loading = false;
           if(this.$common.jsonUtil.jsonLength(response.data)>0) {
-            this.$store.commit(types.ADD_NOTE_NOTES, { notes: response.data })
+            this.$store.commit(types.ADD_NOTE_NOTES, response.data)
           }
           if(this.$common.jsonUtil.jsonLength(response.data) < 10) {
           }
@@ -126,72 +94,26 @@ export default {
             title: '学会用react-native做hybrid开发',
             set_time: '2017-04-21',
             id: 1
-          }, {
-            title: '掌握vue的数组渲染、模板语法、数据绑定、路由管理等基础知识，并尝试实践应用',
-            set_time: '2017-04-21',
-            id: 3
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
-          }, {
-            title: '掌握vue的数组渲染、模板语法、数据绑定、路由管理等基础知识，并尝试实践应用',
-            set_time: '2017-04-21',
-            id: 3
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
-          }, {
-            title: '掌握vue的数组渲染、模板语法、数据绑定、路由管理等基础知识，并尝试实践应用',
-            set_time: '2017-04-21',
-            id: 3
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
-          }, {
-            title: '掌握vue的数组渲染、模板语法、数据绑定、路由管理等基础知识，并尝试实践应用',
-            set_time: '2017-04-21',
-            id: 3
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
           }]
-          this.$store.commit(types.ADD_NOTE_NOTES, { notes: notes })
+          this.$store.commit(types.ADD_NOTE_NOTES, notes)
         })
     }
   },
   computed: {
-    ...mapGetters({
-      getNotes: 'notes',
-      getUser: 'user'
-    })
+    ...mapGetters([
+      'user',
+      'notes',
+      'noteSelected'
+    ])
+  },
+  watch: {
+    noteSelected (newVal, oldVal) {
+      if (this.notes.length === this.noteSelected.length) {
+        this.selectall = true
+      } else {
+        this.selectall = false
+      }
+    }
   }
 }
 </script>

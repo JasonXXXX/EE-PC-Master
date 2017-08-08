@@ -13,6 +13,7 @@ Vue.use(Vuex)
 
 const state = {
   headerSelected: 'forum',
+  meState: '/me/courseing',
   loading: true,
   user: {
     user: localStorage.getItem(Storage.user) || 2,

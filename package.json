@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "css-loader": "^0.28.4",
     "element-ui": "^1.4.1",
     "good-storage": "^1.0.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
     "vue": "^2.4.2",
+    "vue-awesome": "^2.3.1",
     "vue-router": "^2.6.0",
+    "vue-style-loader": "^3.0.1",
     "vuex": "^2.3.1"
   },
   "devDependencies": {

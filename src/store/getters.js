@@ -3,4 +3,5 @@ export default {
   headerSelected: state => state.headerSelected,
   user: state => state.user,
   loading: state => state.loading,
+  meState: state => state.meState,
 }

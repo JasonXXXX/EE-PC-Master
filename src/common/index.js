@@ -13,6 +13,8 @@ import types from '@/store/types'
 import { Message } from 'element-ui'
 import api from './data/api'
 import server from './data/server'
+import * as strings from './data/string'
+import * as wordCountLimit from './data/word-count-limit'
 
 const BASEURL = 'http://' + server.ip + ':' + server.port + '/' + server.server + '/'
 //自定义axios对象，使用这个进行联网
@@ -104,5 +106,7 @@ export default {
   api,
   http,
   jsonUtil,
-  timeUtil
+  timeUtil,
+  wordCountLimit,
+  strings
 }

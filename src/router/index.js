@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import App from '@/App'
 import Fake from '~/fake/Fake'
+import Home from '~/home/Home'
 
 Vue.use(Router)
 
@@ -12,60 +13,78 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: App,
+      component: Home,
       children: [
         {
-          path: '',
-          name: 'Fake',
-          component: Fake
+          path: 'forum',
+          name: 'Forum',
+          component: resolve => require(['~/forum/Forum'], resolve)
         },
         {
-          path: 'home',
-          component: resolve => require(['~/home/Home'], resolve),
+          path: 'teacher',
+          name: 'Teacher',
+          component: resolve => require(['~/teacher/Teacher'], resolve)
+        },
+        {
+          path: 'course',
+          name: 'Course',
+          component: resolve => require(['~/cbroom/Course'], resolve)
+        },
+        {
+          path: 'me',
+          component: resolve => require(['~/me/Me'], resolve),
           children: [
             {
+              path: 'courseing',
+              component: resolve => require(['~/course/CourseLearning'], resolve)
+            },
+            {
+              path: 'coursedone',
+              component: resolve => require(['~/course/CourseLearned'], resolve)
+            },
+            {
+              path: 'homework',
+              component: resolve => require(['~/homework/Homeworking'], resolve)
+            },
+            {
+              path: 'homeworking',
+              component: resolve => require(['~/homework/Homeworking'], resolve)
+            },
+            {
+              path: 'homeworkdone',
+              component: resolve => require(['~/homework/Homeworked'], resolve)
+            },
+            {
+              path: 'note',
+              component: resolve => require(['~/note/Note'], resolve)
+            },
+            {
+              path: 'plan',
+              component: resolve => require(['~/plan/Plan'], resolve)
+            },
+            {
               path: '',
-              component: resolve => require(['~/forum/Forum'], resolve),
-              children: [
-                {
-                  path: '',
-                  component: resolve => require(['~/forum/ForumNews'], resolve)
-                }
-              ]
-            },
-            {
-              path: 'forum',
-              component: resolve => require(['~/forum/Forum'], resolve),
-              children: [
-                {
-                  path: '',
-                  component: resolve => require(['~/forum/ForumNews'], resolve)
-                },
-                {
-                  path: 'forumnews',
-                  component: resolve => require(['~/forum/ForumNews'], resolve)
-                },
-                {
-                  path: 'forumdiscover',
-                  component: resolve => require(['~/forum/ForumDiscover'], resolve)
-                }
-              ]
-            },
-            {
-              path: 'news',
-              name: 'News',
-              component: resolve => require(['~/forum/NewsDetail'], resolve)
-            },
-            {
-              path: 'discover',
-              name: 'Discover',
-              component: resolve => require(['~/forum/DiscoverDetail'], resolve)
+              component: resolve => require(['~/course/CourseLearning'], resolve)
             },
           ]
         },
+        {
+          path: 'news',
+          name: 'News',
+          component: resolve => require(['~/forum/NewsDetail'], resolve)
+        },
+        {
+          path: 'discover',
+          name: 'Discover',
+          component: resolve => require(['~/forum/DiscoverDetail'], resolve)
+        },
+        {
+          path: '',
+          name: 'Default',
+          component: resolve => require(['~/forum/Forum'], resolve)
+        },
       ]
     },
-
     {
       path: '*',
       name: 'PageNotFound',

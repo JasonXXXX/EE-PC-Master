@@ -1,0 +1,1 @@
+export const plan_placeholder = '开始你的学习计划吧'

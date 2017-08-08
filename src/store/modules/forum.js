@@ -3,16 +3,13 @@ import atypes from '@/store/action-types'
 import {loadFavorite, saveFavorite, deleteFavorite} from '@/common/util/cache'
 
 const state = {
-  says: [],
-  news: [],
+  forums: [],
   favoriteList: loadFavorite(),
-  forumState: '1'
-
+  forumState: 1
 }
 
 const getters = {
-  says: state => state.says,
-  news: state => state.news,
+  forums: state => state.forums,
   forumState: state => state.forumState,
   favoriteList: state => state.favoriteList,
 }
@@ -29,14 +26,9 @@ const actions = {
 
 const mutations = {
   //给数组添加元素
-  [types.ADD_FORUM_SAY](state, { says }) {
-    says.forEach(item => {
-      state.says.push(Object.freeze(item))
-    })
-  },
-  [types.ADD_FORUM_NEWS](state, { news }) {
-    news.forEach(item => {
-      state.news.push(Object.freeze(item))
+  [types.ADD_FORUM_NEWS](state, forums) {
+    forums.forEach(item => {
+      state.forums.push(Object.freeze(item))
     })
   },
   [types.ADD_FORUM_NEWSDETAIL](state, {data}) {

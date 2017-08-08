@@ -15,7 +15,7 @@ const actions = {
 
 const mutations = {
   //给数组添加元素
-  [types.ADD_TEACHER_CHINA](state, teachers) {
+  [types.ADD_TEACHER_CHINA] (state, teachers) {
     teachers.forEach(item => {
       state.teachers.push(Object.freeze(item))
     })

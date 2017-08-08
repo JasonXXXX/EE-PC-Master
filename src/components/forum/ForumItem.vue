@@ -1,15 +1,19 @@
 <template>
-  <div class="wrap">
-    <div class="wrap-summary">
-      <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
-      <p class="wrap-summary-detail">
-        <i class="el-icon-star-on wrap-summary-detail-star_count"></i>
-        <span class="wrap-summary-detail-star_count">{{item.message_like}}</span>
-        <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
-        <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
-      </p>
+  <transition name="el-zoom-in-top">
+    <div class="wrap">
+      <div class="wrap-summary">
+        <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
+        <p class="wrap-summary-detail">
+          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark==1"></i>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==1">{{item.message_like}}</span>
+          <icon class="wrap-summary-detail-star_count" v-if="item.mark==2" name="commenting"></icon>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==2">{{item.message_like}}</span>
+          <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
+          <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
+        </p>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <style scoped>
@@ -39,7 +43,7 @@
   }
 
   .wrap-summary-detail-star_count {
-    color: #0873F9;
+    color: #2070FF;
   }
 
   .wrap-summary-detail-author_time {
@@ -50,12 +54,14 @@
 </style>
 
 <script>
+import 'vue-awesome/icons/commenting'
+
 export default {
   name: 'ForumItem',
   props: ['item'],
   methods: {
     routerToDetail () {
-      this.$router.push('/home/' + (this.item.mark==1? 'news': 'discover'))
+      this.$router.push('/' + (this.item.mark==1? 'news': 'discover'))
     }
   }
 }

@@ -21,6 +21,9 @@ export default {
       headimg: imgUrl
     }
   },
+  [types.UPDATE_ME_MESTATE] (state, meState) {
+    state.meState = meState
+  },
   [types.UPDATE_USER_USER] (state, user) {
     state.user.user = user
   },

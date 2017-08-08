@@ -15,11 +15,11 @@ const actions = {
 
 const mutations = {
   //修改计划
-  [types.UPDATE_PLAN](state, { plan }) {
+  [types.UPDATE_PLAN](state, plan) {
     state.plan = plan
   },
   //保存计划的草稿
-  [types.UPDATE_PLAN_DRAFT](state, { draft }) {
+  [types.UPDATE_PLAN_DRAFT](state, draft) {
     state.draft = draft
   },
   [types.CLEAR_PLAN_PLAN](state) {
