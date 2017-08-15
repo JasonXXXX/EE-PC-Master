@@ -4,7 +4,6 @@
 
 export default {
   convertSubNumber(number) {
-    'use strict';
     switch (number) {
       case 1:
         return '语文'
@@ -22,12 +21,13 @@ export default {
         return '政治'
       case 8:
         return '历史'
-      default:
+      case 9:
         return '地理'
+      default:
+        return '未指定'
     }
   },
   convertGradeNumber(number) {
-    'use strict'
     switch (number) {
       case 1:
         return '小学一年级'
@@ -51,12 +51,13 @@ export default {
         return '高一'
       case 11:
         return '高二'
-      default:
+      case 11:
         return '高三'
+      default:
+        return '未指定'
     }
   },
   convertMark(mark) {
-    'use strict'
     if ('小学一年级' == mark || '语文' == mark) {
       return 1
     } else if ('小学二年级' == mark || '数学' == mark) {
@@ -81,15 +82,15 @@ export default {
       return 11
     } else if ('高三' == mark) {
       return 12
+    } else {
+      return 0
     }
   },
   convertGender(gender) {
-    'use strict'
     return '男' === gender ? 1 : 2
   },
-  convertName(sender_mark , sender_id) {
-    'use strict';
-    if(sender_mark == 1){
+  convertName(sender_mark, sender_id) {
+    if (sender_mark == 1) {
       switch (sender_id) {
         case 1:
           return '教师1'
@@ -107,7 +108,8 @@ export default {
           return '教师7'
         case 8:
           return '教师8'
-    }}
+      }
+    }
     else {
       switch (sender_id) {
         case 1:
@@ -126,7 +128,7 @@ export default {
           return '学生7'
         case 8:
           return '学生8'
-      }  
+      }
     }
   }
 }

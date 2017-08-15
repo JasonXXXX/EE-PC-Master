@@ -21,15 +21,16 @@ export default {
         localStorage.setItem(Storage.dbversion, db.version)
       }
       //打开数据库
-      let request = indexedDB.open(db.name, db.version? db.version: 1)
+      let request = indexedDB.open(db.name, db.version ? db.version : 1)
       request.onerror = (event) => {
+        console.log('您的设备不支持数据操作。将无法本地保存聊天记录')
         reject('您的设备不支持数据操作。将无法本地保存聊天记录')
       }
       request.onupgradeneeded = (event) => {
         console.log('数据库更新执行')
         this.DataBase = event.target.result
         if (!(this.DataBase.objectStoreNames.contains(db.store_chat_record))) {
-          this.DataBase.createObjectStore(db.store_chat_record, {keyPath: 'id',autoIncrement: true})
+          this.DataBase.createObjectStore(db.store_chat_record, { keyPath: 'id', autoIncrement: true })
           console.log('objectStore已创建')
         }
       }
@@ -82,7 +83,7 @@ export default {
   select(key) {
     return new Promise((resolve, reject) => {
       let request,
-          store = this.DataBase.transaction(db.store_chat_record, 'readwrite').objectStore(db.store_chat_record)
+        store = this.DataBase.transaction(db.store_chat_record, 'readwrite').objectStore(db.store_chat_record)
       if (key) {
         request = store.get(key)
       } else {

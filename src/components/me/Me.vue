@@ -1,6 +1,6 @@
 <template>
   <div class="config-wrap">
-
+    <transition name="el-zoom-in-top">
     <el-menu :default-active="meState" class="el-menu-vertical-demo config-wrap-tab" :collapse="collapse" router>
       <el-submenu class="collapse-nav" index="/me">
         <template slot="title">
@@ -31,6 +31,7 @@
       <el-menu-item class="wrap-nav" index="/me/friend"><icon class="wrap-nav-icon" name="address-book"></icon><span slot="title">好友</span></el-menu-item>
 
     </el-menu>
+    </transition>
 
     <router-view class="config-wrap-view"></router-view>
   </div>

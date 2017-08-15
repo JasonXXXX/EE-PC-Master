@@ -1,6 +1,7 @@
 <template>
 	<div>
     <course-item v-for="item in courseLearning" :key="item.courseid" :item="item"></course-item>
+    <span class="config-no-list-hint" v-if="!courseLearning.length">{{$common.strings.no_course_hint}}</span>
   </div>
 </template>
 
@@ -43,24 +44,24 @@ export default {
           if (this.$common.jsonUtil.jsonLength(response.data) < 5) {
           	this.allLoaded = true
           }
-          this.$store.commit(types.ADD_COURSE_LEARNING, { courses: response.data })
+          this.$store.commit(types.ADD_COURSE_LEARNING, response.data)
         })
         .catch(error => {
           //测试数据
-          let courses = [{
-            courseid: 1,
-            title: '如何学好vue这个框架',
-            teacher: 'jason',
-            date: '2017-04-23',
-            course_image: img
-          }, {
-            courseid: 2,
-            title: '如何学好react这个框架',
-            teacher: 'jason',
-            date: '2017-04-23',
-            course_image: img
-          }]
-          this.$store.commit(types.ADD_COURSE_LEARNING, { courses: courses })
+          // let courses = [{
+          //   courseid: 1,
+          //   title: '如何学好vue这个框架',
+          //   teacher: 'jason',
+          //   date: '2017-04-23',
+          //   course_image: img
+          // }, {
+          //   courseid: 2,
+          //   title: '如何学好react这个框架',
+          //   teacher: 'jason',
+          //   date: '2017-04-23',
+          //   course_image: img
+          // }]
+          // this.$store.commit(types.ADD_COURSE_LEARNING, courses)
         })
     }
 	},

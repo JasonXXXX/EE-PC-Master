@@ -2,12 +2,12 @@
   <transition name="el-zoom-in-top">
     <div class="wrap">
       <div class="wrap-img-div">
-        <img class="wrap-img" :src="item.course_image">
+        <img class="wrap-img" :src="item.course_image" :alt="item.title">
       </div>
       <div class="wrap-info">
         <p class="wrap-info-title">{{item.title}}</p>
-        <span class="wrap-info-addtive">主讲老师: {{item.teachername}}</span>
-        <span class="wrap-info-addtive">时间: {{item.date}}</span>
+        <span class="wrap-info-addtive">{{$common.strings.course_item_teacher}}: {{item.teachername}}</span>
+        <span class="wrap-info-addtive">{{$common.strings.course_item_time}}: {{item.date}}</span>
       </div>
     </div>
   </transition>

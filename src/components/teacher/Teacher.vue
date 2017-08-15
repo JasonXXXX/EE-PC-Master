@@ -1,5 +1,6 @@
 <template>
   <div class="config-wrap">
+    <transition name="el-zoom-in-top">
     <el-menu :default-active="getIndex" class="el-menu-vertical-demo config-wrap-tab" @select="handleSelect">
       <el-menu-item index="1">语文</el-menu-item>
       <el-menu-item index="2">数学</el-menu-item>
@@ -11,6 +12,7 @@
       <el-menu-item index="8">历史</el-menu-item>
       <el-menu-item index="9">地理</el-menu-item>
     </el-menu>
+    </transition>
     <div class="config-wrap-view" :class="{ 'no-border':!getLength }">
       <span class="hint" v-if="!getLength">暂无老师加入，请耐心等候</span>
       <teacher-rol v-for="items in getChunkTeachers" :key="items[0].id" :items="items"></teacher-rol>

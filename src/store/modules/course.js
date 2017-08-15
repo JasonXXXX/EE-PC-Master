@@ -19,13 +19,13 @@ const actions = {
 
 const mutations = {
   //给正在学的课程添加元素
-  [types.ADD_COURSE_LEARNING](state, { courses }) {
+  [types.ADD_COURSE_LEARNING](state, courses) {
     courses.forEach(item => {
       state.courseLearning.push(Object.freeze(item))
     })
   },
   //给课程记录添加元素
-  [types.ADD_COURSE_LEARNED](state, { courses }) {
+  [types.ADD_COURSE_LEARNED](state, courses) {
     courses.forEach(item => {
       state.courseLearned.push(Object.freeze(item))
     })

@@ -21,30 +21,31 @@ export default {
       headimg: imgUrl
     }
   },
-  [types.UPDATE_ME_MESTATE] (state, meState) {
+  [types.UPDATE_ME_MESTATE](state, meState) {
     state.meState = meState
   },
-  [types.UPDATE_USER_USER] (state, user) {
+  [types.UPDATE_USER_USER](state, user) {
     state.user.user = user
   },
-  [types.UPDATE_USER_BASE] (state, base) {
+  [types.UPDATE_USER_BASE](state, base) {
     state.user.name = base.name
     state.user.email = base.email
     state.user.password = base.password
   },
-  [types.UPDATE_USER_EXTRA] (state, extra) {
+  [types.UPDATE_USER_EXTRA](state, extra) {
     state.user.tel = extra.tel
     state.user.address = extra.address
     state.user.intro = extra.intro
     state.user.ID = extra.ID
   },
-  [types.UPDATE_USER_LAST] (state, last) {
+  [types.UPDATE_USER_LAST](state, last) {
+    state.user.gender = last.gender
     state.user.grade = last.grade
     state.user.sub = last.sub
     state.user.parentname = last.parentname
     state.user.parenttel = last.parenttel
   },
-  [types.UPDATE_USER_NAME_AND_INTRO] (state, data) {
+  [types.UPDATE_USER_NAME_AND_INTRO](state, data) {
     state.user.name = data.name
     state.user.intro = data.intro
   },

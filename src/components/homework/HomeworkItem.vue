@@ -18,7 +18,7 @@
       </div>
       <transition name="el-zoom-in-top">
         <div class="answer" v-if="edit">
-          <textarea class="answer-ta" v-model.trim="answer" maxlength="200" placeholder="输入你的答案"></textarea>
+          <textarea class="answer-ta" v-model.trim="answer" maxlength="200" :placeholder="$common.strings.homework_answer_placeholder"></textarea>
           <span class="answer-hint">{{answer.length}}/{{$common.wordCountLimit.homework}}</span>
         </div>
       </transition>
@@ -156,13 +156,13 @@ export default {
             this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
             this.$message({
               type: 'success',
-              message: '该答案已更新!'
+              message: this.$common.strings.homework_after_save_message
             })
             this.edit = false
           } else {
             this.$message({
               type: 'error',
-              message: '保存失败,请重新保存'
+              message: this.$common.strings.homework_after_save_failed_message
             })
           }
         }).catch(error => {
@@ -175,7 +175,7 @@ export default {
           this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
           this.$message({
               type: 'success',
-              message: '该答案已更新!'
+              message: this.$common.strings.homework_after_save_message
             })
             this.edit = false
         })
@@ -183,9 +183,9 @@ export default {
       })
     },
     hadnleDelete () {
-      this.$confirm('确定删除该作业答案?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$common.strings.homework_warning_message, this.$common.strings.dialog_warning_type, {
+        confirmButtonText: this.$common.strings.dialog_button_yes,
+        cancelButtonText: this.$common.strings.dialog_button_no,
         type: 'warning'
       }).then(() => {
         this.$store.commit(types.DELETE_HOMEWORK_HOMEWORK, {

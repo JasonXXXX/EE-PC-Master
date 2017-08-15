@@ -1,16 +1,27 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import store from '@/store'
+
 import App from '@/App'
-import Fake from '~/fake/Fake'
 import Home from '~/home/Home'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   //定义路由列表
   mode: 'history',
   routes: [
+    {
+      path: '/login',
+      name: 'Login',
+      component: resolve => require(['~/login/Login'], resolve)
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: resolve => require(['~/login/Register'], resolve)
+    },
     {
       path: '/',
       component: Home,
@@ -29,6 +40,21 @@ export default new Router({
           path: 'course',
           name: 'Course',
           component: resolve => require(['~/cbroom/Course'], resolve)
+        },
+        {
+          path: 'coursedetail',
+          name: 'CourseDetail',
+          component: resolve => require(['~/course/CourseDetail'], resolve)
+        },
+        {
+          path: 'Setting',
+          name: 'Setting',
+          component: resolve => require(['~/setting/Setting'], resolve)
+        },
+        {
+          path: 'videoupload',
+          name: 'VideoUpload',
+          component: resolve => require(['~/course/VideoUpload'], resolve)
         },
         {
           path: 'me',
@@ -79,6 +105,16 @@ export default new Router({
           component: resolve => require(['~/forum/DiscoverDetail'], resolve)
         },
         {
+          path: 'detail',
+          name: 'UserDetail',
+          component: resolve => require(['~/user/UserDetail'], resolve)
+        },
+        {
+          path: 'friend',
+          name: 'Friend',
+          component: resolve => require(['~/friend/Friend'], resolve)
+        },
+        {
           path: '',
           name: 'Default',
           component: resolve => require(['~/forum/Forum'], resolve)
@@ -107,3 +143,13 @@ export default new Router({
     }
   }
 })
+
+router.beforeEach((to, from, next) => {
+  if (store.getters.user.userid === 0 && to.path !== '/login') {
+    next('/login')
+  } else {
+    next()
+  }
+})
+
+export default router

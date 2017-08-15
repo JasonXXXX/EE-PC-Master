@@ -1,6 +1,6 @@
 export default {
-	//服务器项目地址
-	//各个servlet的api接口
+  //服务器项目地址
+  //各个servlet的api接口
 
   //作业列表
   HomeworkList: 'HomeworkListServletMobile',
@@ -33,7 +33,7 @@ export default {
   //个人信息修改
   InfoUpdate: 'InfoUpdateServletMobile',
   //修改头像
-  UpdateHeadimg: '',
+  UpdateHeadimg: 'UploadHeadimg',
   //教师列表
   TeacherList: 'TeacherListServletMobile',
   //教师详情
@@ -49,5 +49,7 @@ export default {
   //微课课程信息列表
   MicrocourseInfo: 'MicrocourseInfoServletMobile',
   //课程信息列表
-  CurriculumInfo: 'WebcastcourseInfoServletMobile' 
+  CurriculumInfo: 'WebcastcourseInfoServletMobile',
+  //课程视频上传
+  CourseVideoUpload: ''
 }

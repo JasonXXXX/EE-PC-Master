@@ -1,10 +1,11 @@
 <template>
   <div>
-    <header class="header">
-      <el-checkbox v-model="selectall" @change="handleChange">全选</el-checkbox>
-      <el-button class="header-delete" type="primary" size="small" :disabled="!homeworkSelected.length" @click="handleDeleteSelected">清空所选</el-button>
+    <header class="header" v-if="homeworkDone.length">
+      <el-checkbox v-model="selectall" @change="handleChange">{{$common.strings.homework_select_all}}</el-checkbox>
+      <el-button class="header-delete" type="primary" size="small" :disabled="!homeworkSelected.length" @click="handleDeleteSelected">{{$common.strings.homework_clear_all}}</el-button>
     </header>
     <homework-item v-for="item in homeworkDone" :key="item.id" :item="item"></homework-item>
+    <span class="config-no-list-hint" v-if="!homeworkDone.length">{{$common.strings.no_homework_hint}}</span>
   </div>
 </template>
 
@@ -57,9 +58,9 @@ export default {
       }
     },
     handleDeleteSelected () {
-      this.$confirm('此操作将会清空所有选中的题目的答案,是否清空?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm($common.strings.homework_confirm_clear_all, $common.strings.dialog_warning_type, {
+        confirmButtonText: $common.strings.dialog_button_yes,
+        cancelButtonText: $common.strings.dialog_button_no,
         type: 'warning'
       }).then(() => {
         this.homeworkSelected.forEach(item => {
@@ -71,7 +72,7 @@ export default {
 
         this.$message({
           type: 'success',
-          message: '该答案已清空!'
+          message: $common.strings.homework_after_clear
         })
       }).catch(() => {
       })
@@ -91,23 +92,23 @@ export default {
         })
         .catch(error => {
           //以下是测试数据
-          let works = [{
-            id: 1,
-            title: '使用framework 7做一个app',
-            content: '1利用vue.js做一个简单的页面跳转',
-            uptime: '2014-12-03'
-          }, {
-            id: 2,
-            title: '使用framework 7做一个app',
-            content: '1利用vue.js做一个简单的页面跳转',
-            uptime: '2014-12-03'
-          }, {
-            id: 3,
-            title: '使用framework 7做一个app',
-            content: '1利用vue.js做一个简单的页面跳转',
-            uptime: '2014-12-03'
-          }]
-          this.$store.commit(types.ADD_HOMEWORK_DONE, works)
+          // let works = [{
+          //   id: 1,
+          //   title: '使用framework 7做一个app',
+          //   content: '1利用vue.js做一个简单的页面跳转',
+          //   uptime: '2014-12-03'
+          // }, {
+          //   id: 2,
+          //   title: '使用framework 7做一个app',
+          //   content: '1利用vue.js做一个简单的页面跳转',
+          //   uptime: '2014-12-03'
+          // }, {
+          //   id: 3,
+          //   title: '使用framework 7做一个app',
+          //   content: '1利用vue.js做一个简单的页面跳转',
+          //   uptime: '2014-12-03'
+          // }]
+          // this.$store.commit(types.ADD_HOMEWORK_DONE, works)
         })
     }
   },

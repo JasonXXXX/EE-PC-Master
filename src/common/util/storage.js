@@ -12,5 +12,7 @@ export default {
   name: 'name',
   intro: 'intro',
   headimg: 'headimg',
-  dbversion: 'dbversion'
+  dbversion: 'dbversion',
+  videourl: 'videourl',
+  videopic: 'videopic'
 }

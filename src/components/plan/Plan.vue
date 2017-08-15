@@ -3,10 +3,10 @@
     <div class="wrap">
       <header class="wrap-header">
         <i class="el-icon-check wrap-ctrl-icon" @click="handleSave"></i>
-        <i class="el-icon-close wrap-ctrl-icon" @click="handleClose"></i>
+        <i class="el-icon-close wrap-ctrl-icon" @click="handleEmpty"></i>
       </header>
       <p class="wrap-time">{{time}}</p>
-      <textarea class="wrap-content" v-model.trim="content" rows="6" :placeholder="$common.strings.plan_placeholder"></textarea>
+      <textarea class="wrap-content" v-model.trim="content" rows="6" :placeholder="$common.strings.plan_placeholder" @change="handleChange"></textarea>
       <p class="wrap-hint">{{content.length}}/{{$common.wordCountLimit.plan}}</p>
     </div>
   </transition>
@@ -80,33 +80,15 @@ export default {
     }
   },
   created () {
-    this.init()
-  },
-  beforeRouteLeave(to, from, next) {
-    next()
-  },
-  methods: {
-    handleEdit () {
-
-    },
-    handleClose () {
-
-    },
-    handleSave () {
-
-    },
-    handleDelete () {
-
-    },
-    init () {
-      if (this.getPlanDraft.time) {
-        this.time = this.getPlanDraft.time
-        this.content = this.getPlanDraft.content
-      } else if (!this.getPlan.time) {
-        //如果在vuex中还没有计划内容，则进行初始化
-        let params = new URLSearchParams()
+    if (this.getPlanDraft.time) {
+      this.time = this.getPlanDraft.time
+      this.content = this.getPlanDraft.content
+    } else if (!this.getPlan.time) {
+      //如果在vuex中还没有计划内容，则进行初始化
+      let params = new URLSearchParams()
 
       params.append('studentid', this.user.userid)
+      
       this.$common.http.post(this.$common.api.PlanInfo, params)
         .then(response => {
           if (0 === this.$common.jsonUtil.jsonLength(response.data.length)) {
@@ -127,10 +109,100 @@ export default {
           this.time = 'xxxx-xx-xx'
           this.content = '出错啦 :('
         })
-      } else {
-        this.time = this.getPlan.time
-        this.content = this.getPlan.content
-      }
+    } else {
+      this.time = this.getPlan.time
+      this.content = this.getPlan.content
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.mark) {
+      this.$confirm(this.$common.strings.plan_leaving_without_save, this.$common.strings.dialog_warning_type, {
+        confirmButtonText: this.$common.strings.plan_save_draft_and_leave,
+        cancelButtonText: this.$common.strings.dialog_button_no,
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit(types.UPDATE_PLAN_DRAFT, {
+          time: this.$common.timeUtil.getDate(),
+          content: this.content
+        })
+
+        this.$message({
+          type: 'success',
+          message: this.$common.strings.plan_after_save_draft
+        })
+
+        next()
+      }).catch(() => {
+        // next()
+      })
+    } else {
+      next()
+    }
+  },
+  methods: {
+    handleChange () {
+      this.mark = true
+    },
+    handleEmpty () {
+      this.content = ''
+      this.mark = true
+    },
+    handleSave () {
+      let params = new URLSearchParams()
+
+      params.append('plan_title', '')
+      params.append('plan_content', this.content)
+      params.append('plan_student_id', this.user.userid)
+      params.append('plan_send_time', this.$common.timeUtil.getDate())
+
+      this.$common.http.post(this.$common.api.StudyPlanUpdate, params).then(response => {
+        if (1 === response.data.result) {
+          this.$store.commit(types.UPDATE_PLAN, {
+            time: this.$common.timeUtil.getDate(),
+            content: this.content
+          })
+          this.$router.go(-1)
+        } else {
+          this.$confirm(this.$common.strings.plan_save_draft, this.$common.strings.dialog_warning_type, {
+            confirmButtonText: this.$common.strings.dialog_button_yes,
+            cancelButtonText: this.$common.strings.dialog_button_no,
+            type: 'warning'
+          }).then(() => {
+            this.$store.commit(types.UPDATE_PLAN_DRAFT, {
+              time: this.$common.timeUtil.getDate(),
+              content: this.content
+            })
+
+            this.$message({
+              type: 'success',
+              message: this.$common.strings.plan_after_save_draft
+            })
+
+            this.mark = false
+          }).catch(() => {
+          })
+        }
+      }).catch(error => {
+        this.error = true
+        this.$confirm(this.$common.strings.plan_save_draft, this.$common.strings.dialog_warning_type, {
+          confirmButtonText: this.$common.strings.dialog_button_yes,
+          cancelButtonText: this.$common.strings.dialog_button_no,
+          type: 'warning'
+        }).then(() => {
+          this.$store.commit(types.UPDATE_PLAN_DRAFT, {
+            time: this.$common.timeUtil.getDate(),
+            content: this.content
+          })
+
+          this.$message({
+            type: 'success',
+            message: this.$common.strings.plan_after_save_draft
+          })
+
+          this.mark = false
+        }).catch(() => {
+        })
+      })
     },
     save() {
       let params = new URLSearchParams()
@@ -148,20 +220,40 @@ export default {
           })
           this.$router.go(-1)
         } else {
-          MessageBox.confirm('保存失败，是否存入草稿？').then(action => {
+          this.$confirm(this.$common.strings.plan_save_draft, this.$common.strings.dialog_warning_type, {
+            confirmButtonText: this.$common.strings.dialog_button_yes,
+            cancelButtonText: this.$common.strings.dialog_button_no,
+            type: 'warning'
+          }).then(() => {
             this.$store.commit(types.UPDATE_PLAN_DRAFT, {
               time: this.$common.timeUtil.getDate(),
               content: this.content
             })
+
+            this.$message({
+              type: 'success',
+              message: this.$common.strings.plan_after_save_draft
+            })
+          }).catch(() => {
           })
         }
       }).catch(error => {
         this.error = true
-        MessageBox.confirm('网络发生错误，是否存入草稿？').then(action => {
+        this.$confirm(this.$common.strings.plan_save_draft, this.$common.strings.dialog_warning_type, {
+          confirmButtonText: this.$common.strings.dialog_button_yes,
+          cancelButtonText: this.$common.strings.dialog_button_no,
+          type: 'warning'
+        }).then(() => {
           this.$store.commit(types.UPDATE_PLAN_DRAFT, {
             time: this.$common.timeUtil.getDate(),
             content: this.content
           })
+
+          this.$message({
+            type: 'success',
+            message: this.$common.strings.plan_after_save_draft
+          })
+        }).catch(() => {
         })
       })
     },

@@ -1,81 +1,121 @@
 <template>
-  <div>
-    <div class="title">
-      <router-link class="router-link" to="/home/forum" replace><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></router-link>
-      <span>设置</span>
-    </div>
-    <header class="header"></header>
-    <div class="setting-wrap" @click.stop="clearChatRecord">清除本地聊天记录</div>
-    <div class="setting-wrap" @click.stop="modifyPassword">修改密码</div>
+  <div class="config-wrap">
+    <el-collapse class="wrap-collapse" v-model="activeName" accordion>
+      <el-collapse-item class="wrap-collapse-item" :title="$common.strings.setting_title_user" name="user">
+        <div class="item-div">
+          <span class="item-div-span">{{$common.strings.setting_logout_hint}}</span>
+          <el-button class="item-div-button" @click="logout">{{$common.strings.setting_logout_button}}</el-button>
+        </div>
+      </el-collapse-item>
+  
+      <el-collapse-item class="wrap-collapse-item" :title="$common.strings.setting_title_data" name="data">
+        <div class="item-div">
+          <span class="item-div-span">{{$common.strings.setting_clearchat_hint}}</span>
+          <el-button class="item-div-button" @click="clearChatRecord">{{$common.strings.setting_clearchat_button}}</el-button>
+        </div>
+      </el-collapse-item>
+  
+      <el-collapse-item class="wrap-collapse-item" :title="$common.strings.setting_title_security" name="security">
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 
 <style scoped>
-.setting-wrap {
-  display: flex;
-  align-items: center;
-  margin: 8px 0;
-  padding: 12px 8px;
-  background-color: #FFFFFF;
-  color: #525252;
-  box-shadow: 0px 1px 4px #BBB;
-}
+  .wrap-collapse {
+    width: 100%;
+    text-align: left;
+  }
+  
+  .item-div {
+    display: flex;
+    align-items: center;
+  }
+  
+  .item-div-span {
+    flex: 1;
+    display: block;
+    text-align: left;
+    color: #999999;
+    font-size: 14px;
+  }
 </style>
 
 <script>
 import { mapGetters } from 'vuex'
 import types from '@/store/types.js'
-import { Toast, MessageBox } from 'mint-ui'
+import atypes from '@/store/action-types.js'
 import Database from '@/common/util/database.js'
 
 export default {
   name: 'Setting',
-  data() {
+  data () {
     return {
-
+      activeName: 'user'
     }
   },
-  created() {
+  created () {
 
   },
   methods: {
-    clearChatRecord() {
+    clearChatRecord () {
       let self = this
-      MessageBox.confirm('确认清空本地聊天记录吗？').then(action => {
+      this.$confirm('确认清空本地聊天记录吗？', this.$common.strings.dialog_warning_type, {
+        confirmButtonText: this.$common.strings.dialog_button_yes,
+        cancelButtonText: this.$common.strings.dialog_button_no,
+        type: 'warning'
+      }).then(() => {
         Database.init(true).then(() => {
           Database.clear().then(() => {
             self.$store.commit(types.CLEAR_CHAT_CHATS)
             Database.close()
-            Toast({
-              message: '聊天记录已删除',
-              position: 'bottom',
-              duration: 2000
+            this.$message({
+              type: 'success',
+              message: '聊天记录已删除!'
             })
           }).catch(() => {
-            Toast({
-              message: '删除失败，请重新删除',
-              position: 'bottom',
-              duration: 2000
+            this.$message({
+              type: 'warning',
+              message: '未能成功删除,请重新删除!'
             })
           })
         }).catch(error => {
-          Toast({
-            message: '访问本地数据失败，请重新删除',
-            position: 'bottom',
-            duration: 2000
+          this.$message({
+            type: 'warning',
+            message: '访问本地数据失败,请重新删除!'
           })
         })
       }).catch(cancle => {
-        
+
       })
     },
-    modifyPassword() {
-      
+    modifyPassword () {
+
+    },
+    logout () {
+      if (this.user.userid === 0) {
+        this.$message('您还未登录,请先登录!')
+      } else {
+        this.$confirm('是否进行注销？', this.$common.strings.dialog_warning_type, {
+          confirmButtonText: this.$common.strings.dialog_button_yes,
+          cancelButtonText: this.$common.strings.dialog_button_no,
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch(atypes.LOGOUT).then(resolve => {
+            this.$message('已注销!')
+          }).catch(reject => {
+
+          })
+        }).catch(cancle => {
+
+        })
+      }
     }
   },
   computed: {
     ...mapGetters([
-      'chats'
+      'chats',
+      'user'
     ])
   }
 }

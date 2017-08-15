@@ -1,84 +1,63 @@
 <template>
-	<div style="width: 100%;">
-    <div class="title">
-      <router-link class="router-link" to="/home/forum" replace>
-      	<span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span >
-      </router-link>
-    	<span>好友列表</span>
-    </div>
-    <div style="height: 5rem;"></div>
-    <div class="friend-item" v-for="friend in friends" :key="friend.id" @click="friendDetail(friend.friend_id)">
-      <img class="friend-headimg" :src="friend.friend_headimg">
-      <p class="friend-username">{{friend.friend_name}}</p>
-			<div @click.stop="openChatView(friend)">
-				<badge size="small" v-if="getMessageCount(friend.friend_id)">
-					<slot slot="name">{{getMessageCount(friend.friend_id)}}</slot>
-				</badge>
+  <div class="config-wrap">
+		<transition name="el-zoom-in-top">
+			<div class="config-wrap-tab">
+				<el-input
+				  class="wrap-input"
+		      :placeholder="friendHint"
+		      :fetch-suggestions="queryFriendSuggestions"
+		      icon="search"
+		      @select="handleFriendSelect"
+		      v-model="name">
+		    </el-input>
+				<friend-item v-for="item in friends" :key="item.friend_id" :item="item"></friend-item>
 			</div>
-    </div>
-    <p class="friend-hint-text" v-show="friends.length">共 {{this.friends.length}} 位好友</p>
-    <p class="friend-hint-text" v-show="!friends.length">您目前没有好友 :)</p>
-  </div>
+		</transition>
+	</div>
 </template>
 
 <style lang="css" scoped>
-.friend-item {
-	display: flex;
-	align-items: center;
-	padding: 8px;
-	margin: 0;
-	width: 100%;
-	border-bottom: .5px solid #BBB;
-	overflow-x: hidden;
-}
-
-.friend-headimg {
-	padding: 0;
-	margin: 0;
-	width: 32px;
-	height: 32px;
-	border-radius: 50%;
-}
-
-.friend-username {
-	flex: 1;
-	margin: 0 0 0 4px;
-	padding: 0 0 0 4px;
-	color: #424242;
-	font-size: 14px;
-}
-
-.friend-hint-text {
-	margin: 0;
-	padding: 12px 0;
-	width: 100%;
-	text-align: center;
-	color: #A0A0A0;
-}
+  .wrap-input {
+		margin: 0 0 4px 0;
+		opacity: .6;
+		border: none;
+		border-radius: 0;
+		font-size: 12px;
+	}
 </style>
 
 <script>
 import types from '@/store/types'
 import { mapGetters } from 'vuex'
 import Logo from '@/assets/logo.png'
-import { Toast,Badge } from 'mint-ui'
+import FriendItem from './FriendItem'
 
 export default {
 	name: 'Friend',
-	data() {
+	data () {
 	  return {
-
+			friendHint: '搜索',
+			name: ''
 	  }
 	},
 	components: {
-		Badge
+		FriendItem
 	},
-	mounted() {
-	  if(this.friends.length<1) {
+	created () {
+		if(this.friends.length<1) {
 	  	this.fetchFriends()
 	  }
 	},
+	mounted () {
+	  this.friendHint = '搜索共' + this.friends.length + '位好友'
+	},
 	methods: {
+		queryFriendSuggestions (queryString, callback) {
+
+		},
+		handleFriendSelect () {
+
+		},
 	  fetchFriends() {
     	this.$common.http.get(this.$common.api.StudentFriendList+'?studentid='+this.user.userid)
     	  .then(response => {
