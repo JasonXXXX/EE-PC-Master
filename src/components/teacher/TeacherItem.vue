@@ -17,6 +17,12 @@
     padding: 8px;
     margin: 0 8px 8px 8px;
     border-bottom: .5px solid #BDBDBD;
+    transition: all .8s ease;
+  }
+
+  .wrap:hover {
+    background-color: #EFEFEF;
+    box-shadow: 1px 2px 12px #BBBBBB;
   }
 
   .wrap-img {

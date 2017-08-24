@@ -8,12 +8,20 @@ import Storage from './storage'
 let db = {
   name: 'ChatDB',
   version: parseInt(localStorage.getItem(Storage.dbversion)) || 1,
-  store_chat_record: 'ChatDBStore'
+  store_chat_record: 'ChatDBStore',
+  store_course_view: 'CourseViewStore',
+  store_note: 'NoteStore',
+  store_plan: 'PlanStore',
+  store_homework: 'HomeworkStore',
+  store_friend: 'FriendStore',
 }
 
 export default {
   DataBase: null,
-  init(edit) {
+
+  db: db,
+
+  init(edit, store) {
     return new Promise((resolve, reject) => {
       if (edit || !(localStorage.getItem(Storage.dbversion))) {
         //先对数据库版本号进行更新
@@ -29,8 +37,8 @@ export default {
       request.onupgradeneeded = (event) => {
         console.log('数据库更新执行')
         this.DataBase = event.target.result
-        if (!(this.DataBase.objectStoreNames.contains(db.store_chat_record))) {
-          this.DataBase.createObjectStore(db.store_chat_record, { keyPath: 'id', autoIncrement: true })
+        if (!(this.DataBase.objectStoreNames.contains(store || db.store_chat_record))) {
+          this.DataBase.createObjectStore(store || db.store_chat_record, { keyPath: 'id', autoIncrement: true })
           console.log('objectStore已创建')
         }
       }
@@ -42,14 +50,15 @@ export default {
       }
     })
   },
-  put(data) {
+
+  put(data, store) {
     //这个方法若key值存在，会进行修改
     //打开事务
-    let transaction = this.DataBase.transaction(db.store_chat_record, 'readwrite')
+    let transaction = this.DataBase.transaction(store || db.store_chat_record, 'readwrite')
     //打开仓库
-    let store = transaction.objectStore(db.store_chat_record)
+    let Store = transaction.objectStore(store || db.store_chat_record)
     //写入数据
-    let request = store.put(data)
+    let request = Store.put(data)
     request.onsuccess = (event) => {
       console.log('插入/修改数据到数据库成功,keyPath=', event.target.result)
     }
@@ -57,11 +66,12 @@ export default {
       console.log('插入/修改数据到数据库失败')
     }
   },
-  add(data) {
+
+  add(data, store) {
     //这个方法若key值存在，不会进行修改
-    let transaction = this.DataBase.transaction(db.store_chat_record, 'readwrite')
-    let store = transaction.objectStore(db.store_chat_record)
-    let request = store.add(data)
+    let transaction = this.DataBase.transaction(store || db.store_chat_record, 'readwrite')
+    let Store = transaction.objectStore(store || db.store_chat_record)
+    let request = Store.add(data)
     request.onsuccess = (event) => {
       console.log('插入数据到数据库成功,keyPath=', event.target.result)
     }
@@ -69,9 +79,10 @@ export default {
       console.log('插入数据到数据库失败')
     }
   },
-  delete(key) {
-    let request = this.DataBase.transaction(db.store_chat_record, 'readwrite')
-      .objectStore(db.store_chat_record)
+
+  delete(key, store) {
+    let request = this.DataBase.transaction(store || db.store_chat_record, 'readwrite')
+      .objectStore(store || db.store_chat_record)
       .delete(key)
     request.onsuccess = () => {
       console.log('删除数据成功')
@@ -80,52 +91,56 @@ export default {
       console.log('删除数据失败')
     }
   },
-  select(key) {
+
+  select(key, store) {
     return new Promise((resolve, reject) => {
       let request,
-        store = this.DataBase.transaction(db.store_chat_record, 'readwrite').objectStore(db.store_chat_record)
+        Store = this.DataBase.transaction(store || db.store_chat_record, 'readwrite').objectStore(store || db.store_chat_record)
       if (key) {
-        request = store.get(key)
+        request = Store.get(key)
       } else {
-        request = store.getAll()
+        request = Store.getAll()
       }
       request.onsuccess = () => {
         console.log('数据查询成功')
         resolve(request.result)
       }
       request.onerror = () => {
-        console.log('数据查询失败')
+        console.log('获取聊天记录失败')
         reject('获取聊天记录失败')
       }
     })
   },
-  clear() {
+
+  clear(store) {
     return new Promise((resolve, reject) => {
-      let request = this.DataBase.transaction(db.store_chat_record, 'readwrite').objectStore(db.store_chat_record)
+      let request = this.DataBase.transaction(store || db.store_chat_record, 'readwrite').objectStore(store || db.store_chat_record)
         .clear()
       request.onsuccess = () => {
-        console.log('清空数据库数据成功')
+        console.log('清空仓库数据成功')
         resolve()
       }
       request.onerror = () => {
-        console.log('清空数据库数据失败')
+        console.log('清空仓库数据失败')
         reject()
       }
     })
   },
-  deleteDatabase() {
+
+  deleteDatabase(name) {
     return new Promise((resolve, reject) => {
-      let request = indexedDB.deleteDatabase(db.name)
+      let request = indexedDB.deleteDatabase(name || db.name)
       request.onerror = (event) => {
-        console.log('删除数据库失败')
+        console.log('删除数据库' + (name || '') + '失败')
         reject('删除数据库失败')
       }
       request.onsuccess = (event) => {
-        console.log('数据库已删除')
+        console.log((name + '') + '数据库已删除')
         resolve()
       }
     })
   },
+
   close() {
     this.DataBase.close()
     this.DataBase = null

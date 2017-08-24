@@ -26,6 +26,11 @@
     padding: 8px;
     text-align: left;
     border-bottom: .5px solid #BDBDBD;
+    transition: all .8s ease;
+  }
+
+  .div:hover {
+    box-shadow: 2px 2px 16px #999999;
   }
 
   .wrap {
@@ -218,7 +223,7 @@ export default {
     noteSelected () {
       if (this.noteSelected.length > 0) {
         this.noteSelected.every(item => {
-          this.checked = item===this.item.id
+          this.checked = item === this.item.id
           return !this.checked
         })
       } else {
@@ -228,7 +233,7 @@ export default {
     'item.title': {
       handler (newVal, oldVal) {
         this.note = newVal
-        if (newVal=='') {
+        if (newVal == '') {
           this.checked = false
         }
       },

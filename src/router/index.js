@@ -115,6 +115,11 @@ const router = new Router({
           component: resolve => require(['~/friend/Friend'], resolve)
         },
         {
+          path: 'chart',
+          name: 'Chart',
+          component: resolve => require(['~/chart/Chart'], resolve)
+        },
+        {
           path: '',
           name: 'Default',
           component: resolve => require(['~/forum/Forum'], resolve)

@@ -1,5 +1,5 @@
 export default {
-	ip: '10.253.16.12',
+	ip: '192.168.1.3',
 	port: '8080',
 	server: 'ExcellentEducation'
 }

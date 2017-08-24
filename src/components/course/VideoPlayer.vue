@@ -8,9 +8,9 @@
   .wrap {
     width: 100%;
     margin: 0;
-    padding: 12px;
+    padding: 12px 0;
   }
-  
+
   .wrap-video {
     width: 100%;
     height: auto;

@@ -25,11 +25,11 @@
     display: flex;
     align-items: center;
   }
-  
+
   .wrap-nav-icon {
     margin-right: 6px;
   }
-  
+
   .no-border {
     border: none;
     display: block;
@@ -93,7 +93,7 @@ export default {
             content: '掌握be动词的用法',
             teachername: 'jason',
             duration: '2h',
-            course_vedio: Be,
+            course_video: Be,
             fee: 99.99
           },
           {
@@ -103,18 +103,7 @@ export default {
             content: '掌握be动词的用法',
             teachername: 'jason',
             duration: '2h',
-            course_vedio: Be,
-            fee: 99.99
-
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_vedio: Be,
+            course_video: Be,
             fee: 99.99
 
           },
@@ -125,7 +114,7 @@ export default {
             content: '掌握be动词的用法',
             teachername: 'jason',
             duration: '2h',
-            course_vedio: Be,
+            course_video: Be,
             fee: 99.99
 
           },
@@ -136,7 +125,7 @@ export default {
             content: '掌握be动词的用法',
             teachername: 'jason',
             duration: '2h',
-            course_vedio: Be,
+            course_video: Be,
             fee: 99.99
 
           },
@@ -147,7 +136,18 @@ export default {
             content: '掌握be动词的用法',
             teachername: 'jason',
             duration: '2h',
-            course_vedio: Be,
+            course_video: Be,
+            fee: 99.99
+
+          },
+          {
+            course_id: 1,
+            coursemark: this.cbroomState,
+            course_image: Be,
+            content: '掌握be动词的用法',
+            teachername: 'jason',
+            duration: '2h',
+            course_video: Be,
             fee: 99.99
 
           }]

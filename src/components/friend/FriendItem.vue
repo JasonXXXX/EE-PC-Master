@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" @click="handleClick">
     <img class="wrap-img" :src="item.friend_headimg">
     <span class="wrap-span">{{item.friend_name}}</span>
   </div>
@@ -40,11 +40,15 @@
 </style>
 
 <script>
+import types from '@/store/types'
+
 export default {
   name: 'FriendItem',
   props: ['item'],
   methods: {
-    
+    handleClick () {
+      this.$store.commit(types.UPDATE_CHAT_CHATFRIEND, this.item)
+    }
   }
 }
 </script>
