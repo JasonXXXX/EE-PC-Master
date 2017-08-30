@@ -1,60 +1,53 @@
 <template>
-  <canvas id="myCanvas" class="myCanvas">
-  </canvas>
+  <div class="config-wrap wrap">
+    <el-dropdown class="wrap-menu" type="primary" @command="handleSelect">
+      <span class="el-dropdown-link">
+        选择项目
+        <i class="el-icon-caret-bottom el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="course">课程</el-dropdown-item>
+        <el-dropdown-item command="note">笔记</el-dropdown-item>
+        <el-dropdown-item command="homework">作业</el-dropdown-item>
+        <el-dropdown-item command="plan">学习计划</el-dropdown-item>
+        <el-dropdown-item command="friend" divided>好友</el-dropdown-item>
+        <el-dropdown-item command="chat">聊天</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+    <router-view></router-view>
+
+  </div>
 </template>
 
 <style scoped>
-.myCanvas {
-  height: 100%;
-  width: 100%;
-}
+  .myCanvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  .wrap {
+    text-align: left;
+  }
+
+  .wrap-menu {
+    margin: 4px 0 4px 8px;
+    height: fit-content;
+  }
 </style>
 
 <script>
-import 'chart.js'
-
 export default {
   name: 'Chart',
-  mounted() {
-    const ctx = document.getElementById('myCanvas').getContext('2d')
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: 'HIDE',
-          data: [12, 19, 13, 15, 12, 13],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
+  methods: {
+    handleSelect (value) {
+      switch (value) {
+        case 'course':
+          this.$router.push('/chart/course')
+          break;
+        default:
+          break;
       }
-    })
+    }
   }
 }
 </script>

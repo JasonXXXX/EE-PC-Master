@@ -7,6 +7,7 @@ import homework from './modules/homework'
 import chatMessage from './modules/chat-message'
 import forum from './modules/forum'
 import teacher from './modules/teacher'
+import searchs from './modules/search-record'
 
 export default {
   course,
@@ -17,5 +18,6 @@ export default {
   chatMessage,
   forum,
   teacher,
-  cbroom
+  cbroom,
+  searchs
 }

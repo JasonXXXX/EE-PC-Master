@@ -97,6 +97,7 @@ import logo from '@/assets/icon.png'
 import headimg from '@/assets/headimg.png'
 import { mapGetters } from 'vuex'
 import types from '@/store/types'
+import Storage from '@/common/util/storage'
 
 import 'vue-awesome/icons/rss'
 import 'vue-awesome/icons/graduation-cap'
@@ -111,7 +112,6 @@ export default {
       headimg: headimg,
       activeIndex: 'detail',
       search: '',
-      searchs: []
     }
   },
   created () {
@@ -125,6 +125,8 @@ export default {
       this.$router.push(command)
     },
     initSearchSuggestions () {
+      this.$store.commit(types.ADD_SEARCH_RECORDS, JSON.parse(localStorage.getItem(Storage.search_record)) || [])
+
       this.cbcourses.forEach(item => {
         this.searchs.push({
           value: '课程: ' + item.content,
@@ -174,9 +176,7 @@ export default {
       }
     },
     querySearchSuggestions (queryString, cb) {
-      const results = queryString ? this.searchs.filter(this.createFilter(queryString)) : [{
-        value: '请输入关键字'
-      }]
+      const results = queryString ? this.searchs.filter(this.createFilter(queryString)) : this.searchs
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -185,7 +185,7 @@ export default {
     },
     handleSearchSelect (value) {
       if (value.value === '请输入关键字') {
-
+        this.search = ''
       } else {
 
       }
@@ -201,7 +201,8 @@ export default {
       'homeworkDone',
       'notes',
       'getPlan',
-      'teachers'
+      'teachers',
+      'searchs'
     ])
   },
   watch: {

@@ -2,12 +2,14 @@ import types from '@/store/types'
 
 const state = {
   cbcourses: [],
+  course: {},
   cbroomState: 1
 }
 
 const getters = {
   cbcourses: state => state.cbcourses,
-  cbroomState: state => state.cbroomState
+  cbroomState: state => state.cbroomState,
+  course: state => state.course
 }
 
 const actions = {
@@ -29,6 +31,9 @@ const mutations = {
   [types.CLEAR_CBROOM_CBROOM](state) {
     state.cbcourses.splice(0,state.cbcourses.length)
     state.cbroomState = 1
+  },
+  [types.UPDATE_CBROOM_COURSE](state, course) {
+    state.course = course
   }
 }
 

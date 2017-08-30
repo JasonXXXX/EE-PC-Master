@@ -14,5 +14,6 @@ export default {
   headimg: 'headimg',
   dbversion: 'dbversion',
   videourl: 'videourl',
-  videopic: 'videopic'
+  videopic: 'videopic',
+  search_record: 'search_record'
 }

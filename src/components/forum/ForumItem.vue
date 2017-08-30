@@ -4,10 +4,10 @@
       <div class="wrap-summary">
         <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
         <p class="wrap-summary-detail">
-          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark==1"></i>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark==1">{{item.message_like}}</span>
-          <icon class="wrap-summary-detail-star_count" v-if="item.mark==2" name="commenting"></icon>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark==2">{{item.message_like}}</span>
+          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark!=4"></i>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark!=4">{{item.message_like}}</span>
+          <icon class="wrap-summary-detail-star_count" v-if="item.mark==4" name="commenting"></icon>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==4">{{item.message_like}}</span>
           <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
           <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
         </p>
@@ -22,27 +22,36 @@
     margin: 0;
     padding: 12px;
     border-bottom: .5px solid #BDBDBD;
+    transition: all .6s ease;
+  }
+
+  .wrap:hover {
+    box-shadow: 1px 1px 8px #BBBBBB;
+    border-bottom: .5px solid transparent;
   }
 
   .wrap-summary {
     flex: 1;
     margin: 0;
-    padding: 8px;
+    padding: 0 8px;
     text-align: left;
   }
 
   .wrap-summary-title {
     margin: 8px;
-    font-size: 23px;
+    font-size: 20px;
     color: #424242;
   }
 
   .wrap-summary-detail {
-    margin: 0 8px 8px 8px;
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    margin: 0 8px;
+    font-size: 12px;
   }
 
   .wrap-summary-detail-star_count {
+    margin: 0 4px 0 0;
     color: #2070FF;
   }
 

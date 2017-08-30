@@ -11,15 +11,15 @@ export default {
   //增加更新/作业
   HomeworkUpdate: 'HomeworkUpdateServletMobile',
   //获取学生学习计划
-  PlanInfo: 'StudyplanListServletMobile',
+  PlanInfo: 'StudyplanMessageServletMobile',
   //增加/更新学生学习计划
-  StudyPlanUpdate: 'StudyPlanUpdateServlet',
+  StudyPlanUpdate: 'StudyplanServletMobile',
   //获取学生课程记录列表
   StudentCourseRecordList: 'RecordcourseListServletMobile',
   //获得学生好友列表
   StudentFriendList: 'FriendListServletMobile',
   //学生笔记列表
-  StudentNoteList: 'GetStudentNoteListServletMobile',
+  StudentNoteList: 'StudentnoteListServletMobile',
   //获取学生笔记详情
   StudentNoteInfo: 'StudenntnoteMessageServletMobile',
   //更新/添加笔记
@@ -29,23 +29,23 @@ export default {
   //用户登录
   Login: 'LoginServletMobile',
   //获取个人详细信息
-  UserInfo: 'GetstudentInfoMobile',
+  UserInfo: 'GetstudentMessageServletMobile',
   //个人信息修改
-  InfoUpdate: 'InfoUpdateServletMobile',
+  InfoUpdate: 'StudentUpdateServletMobile',
   //修改头像
   UpdateHeadimg: 'UploadHeadimg',
   //教师列表
-  TeacherList: 'TeacherListServletMobile',
+  TeacherList: 'TeacherListServlet',
   //教师详情
   TeacherInfo: 'TeacherInfoServletMobile',
   //资讯，我想说列表
-  MessageList: 'MessageListServletMobile',
+  MessageList: 'messageListServletMobile',
   //资讯，我想说详细信息
   MessageInfo: 'MessageInfoServletMobile',
   //收藏
   Messagemark: 'MessagemarkServletMobile',
   //课程列表
-  CourseList: 'CourseListServletMobile',
+  CourseList: 'CourseRecordQueryServletMobile',
   //微课课程信息列表
   MicrocourseInfo: 'MicrocourseInfoServletMobile',
   //课程信息列表

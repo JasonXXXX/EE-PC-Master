@@ -21,11 +21,12 @@ const BASEURL = 'http://' + server.ip + ':' + server.port + '/' + server.server 
 //自定义axios对象，使用这个进行联网
 const http = axios.create({
   headers: {
+    'Accept': 'application/json,text/plain',
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Authorization': `token ${localStorage.getItem(storage.token)}`
+    'Content-Language': 'zh-CN',
   },
   baseURL: BASEURL,
-  timeout: 50,
+  timeout: 5000,
   withCredentials: true
 })
 // http request 拦截器
@@ -33,11 +34,12 @@ http.interceptors.request.use(function (config) {
   console.log('拦截发送的请求')
   store.commit(types.UPDATE_LOADING, true)
   //发送请求之前添加token参数
-  // if (config.data) {
-  //   //给每个请求添加用户登录的token
-  //   config.data = config.data + '&token=' + (localStorage.getItem(storage.token) || '0')
-  // }
-  config.data = JSON.stringify(config.data)
+  if (config.data) {
+    //给每个请求添加用户登录的token
+    config.data = config.data + '&token=' + (localStorage.getItem(storage.token) || '0')
+  }
+  // config.data = JSON.stringify(config.data)
+  // config.data = config.data.substring(1, config.data.length-1)
   return config
 }, function (error) {
   //请求错误时执行

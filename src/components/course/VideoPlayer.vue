@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <video ref="video" @click="handleClick" class="wrap-video" :autoplay="autoplay" :controls="controls" :poster="poster" :src="video.src" :loop="loop"></video>
+    <video ref="video" @click="handleClick" class="wrap-video" :autoplay="autoplay" :controls="controls" :poster="poster" :src="video.src" :loop="loop" @onerror="handleVideoError"></video>
   </div>
 </template>
 
@@ -20,6 +20,7 @@
 
 <script>
 import Pic from '@/assets/html.jpg'
+import Database from '@/common/util/database'
 
 export default {
   name: 'VideoPlayer',
@@ -46,9 +47,24 @@ export default {
     handleClick () {
       if (!this.player.paused) {
         this.player.pause()
+        Database.init(true, Database.db.store_course).then(() => {
+          Database.put({
+            id: this.video.id,
+            text: this.video.text,
+            date: new Date()
+          }, Database.db.store_course)
+        }).catch(error => {
+          console.log(error)
+        })
       } else {
         this.player.play()
       }
+    },
+    handleVideoError () {
+      this.$message({
+        type: 'warning',
+        message: this.video.error_text || '视频加载出错啦'
+      })
     }
   }
 }

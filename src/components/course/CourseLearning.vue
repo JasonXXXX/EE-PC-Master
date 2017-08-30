@@ -1,6 +1,6 @@
 <template>
 	<div>
-    <course-item v-for="item in courseLearning" :key="item.courseid" :item="item"></course-item>
+    <course-item v-for="item in courseLearning" :key="item.record_id" :item="item"></course-item>
     <span class="config-no-list-hint" v-if="!courseLearning.length">{{$common.strings.no_course_hint}}</span>
   </div>
 </template>

@@ -95,12 +95,12 @@ const router = new Router({
           ]
         },
         {
-          path: 'news',
+          path: 'news/:messageid',
           name: 'News',
           component: resolve => require(['~/forum/NewsDetail'], resolve)
         },
         {
-          path: 'discover',
+          path: 'discover/:messageid',
           name: 'Discover',
           component: resolve => require(['~/forum/DiscoverDetail'], resolve)
         },
@@ -116,8 +116,17 @@ const router = new Router({
         },
         {
           path: 'chart',
-          name: 'Chart',
-          component: resolve => require(['~/chart/Chart'], resolve)
+          component: resolve => require(['~/chart/Chart'], resolve),
+          children: [
+            {
+              path: 'course',
+              component: resolve => require(['~/chart/ChartCourse'], resolve)
+            },
+            {
+              path: '',
+              component: resolve => require(['~/chart/ChartCourse'], resolve)
+            }
+          ]
         },
         {
           path: '',

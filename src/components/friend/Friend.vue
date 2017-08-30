@@ -103,29 +103,6 @@ export default {
 			this.fetchFriends()
 		}
 		this.friendHint = '搜索共' + this.friends.length + '位好友'
-		// this.$store.commit(types.ADD_CHAT_CHATS, [
-		// 	{
-		// 		from: this.user.userid,
-		// 		to: this.chatfriend.friend_id,
-		// 		content: '啥啥啥?',
-		// 		failed: true,
-		// 		unopen: false
-		// 	},
-		// 	{
-		// 		to: this.user.userid,
-		// 		from: this.chatfriend.friend_id,
-		// 		content: 'this.text',
-		// 		failed: true,
-		// 		unopen: false
-		// 	},
-		// 	{
-		// 		from: this.user.userid,
-		// 		to: this.chatfriend.friend_id,
-		// 		content: '啊啊啊啊啊啊',
-		// 		failed: true,
-		// 		unopen: false
-		// 	}
-		// ])
 	},
 	mounted () {
 		document.getElementById('child').style.height = document.getElementById('parent').clientHeight - 16 + 'px'
@@ -170,24 +147,9 @@ export default {
 		fetchFriends () {
 			this.$common.http.get(this.$common.api.StudentFriendList + '?studentid=' + this.user.userid)
 				.then(response => {
-					this.$store.commit(types.ADD_FRIEND_FRIENDS, { friends: response.data })
+					this.$store.commit(types.ADD_FRIEND_FRIENDS, response.data)
 				})
 				.catch(error => {
-					//测试数据
-					let friends = [{
-						friend_id: 1,
-						friend_headimg: Logo,
-						friend_name: '张建新'
-					}, {
-						friend_id: 2,
-						friend_headimg: Logo,
-						friend_name: '胡荣玲'
-					}, {
-						friend_id: 3,
-						friend_headimg: Logo,
-						friend_name: '郭颖'
-					}]
-					this.$store.commit(types.ADD_FRIEND_FRIENDS, friends)
 				});
 		},
 		friendDetail (friendid) {

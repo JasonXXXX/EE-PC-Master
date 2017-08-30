@@ -4,7 +4,9 @@
       <i class="el-icon-d-arrow-left" @click="back"></i>
     </header>
     <article class="wrap-article">
-      <li class="article-title-indicator"><h1 class="article-title">{{detail.title}}</h1></li>
+      <li class="article-title-indicator">
+        <h1 class="article-title">{{detail.title}}</h1>
+      </li>
       <div class="article-info">
         <li class="article-title-indicator">
           <span class="article-info-detail">{{detail.sender_name}}</span>
@@ -13,9 +15,18 @@
       </div>
       <p class="article-content" v-text="detail.content"></p>
       <div class="article-control">
-        <span class="article-icon-wrap" @click.stop="toggleLike"><icon :name="like" class="article-icon"></icon><span>点赞</span></span>
-        <span class="article-icon-wrap" @click.stop="toggleStar" style="flex: 1;"><icon :name="star" class="article-icon"></icon><span>收藏</span></span>
-        <span class="article-icon-wrap" @click.stop="toggleComment" v-if="!writeComment"><icon name="commenting-o" class="article-icon"></icon><span>评论</span></span>
+        <span class="article-icon-wrap" @click.stop="toggleLike">
+          <icon :name="like" class="article-icon"></icon>
+          <span>点赞</span>
+        </span>
+        <span class="article-icon-wrap" @click.stop="toggleStar" style="flex: 1;">
+          <icon :name="star" class="article-icon"></icon>
+          <span>收藏</span>
+        </span>
+        <span class="article-icon-wrap" @click.stop="toggleComment" v-if="!writeComment">
+          <icon name="commenting-o" class="article-icon"></icon>
+          <span>评论</span>
+        </span>
         <el-button class="article-comment-button" type="primary" v-if="writeComment">发表评论</el-button>
       </div>
       <textarea class="article-comment-ta" v-model.trim="comment" v-if="writeComment" placeholder="随便说点什么吧~" maxlength="100"></textarea>
@@ -106,7 +117,7 @@
 
   .article-comment-button {
     font-size: 13px;
-    padding:6px 12px;
+    padding: 6px 12px;
   }
 
   .article-comment-ta {
@@ -141,7 +152,7 @@ import CommentItem from './ForumCommentItem'
 import Convert from '@/common/util/convert.js'
 
 export default {
-  data() {
+  data () {
     return {
       detail: {
         comment_views: [],
@@ -164,7 +175,8 @@ export default {
   components: {
     CommentItem
   },
-  created() {
+  created () {
+    console.log(this.$route.params.messageid)
     this.fetchNewsDetail()
   },
   methods: {
@@ -172,15 +184,15 @@ export default {
       this.$router.back()
     },
     toggleLike () {
-      this.like = this.like==='heart-o'? 'heart': 'heart-o'
+      this.like = this.like === 'heart-o' ? 'heart' : 'heart-o'
     },
     toggleStar () {
-      this.star = this.star==='star-o'? 'star': 'star-o'
+      this.star = this.star === 'star-o' ? 'star' : 'star-o'
     },
     toggleComment () {
       this.writeComment = !this.writeComment
     },
-    getMyTime() {
+    getMyTime () {
       let now = new Date()
       let year = now.getFullYear()
       let month = now.getMonth() + 1
@@ -188,8 +200,8 @@ export default {
       let today = year + "-" + month + "-" + day
       return today
     },
-    addComment(){
-      if (this.commentText!==''){
+    addComment () {
+      if (this.commentText !== '') {
         this.detail.comment_views.push({
           comment_tocomment_id: 1,
           content: this.commentText,
@@ -201,10 +213,10 @@ export default {
         this.commentText = ''
       }
     },
-    canelComment(){
+    canelComment () {
       this.commentText = ''
     },
-    toggleFavorite(detail) {
+    toggleFavorite (detail) {
       if (this.isFavorite(detail)) {
         // this.$context.commit(atypes.DELETE_FAVORITE_LIST, detail)
         this.$store.dispatch(atypes.DELETE_FAVORITE_LIST, detail)
@@ -217,20 +229,20 @@ export default {
         console.log(this.favoriteList)
       }
     },
-    getFavoriteIcon(detail) {
+    getFavoriteIcon (detail) {
       if (this.isFavorite(detail)) {
         return 'glyphicon-heart'
       }
       return 'glyphicon-heart-empty'
     },
-    isFavorite(detail) {
+    isFavorite (detail) {
       const index = this.favoriteList.findIndex((item) => {
         return item.id == detail.id && item.mark == detail.mark
       })
       return index > -1
     },
-    fetchNewsDetail() {
-      this.$common.http.get(this.$common.api.MessageInfo+'?message_id='+this.$route.params.newsid)
+    fetchNewsDetail () {
+      this.$common.http.get(this.$common.api.MessageInfo + '?messageid=' + this.$route.params.messageid)
         .then(response => {
           this.detail.comment_views = response.data.comment_views
           this.detail.content = response.data.content
@@ -238,7 +250,7 @@ export default {
           this.detail.mark = response.data.mark
           this.detail.message_mark = response.data.message_mark
           this.detail.send_time = response.data.send_time
-          this.detail.sender_name = Convert.convertName(response.data.sender_mark , response.data.sender_id)
+          this.detail.sender_name = Convert.convertName(response.data.sender_mark, response.data.sender_id)
           this.detail.title = response.data.title
           // this.detail.comment_name = Convert.convertName(response.data.comment_views.sender_mark , response.data.comment_views.sender_id)
         })
@@ -253,7 +265,7 @@ export default {
               name: 'Jason',
               sender_id: 1,
               sender_mark: 2
-            },{
+            }, {
               comment_tocomment_id: 2,
               content: "新技能get！",
               id: 2,
@@ -261,7 +273,7 @@ export default {
               name: 'Jason',
               sender_id: 2,
               sender_mark: 2
-            },{
+            }, {
               comment_tocomment_id: 1,
               content: "好厉害！瞬间就明白了都，希望作者多多出这样的良心文章",
               id: 1,
@@ -269,7 +281,7 @@ export default {
               name: 'Jason',
               sender_id: 1,
               sender_mark: 2
-            },{
+            }, {
               comment_tocomment_id: 2,
               content: "新技能get！",
               id: 2,
@@ -277,7 +289,7 @@ export default {
               name: 'Jason',
               sender_id: 2,
               sender_mark: 2
-            },{
+            }, {
               comment_tocomment_id: 3,
               content: "见解独到，佩服佩服",
               id: 3,
@@ -287,22 +299,22 @@ export default {
               sender_mark: 2
             }
             ],
-          content: "我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。那么，我们可以在 vue-router 的路由路径中使用『动态路径参数』（dynamic segment）来达到这个效果.一个『路径参数』使用冒号 : 标记。当匹配到一个路由时，参数值会被设置到 this.$route.params，可以在每个组件内使用。于是，我们可以更新 User 的模板，输出当前用户的 ID .提醒一下，当使用路由参数时，例如从 /user/foo 导航到 user/bar，原来的组件实例会被复用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会再被调用。",
-          id: 2,
-          mark: 1,
-          message_mark: 2,
-          send_time: "2017-1-2",
-          sender_id: 1,
-          sender_mark: 1,
-          title: "6660分钟vue快速入门"
-        }
+            content: "我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。那么，我们可以在 vue-router 的路由路径中使用『动态路径参数』（dynamic segment）来达到这个效果.一个『路径参数』使用冒号 : 标记。当匹配到一个路由时，参数值会被设置到 this.$route.params，可以在每个组件内使用。于是，我们可以更新 User 的模板，输出当前用户的 ID .提醒一下，当使用路由参数时，例如从 /user/foo 导航到 user/bar，原来的组件实例会被复用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会再被调用。",
+            id: 2,
+            mark: 1,
+            message_mark: 2,
+            send_time: "2017-1-2",
+            sender_id: 1,
+            sender_mark: 1,
+            title: "6660分钟vue快速入门"
+          }
           this.detail.comment_views = newsDetail.comment_views
           this.detail.content = newsDetail.content
           this.detail.id = newsDetail.id
           this.detail.mark = newsDetail.mark
           this.detail.message_mark = newsDetail.message_mark
           this.detail.send_time = newsDetail.send_time
-          this.detail.sender_name = Convert.convertName(newsDetail.sender_mark , newsDetail.sender_id)
+          this.detail.sender_name = Convert.convertName(newsDetail.sender_mark, newsDetail.sender_id)
           this.detail.title = newsDetail.title
           // this.detail.comment_name = Convert.convertName(newsDetail.comment_views.sender_mark , newsDetail.comment_views.sender_id)
 

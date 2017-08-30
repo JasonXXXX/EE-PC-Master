@@ -2,11 +2,11 @@
   <transition name="el-zoom-in-top">
     <div class="wrap">
       <div class="wrap-img-div">
-        <img class="wrap-img" :src="item.course_image" :alt="item.title">
+        <img class="wrap-img" :src="item.course_image || img" :alt="item.course_title">
       </div>
       <div class="wrap-info">
-        <p class="wrap-info-title">{{item.title}}</p>
-        <span class="wrap-info-addtive">{{$common.strings.course_item_teacher}}: {{item.teachername}}</span>
+        <p class="wrap-info-title">{{item.course_title}}</p>
+        <span class="wrap-info-addtive">{{$common.strings.course_item_teacher}}: {{item.teacher_name}}</span>
         <span class="wrap-info-addtive">{{$common.strings.course_item_time}}: {{item.date}}</span>
       </div>
     </div>
@@ -20,10 +20,18 @@
     margin: 0;
     padding: 12px;
     border-bottom: .5px solid #BDBDBD;
+    transition: all .6s ease;
+  }
+
+  .wrap:hover {
+    box-shadow: 1px 1px 8px #BBBBBB;
+    border-bottom: .5px solid transparent;
   }
 
   .wrap-img-div {
     flex: 1;
+    display: flex;
+    align-items: center;
     padding: 0;
     margin: 0 12px 0 0;
     min-width: 160px;
@@ -47,6 +55,11 @@
     margin: 8px 0;
     color: #424242;
     font-size: 17px;
+    transition: all .6s ease;
+  }
+
+  .wrap-info-title:hover {
+    color: #666666;
   }
 
   .wrap-info-addtive {
@@ -63,8 +76,15 @@
 </style>
 
 <script>
+import Img from '@/assets/html.jpg'
+
 export default {
   name: 'CourseItem',
-  props: ['item']
+  props: ['item'],
+  data () {
+    return {
+      img: Img
+    }
+  }
 }
 </script>

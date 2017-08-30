@@ -85,19 +85,16 @@ export default {
       this.content = this.getPlanDraft.content
     } else if (!this.getPlan.time) {
       //如果在vuex中还没有计划内容，则进行初始化
-      let params = new URLSearchParams()
-
-      params.append('studentid', this.user.userid)
-      
-      this.$common.http.post(this.$common.api.PlanInfo, params)
+      this.$common.http.get(this.$common.api.PlanInfo + '?studentid=' + this.user.userid)
         .then(response => {
-          if (0 === this.$common.jsonUtil.jsonLength(response.data.length)) {
+          if ('null' === this.$common.jsonUtil.jsonLength(response.data.length)) {
             this.time = this.$common.timeUtil.getDate()
             this.content = ''
           } else {
-            this.time = response.data.set_time
-            this.content = response.data.title
+            this.time = response.data.plan_settime
+            this.content = response.data.plan_content
             let plan = {
+              id: response.data.plan_id,
               time: this.time,
               content: this.content
             }
@@ -122,6 +119,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.commit(types.UPDATE_PLAN_DRAFT, {
+          id: this.getPlan.id || 0,
           time: this.$common.timeUtil.getDate(),
           content: this.content
         })
@@ -150,6 +148,8 @@ export default {
     handleSave () {
       let params = new URLSearchParams()
 
+      params.append('plan_id', this.getPlan.id)
+      params.append('operate', 3)
       params.append('plan_title', '')
       params.append('plan_content', this.content)
       params.append('plan_student_id', this.user.userid)

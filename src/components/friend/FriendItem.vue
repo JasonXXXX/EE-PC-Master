@@ -1,6 +1,6 @@
 <template>
   <div class="wrap" @click="handleClick">
-    <img class="wrap-img" :src="item.friend_headimg">
+    <img class="wrap-img" :src="item.friend_headimg || img">
     <span class="wrap-span">{{item.friend_name}}</span>
   </div>
 </template>
@@ -41,10 +41,16 @@
 
 <script>
 import types from '@/store/types'
+import Img from '@/assets/logo.png'
 
 export default {
   name: 'FriendItem',
   props: ['item'],
+  data () {
+    return {
+      img: Img
+    }
+  },
   methods: {
     handleClick () {
       this.$store.commit(types.UPDATE_CHAT_CHATFRIEND, this.item)

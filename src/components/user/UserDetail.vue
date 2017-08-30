@@ -1,28 +1,28 @@
 <template>
 	<div class="config-wrap">
-		<el-collapse class="wrap-collapse" v-model="activeName" accordion>
+		<el-collapse class="wrap-collapse" v-model.trim="activeName" accordion>
 			<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_base_info" name="base">
-				<el-input :placeholder="$common.strings.detail_placeholder_name" icon="information" :autofocus="true" v-model="name">
+				<el-input :placeholder="$common.strings.detail_placeholder_name" icon="information" :autofocus="true" @change="markEdit" v-model.trim="name">
 				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_tel" icon="warning" v-model="tel">
+				<el-input :placeholder="$common.strings.detail_placeholder_tel" icon="warning" @change="markEdit" v-model.trim="tel">
 				</el-input>
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_gender" :fetch-suggestions="queryGenderSuggestions" icon="minus" @select="handleGenderSelect" v-model="gender">
+				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_gender" :fetch-suggestions="queryGenderSuggestions" icon="minus" @select="handleGenderSelect" v-model.trim="gender">
 				</el-autocomplete>
-				<el-input :placeholder="$common.strings.detail_placeholder_address" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" v-model="address">
+				<el-input :placeholder="$common.strings.detail_placeholder_address" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="address">
 				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_ID" icon="more" v-model="ID">
+				<el-input :placeholder="$common.strings.detail_placeholder_ID" icon="more" @change="markEdit" v-model.trim="ID">
 				</el-input>
-				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parentname" icon="information" v-model="parentname">
+				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parentname" icon="information" @change="markEdit" v-model.trim="parentname">
 				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_intro" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" v-model="intro">
+				<el-input :placeholder="$common.strings.detail_placeholder_intro" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="intro">
 				</el-input>
-				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parenttel" icon="warning" v-model="parenttel">
+				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parenttel" icon="warning" @change="markEdit" v-model.trim="parenttel">
 				</el-input>
 			</el-collapse-item>
 			<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_site_info" name="site">
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_sub" :fetch-suggestions="querySubSuggestions" icon="document" @select="handleSubSelect" v-model="sub">
+				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_sub" :fetch-suggestions="querySubSuggestions" icon="document" @select="handleSubSelect" v-model.trim="sub">
 				</el-autocomplete>
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_grade" :fetch-suggestions="queryGradeSuggestions" icon="document" @select="handleGradeSelect" v-model="grade">
+				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_grade" :fetch-suggestions="queryGradeSuggestions" icon="document" @select="handleGradeSelect" v-model.trim="grade">
 				</el-autocomplete>
 			</el-collapse-item>
 		</el-collapse>
@@ -44,27 +44,27 @@
 	.wrap-collapse {
 		flex: 1;
 	}
-	
+
 	.wrap-collapse-item {
 		text-align: left;
 	}
-	
+
 	.wrap-autocom {
 		width: 100%;
 	}
-	
+
 	.wrap-upload {
 		margin: 12px;
 	}
-	
+
 	.wrap-upload-icon {
 		overflow: hidden;
 	}
-	
+
 	.wrap-submit {
 		margin-top: 12px;
 	}
-	
+
 	.wrap-upload-headimg {
 		display: block;
 		width: 160px;
@@ -88,16 +88,16 @@ export default {
 			activeName: 'base',
 			headimg: '',
 			name: '',
-			tel: '189****2356',
-			address: 'xx省xx区xx市',
-			ID: '44xxxxxxxxxxxxxxx8',
-			parentname: 'xxx',
-			parenttel: '135****8954',
+			tel: '',
+			address: '',
+			ID: '',
+			parentname: '',
+			parenttel: '',
 			intro: '',
 			ifModified: false,
-			grade: '高二',
-			sub: '英语',
-			gender: '男',
+			grade: '',
+			sub: '',
+			gender: '',
 			genderSuggestions: [
 				{ value: this.$common.strings.common_male },
 				{ value: this.$common.strings.common_female }
@@ -153,12 +153,13 @@ export default {
 				this.parenttel = response.data.parenttel
 				this.grade = Convert.convertGradeNumber(response.data.grade)
 				this.sub = Convert.convertSubNumber(response.data.sub)
-				this.gender = response.data.gender
+				this.gender = Convert.convertGender(response.data.gender)
 			}).catch(error => {
 
 			})
 	},
 	beforeRouteLeave (to, from, next) {
+		console.log(this.ifModified)
 		if (this.ifModified) {
 			let params = new URLSearchParams()
 
@@ -166,7 +167,7 @@ export default {
 			params.append('userid', this.user.userid)
 			params.append('name', this.name)
 			params.append('tel', this.tel)
-			params.append('gender', this.gender)
+			params.append('gender', Convert.convertMark(this.gender))
 			params.append('address', this.address)
 			params.append('intro', this.intro)
 			params.append('grademark', Convert.convertMark(this.grademark))
@@ -186,13 +187,13 @@ export default {
 					})
 					this.$message({
 						type: 'success',
-						message: $common.strings.detail_after_save
+						message: this.$common.strings.detail_after_save
 					})
 					next()
 				}).catch(error => {
-					this.$confirm($common.strings.detail_leave_without_save, $common.strings.dialog_warning_type, {
-						confirmButtonText: $common.strings.dialog_button_yes,
-						cancelButtonText: $common.strings.dialog_button_no,
+					this.$confirm(this.$common.strings.detail_leave_without_save, this.$common.strings.dialog_warning_type, {
+						confirmButtonText: this.$common.strings.dialog_button_yes,
+						cancelButtonText: this.$common.strings.dialog_button_no,
 						type: 'warning'
 					}).then(() => {
 						//保存失败,再次进行保存
@@ -207,13 +208,13 @@ export default {
 
 								this.$message({
 									type: 'success',
-									message: $common.strings.detail_after_save
+									message: this.$common.strings.detail_after_save
 								})
 								next()
 							}).catch(error => {
 								this.$message({
 									type: 'success',
-									message: $common.strings.detail_fail_and_leave
+									message: this.$common.strings.detail_fail_and_leave
 								})
 								next()
 							})
@@ -246,13 +247,13 @@ export default {
 			cb(results)
 		},
 		handleGenderSelect (value) {
-			// this.gender = value.value
+			this.markEdit()
 		},
 		handleGradeSelect (value) {
-			// this.grade = value.value
+			this.markEdit()
 		},
 		handleSubSelect (value) {
-			// this.sub = value.value
+			this.markEdit()
 		},
 		createFilter (queryString) {
 			return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) === 0)
@@ -287,35 +288,6 @@ export default {
 						message: this.$common.strings.detail_after_headimg_save_fail
 					})
 				})
-		},
-		backward () {
-			if (this.ifModified) {
-				MessageBox.confirm('返回将丢失修改的内容。是否返回？').then(action => {
-					this.$router.back()
-				})
-			} else {
-				this.$router.back()
-			}
-		},
-		modifyName () {
-			MessageBox.prompt('请输入姓名:').then(({ value, action }) => {
-				this.name = value
-				this.ifModified = true
-			})
-		},
-		modifyTel () {
-			MessageBox.prompt('请输入手机号:').then(({ value, action }) => {
-				if (/1[0-9]{10}/.test(value)) {
-					this.tel = value
-					this.ifModified = true
-				} else {
-					Toast({
-						message: '请输入正确的手机号',
-						position: 'bottom',
-						duration: 2000
-					})
-				}
-			})
 		},
 		modify () {
 			let params = new URLSearchParams()

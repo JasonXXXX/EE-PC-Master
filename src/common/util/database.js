@@ -9,10 +9,55 @@ let db = {
   name: 'ChatDB',
   version: parseInt(localStorage.getItem(Storage.dbversion)) || 1,
   store_chat_record: 'ChatDBStore',
-  store_course_view: 'CourseViewStore',
+  /**
+   * 记录course浏览记录,
+   * 格式
+   * {
+   *   id: ,
+   *   text: ,
+   *   date:
+   * }
+   */
+  store_course: 'CourseStore',
+  /**
+   * 记录note书写记录,
+   * 格式
+   * {
+   *   id: ,
+   *   text: ,
+   *   date:
+   * }
+   */
   store_note: 'NoteStore',
+  /**
+   * 记录plan书写记录,
+   * 格式
+   * {
+   *   id: ,
+   *   text: ,
+   *   date:
+   * }
+   */
   store_plan: 'PlanStore',
+  /**
+   * 记录homework做作业记录,
+   * 格式
+   * {
+   *   id: ,
+   *   text: ,
+   *   date:
+   * }
+   */
   store_homework: 'HomeworkStore',
+  /**
+   * 记录course浏览记录,
+   * 格式
+   * {
+   *   id: ,
+   *   text: ,
+   *   date:
+   * }
+   */
   store_friend: 'FriendStore',
 }
 

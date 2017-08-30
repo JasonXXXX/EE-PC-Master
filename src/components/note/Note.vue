@@ -69,10 +69,8 @@ export default {
       })
     },
     fetchNotes() {
-      this.loading = true;
-      this.$common.http.get(this.$common.api.StudentNoteList+'?studentid='+this.user.userid+'$index='+this.user.index)
+      this.$common.http.get(this.$common.api.StudentNoteList+'?studentid='+this.user.userid+'&index='+this.notes.length)
         .then(response => {
-          this.loading = false;
           if(this.$common.jsonUtil.jsonLength(response.data)>0) {
             this.$store.commit(types.ADD_NOTE_NOTES, response.data)
           }
@@ -80,22 +78,6 @@ export default {
           }
         })
         .catch(error => {
-          this.loading = false;
-          //测试数据
-          let notes = [{
-            title: '掌握vue的数组渲染、模板语法、数据绑定、路由管理等基础知识，并尝试实践应用',
-            set_time: '2017-04-21',
-            id: 3
-          }, {
-            title: '学习vue跟angularjs的不同',
-            set_time: '2017-04-21',
-            id: 2
-          }, {
-            title: '学会用react-native做hybrid开发',
-            set_time: '2017-04-21',
-            id: 1
-          }]
-          this.$store.commit(types.ADD_NOTE_NOTES, notes)
         })
     }
   },

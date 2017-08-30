@@ -72,7 +72,7 @@
           })
           .catch(error => {
             //测试数据
-            let china = [
+            /*let china = [
               {
                 id: 1,
                 headimg: Logo,
@@ -188,7 +188,7 @@
                 submark: 1
               }
             ]
-            this.$store.commit(types.ADD_TEACHER_CHINA, china)
+            this.$store.commit(types.ADD_TEACHER_CHINA, china)*/
           })
 	    },
     },

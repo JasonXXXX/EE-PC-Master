@@ -87,7 +87,8 @@ export default {
           to: this.chatfriend.friend_id,
           content: this.text,
           failed: true,
-          unopen: false
+          unopen: false,
+          date: new Date()
         }
         this.text = ''
         this.$store.commit(types.ADD_CHAT_CHAT, chat)

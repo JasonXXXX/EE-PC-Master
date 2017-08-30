@@ -76,93 +76,24 @@ export default {
     fetchCourses () {
       let params = new URLSearchParams()
 
-      params.append('studentid', this.user.userid)
       params.append('index', this.getCourses.length)
-      params.append('isdone1', this.cbroomState)
+      params.append('coursemark', this.cbroomState)
 
       this.$common.http.post(this.$common.api.CourseList, params)
         .then(response => {
           this.$store.commit(types.ADD_CBROOM_MICROLECTURE, response.data)
         })
         .catch(error => {
-          //测试数据
-          let microlectures = [{
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-
-          },
-          {
-            course_id: 1,
-            coursemark: this.cbroomState,
-            course_image: Be,
-            content: '掌握be动词的用法',
-            teachername: 'jason',
-            duration: '2h',
-            course_video: Be,
-            fee: 99.99
-
-          }]
-          this.$store.commit(types.ADD_CBROOM_MICROLECTURE, microlectures)
         })
     }
   },
   computed: {
     ...mapGetters([
-      'user',
       'cbroomState',
       'cbcourses'
     ]),
     getCourses () {
-      return this.cbcourses.filter(item => item.coursemark == this.cbroomState)
+      return this.cbcourses.filter(item => item.course_mark == this.cbroomState)
     }
   },
   watch: {
