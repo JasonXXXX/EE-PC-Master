@@ -18,7 +18,7 @@
     border-bottom: .5px solid #BDBDBD;
   }
 
-   .header-delete {
+  .header-delete {
     margin: 0 12px 0 0;
     padding: 4px 12px;
   }
@@ -83,7 +83,7 @@ export default {
       // isfinish为 1 表示已完成的作业
       params.append('isfinish', 1)
       params.append('index', this.homeworkDone.length)
-      params.append('studentid', this.user.userid)
+      params.append('student_id', this.user.userid)
 
       this.$common.http.post(this.$common.api.HomeworkList, params)
         .then(response => {

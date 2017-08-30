@@ -2,7 +2,7 @@
   <transition name="el-fade-in">
     <div class="wrap">
       <img :src="item.headimg" class="wrap-img">
-      <p class="wrap-name">{{item.name}}</p>
+      <p class="wrap-name">{{item.teacher_name}}</p>
       <span class="wrap-intro">{{item.intro}}</span>
     </div>
   </transition>

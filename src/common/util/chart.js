@@ -6,6 +6,8 @@ import 'chart.js'
 
 const defaultChartType = 'bar'
 
+const Types = ['bar', 'radar', 'polarArea', 'pie', 'bubble']
+
 const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
 const defaultDataLabel = 'HIDE'
@@ -41,6 +43,9 @@ const defaultBorderColor = [
 ]
 
 const defaultOptions = {
+  tooltips: {
+    enabled: false
+  },
   scales: {
     yAxes: [
       {
@@ -49,7 +54,8 @@ const defaultOptions = {
         }
       }
     ]
-  }
+  },
+  events: []
 }
 
 export default {
@@ -61,7 +67,7 @@ export default {
     })
   },
   drawChart(ele, labels, data, options, bdwidth, type, datalabel) {
-    return this.draw(ele, type || defaultChartType, {
+    return this.draw(ele, type || Types[Math.floor(Math.random(1) * 10 % Types.length)], {
       labels: labels,
       datasets: [
         {

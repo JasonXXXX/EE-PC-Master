@@ -10,18 +10,18 @@
 </template>
 
 <style scoped>
-.header {
-  display: flex;
-  flex-direction: row-reverse;
-  margin: 4px 0;
-  padding: 4px 8px 8px 8px;
-  border-bottom: .5px solid #BDBDBD;
-}
+  .header {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 4px 0;
+    padding: 4px 8px 8px 8px;
+    border-bottom: .5px solid #BDBDBD;
+  }
 
-.header-delete {
-  margin: 0 12px 0 0;
-  padding: 4px 12px;
-}
+  .header-delete {
+    margin: 0 12px 0 0;
+    padding: 4px 12px;
+  }
 </style>
 
 <script>
@@ -34,30 +34,30 @@ export default {
   components: {
     HomeworkItem
   },
-  data() {
+  data () {
     return {
       selectall: false,
       noneSelect: true
     }
   },
-  created() {
+  created () {
     this.$store.commit(types.UPDATE_HOMEWORK_ISDONE, false)
     if (!this.undonecalled) {
       this.fetchHomework()
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.$store.commit(types.HOMEWORK_SELECT_NONE)
   },
   methods: {
-    handleChange(event) {
+    handleChange (event) {
       if (event.target.checked) {
         this.$store.commit(types.HOMEWORK_SELECT_ALL, true)
       } else {
         this.$store.commit(types.HOMEWORK_SELECT_NONE)
       }
     },
-    handleDeleteSelected() {
+    handleDeleteSelected () {
       this.$confirm($common.strings.homework_confirm_clear_all, $common.strings.dialog_warning_type, {
         confirmButtonText: $common.strings.dialog_button_yes,
         cancelButtonText: $common.strings.dialog_button_no,
@@ -78,13 +78,13 @@ export default {
 
       })
     },
-    fetchHomework() {
+    fetchHomework () {
       let params = new URLSearchParams()
 
       // isfinish为 2 表示未完成的作业
       params.append('isfinish', 2)
       params.append('index', this.homeworkUndone.length)
-      params.append('studentid', this.user.userid)
+      params.append('student_id', this.user.userid)
 
       this.$common.http.post(this.$common.api.HomeworkList, params)
         .then(response => {
@@ -122,7 +122,7 @@ export default {
     ])
   },
   watch: {
-    homeworkSelected() {
+    homeworkSelected () {
       this.selectall = this.homeworkSelected.length === this.homeworkUndone.length
     }
   }

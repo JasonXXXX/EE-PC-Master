@@ -45,7 +45,7 @@ export default {
   //收藏
   Messagemark: 'MessagemarkServletMobile',
   //课程列表
-  CourseList: 'CourseRecordQueryServletMobile',
+  CourseList: 'CourseListServletMobile',
   //微课课程信息列表
   MicrocourseInfo: 'MicrocourseInfoServletMobile',
   //课程信息列表

@@ -2,12 +2,12 @@
   <transition name="el-zoom-in-top">
     <div class="wrap">
       <div class="wrap-summary">
-        <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
+        <p class="wrap-summary-title" @click="routerToDetail">{{item.message_title}}</p>
         <p class="wrap-summary-detail">
-          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark!=4"></i>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark!=4">{{item.message_like}}</span>
-          <icon class="wrap-summary-detail-star_count" v-if="item.mark==4" name="commenting"></icon>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark==4">{{item.message_like}}</span>
+          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.message_mark!=4"></i>
+          <span class="wrap-summary-detail-star_count" v-if="item.message_mark!=4">{{item.message_like}}</span>
+          <icon class="wrap-summary-detail-star_count" v-if="item.message_mark==4" name="commenting"></icon>
+          <span class="wrap-summary-detail-star_count" v-if="item.message_mark==4">{{item.message_like}}</span>
           <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
           <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
         </p>
@@ -64,13 +64,15 @@
 
 <script>
 import 'vue-awesome/icons/commenting'
+import types from '@/store/types'
 
 export default {
   name: 'ForumItem',
   props: ['item'],
   methods: {
     routerToDetail () {
-      this.$router.push('/' + (this.item.mark==1? 'news': 'discover'))
+      this.$store.commit(types.UPDATE_FORUM_MESSAGEID, this.item.message_id)
+      this.$router.push('/' + (this.item.message_mark == 1 ? 'news' : 'discover'))
     }
   }
 }

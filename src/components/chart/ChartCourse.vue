@@ -4,8 +4,16 @@
       <el-menu-item class="wrap-menu-item" index="1">最近三个月</el-menu-item>
       <el-menu-item class="wrap-menu-item" index="2">全部</el-menu-item>
     </el-menu>
-    <canvas id="canvas-threemonth" v-show="activeIndex==='1'"></canvas>
-    <canvas id="canvas-alltime" v-show="activeIndex==='2'"></canvas>
+    <el-select class="wrap-select" v-model="year" placeholder="xxxx年" v-if="activeIndex==='2' && years.length" @change="handleYearChange">
+      <el-option v-for="item in years" :key="item" :label="item" :value="item">
+      </el-option>
+    </el-select>
+    <el-select class="wrap-select" v-model="month" placeholder="xx月" v-if="activeIndex==='2' && months.length" @change="handleMonthChange">
+      <el-option v-for="item in months" :key="item" :label="item" :value="item">
+      </el-option>
+    </el-select>
+    <canvas id="canvas-threemonth"></canvas>
+    <!-- <canvas id="canvas-alltime"></canvas> -->
   </div>
 </template>
 
@@ -17,7 +25,8 @@
     /* box-shadow: 1px 1px 8px #BBBBBB; */
   }
 
-  .wrap-menu-item {
+  .wrap-menu-item,
+  .wrap-select {
     overflow: hidden;
   }
 </style>
@@ -43,46 +52,46 @@ export default {
           date: new Date('2015-08-18')
         },
         {
-          date: new Date('2015-08-18')
+          date: new Date('2015-08-19')
         },
         {
-          date: new Date('2016-06-18')
+          date: new Date('2016-03-18')
         },
         {
-          date: new Date('2016-07-18')
+          date: new Date('2016-05-03')
+        },
+        {
+          date: new Date('2016-08-28')
         },
         {
           date: new Date('2016-08-18')
         },
         {
-          date: new Date('2016-08-18')
+          date: new Date('2017-01-12')
         },
         {
-          date: new Date('2017-01-16')
-        },
-        {
-          date: new Date('2017-03-16')
+          date: new Date('2017-03-06')
         },
         {
           date: new Date('2017-03-16')
         },
         {
-          date: new Date('2017-04-16')
+          date: new Date('2017-04-26')
         },
         {
-          date: new Date('2017-05-16')
+          date: new Date('2017-05-22')
         },
         {
-          date: new Date('2017-05-16')
+          date: new Date('2017-05-27')
         },
         {
-          date: new Date('2017-06-18')
+          date: new Date('2017-06-28')
         },
         {
-          date: new Date('2017-06-16')
+          date: new Date('2017-06-29')
         },
         {
-          date: new Date('2017-06-18')
+          date: new Date('2017-06-30')
         },
         {
           date: new Date('2017-07-13')
@@ -148,7 +157,10 @@ export default {
           date: new Date('2017-08-26')
         },
       ],
-      item: ''
+      year: '',
+      years: [],
+      month: '',
+      months: [],
     }
   },
   created () {
@@ -168,6 +180,8 @@ export default {
       }
     },
     threeMonth () {
+      this.ctx.height = this.ctx.height
+
       this.ctx = document.getElementById('canvas-threemonth').getContext('2d')
 
       const data = Handler.courseLastThreeMonths(this.courses)
@@ -175,59 +189,65 @@ export default {
       Draw.drawChart(this.ctx, [(now - 1) + '月', now + '月', (now + 1) + '月'], data)
     },
     allTime () {
-      this.ctx = document.getElementById('canvas-alltime').getContext('2d')
+      this.ctx.height = this.ctx.height
 
-      const m = Handler.metric(this.courses)
-      const labels = Handler.renderLabels(this.courses)
+      const dl = this.getDataAndLabels(this.courses)
+      this.years = dl.labels
+
+      Draw.drawChart(this.ctx, dl.labels, dl.data)
+    },
+    getDataAndLabels (dataset) {
+      const m = Handler.metric(dataset)
+      const labels = Handler.renderLabels(dataset)
 
       let data
 
       switch (m.type) {
         case 'month':
-          // for (let i = 0; i <= m.end - m.start; i++) {
-          //   labels[i] = (m.start + i) + '月'
-          // }
-          data = Handler.courseAllTime(this.courses, m.type, labels.length, m.start)
+          data = Handler.courseAllTime(dataset, m.type, labels.length, m.start)
           break
         case 'day-ellipse':
-          // const day = m.end
-          // labels[0] = (day - 11) + '号及以前'
-          // labels[1] = (day - 10) + '号'
-          // labels[2] = (day - 9) + '号'
-          // labels[3] = (day - 8) + '号'
-          // labels[4] = (day - 7) + '号'
-          // labels[5] = (day - 6) + '号'
-          // labels[6] = (day - 5) + '号'
-          // labels[7] = (day - 4) + '号'
-          // labels[8] = (day - 3) + '号'
-          // labels[9] = (day - 2) + '号'
-          // labels[10] = (day - 1) + '号'
-          // labels[11] = day + '号'
-          // console.log('end=' + m.end)
-          data = Handler.courseAllTime(this.courses, m.type, labels.length, m.end)
+          data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
           break
         case 'day':
-          // for (let i = 0; i <= m.end - m.start; i++) {
-          //   labels[i] = (m.start + i) + '号'
-          // }
-          data = Handler.courseAllTime(this.courses, m.type, labels.length, m.end)
+          data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
           break
         default:
-          data = Handler.courseAllTime(this.courses, m.type, labels.length)
+          data = Handler.courseAllTime(dataset, m.type, labels.length)
           break
       }
-      const _courses = this.courses
-      Draw.drawChartWithFunctions(this.ctx, labels, data, {
-        clickYear (e, legendItem) {
-          const label = legendItem[0]._model.label
-        }
-      })
+
+      return {
+        data: data,
+        labels: labels
+      }
+    },
+    handleYearChange (val) {
+      this.ctx.height = this.ctx.height
+
+      const y = parseInt(val.substr(0, val.indexOf('年')))
+      const dataset = this.courses.filter(item => item.date.getFullYear() == y)
+
+      const dl = this.getDataAndLabels(dataset)
+
+      this.months = dl.labels
+      this.month = ''
+
+      Draw.drawChart(this.ctx, dl.labels, dl.data)
+    },
+    handleMonthChange (val) {
+      this.ctx.height = this.ctx.height
+
+      const y = parseInt(this.year.substr(0, this.year.indexOf('年')))
+      const m = parseInt(val.substr(0, val.indexOf('月'))) - 1
+      const dataset = this.courses.filter(item => (item.date.getFullYear() === y && item.date.getMonth() === m))
+
+      const dl = this.getDataAndLabels(dataset)
+
+      Draw.drawChart(this.ctx, dl.labels, dl.data)
     }
   },
-  watch: {
-    item (oldVal, newVal) {
-      console.log(oldVal, newVal)
-    }
+  computed: {
   }
 }
 </script>

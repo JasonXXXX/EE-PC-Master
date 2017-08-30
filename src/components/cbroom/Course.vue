@@ -77,7 +77,7 @@ export default {
       let params = new URLSearchParams()
 
       params.append('index', this.getCourses.length)
-      params.append('coursemark', this.cbroomState)
+      params.append('course_mark', this.cbroomState)
 
       this.$common.http.post(this.$common.api.CourseList, params)
         .then(response => {

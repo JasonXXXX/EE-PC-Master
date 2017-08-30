@@ -57,18 +57,18 @@ export default {
     switch (m.type) {
       case 'year-ellipse':
         const year = new Date().getFullYear()
-        labels[0] = (year - 7) + '及以前'
-        labels[1] = year - 6
-        labels[2] = year - 5
-        labels[3] = year - 4
-        labels[4] = year - 3
-        labels[5] = year - 2
-        labels[6] = year - 1
-        labels[7] = year
+        labels[0] = (year - 7) + '年及以前'
+        labels[1] = (year - 6) + '年'
+        labels[2] = (year - 5) + '年'
+        labels[3] = (year - 4) + '年'
+        labels[4] = (year - 3) + '年'
+        labels[5] = (year - 2) + '年'
+        labels[6] = (year - 1) + '年'
+        labels[7] = year + '年'
         break
       case 'year':
         for (let i = 0; i <= m.end - m.start; i++) {
-          labels[i] = (m.start + i)
+          labels[i] = (m.start + i) + '年'
         }
         break
       case 'month':

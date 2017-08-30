@@ -95,12 +95,12 @@ const router = new Router({
           ]
         },
         {
-          path: 'news/:messageid',
+          path: 'news',
           name: 'News',
           component: resolve => require(['~/forum/NewsDetail'], resolve)
         },
         {
-          path: 'discover/:messageid',
+          path: 'discover',
           name: 'Discover',
           component: resolve => require(['~/forum/DiscoverDetail'], resolve)
         },

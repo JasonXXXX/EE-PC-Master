@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="config-wrap wrap">
     <header class="wrap-header">
       <i class="el-icon-d-arrow-left" @click="back"></i>
     </header>
@@ -176,7 +176,6 @@ export default {
     CommentItem
   },
   created () {
-    console.log(this.$route.params.messageid)
     this.fetchNewsDetail()
   },
   methods: {
@@ -242,16 +241,16 @@ export default {
       return index > -1
     },
     fetchNewsDetail () {
-      this.$common.http.get(this.$common.api.MessageInfo + '?messageid=' + this.$route.params.messageid)
+      this.$common.http.get(this.$common.api.MessageInfo + '?messageid=' + this.messageid)
         .then(response => {
           this.detail.comment_views = response.data.comment_views
-          this.detail.content = response.data.content
-          this.detail.id = response.data.id
-          this.detail.mark = response.data.mark
+          this.detail.content = response.data.message_content
+          this.detail.id = response.data.message_id
+          this.detail.mark = response.data.message_mark
           this.detail.message_mark = response.data.message_mark
           this.detail.send_time = response.data.send_time
           this.detail.sender_name = Convert.convertName(response.data.sender_mark, response.data.sender_id)
-          this.detail.title = response.data.title
+          this.detail.title = response.data.message_title
           // this.detail.comment_name = Convert.convertName(response.data.comment_views.sender_mark , response.data.comment_views.sender_id)
         })
         .catch(error => {
@@ -325,6 +324,7 @@ export default {
   computed: {
     ...mapGetters([
       'favoriteList',
+      'messageid',
       'user'
     ])
   },

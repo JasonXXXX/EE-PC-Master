@@ -3,8 +3,8 @@
     <div :class="['div', {highlight:edit}]">
       <div class="wrap">
         <div class="wrap-content">
-          <el-tooltip :disabled="edit" :content="'我的答案: '+item.content" placement="bottom" effect="light">
-            <span class="content-problem">{{item.title}}</span>
+          <el-tooltip :disabled="edit" :content="'我的答案: '+item.work_content" placement="bottom" effect="light">
+            <span class="content-problem">{{item.work_title}}</span>
           </el-tooltip>
           <span class="content-time">{{item.uptime}}</span>
         </div>
@@ -118,7 +118,7 @@ export default {
     return {
       checked: false,
       edit: false,
-      answer: this.item.content
+      answer: this.item.work_content
     }
   },
   methods: {
@@ -174,10 +174,10 @@ export default {
           }
           this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
           this.$message({
-              type: 'success',
-              message: this.$common.strings.homework_after_save_message
-            })
-            this.edit = false
+            type: 'success',
+            message: this.$common.strings.homework_after_save_message
+          })
+          this.edit = false
         })
       }).catch(() => {
       })
@@ -189,7 +189,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.commit(types.DELETE_HOMEWORK_HOMEWORK, {
-          mark: this.item.content.length!=0,
+          mark: this.item.content.length != 0,
           id: this.item.id
         })
         this.answer = ''
@@ -211,7 +211,7 @@ export default {
     homeworkSelected () {
       if (this.homeworkSelected.length > 0) {
         this.homeworkSelected.every(item => {
-          this.checked = item===this.item.id
+          this.checked = item === this.item.id
           return !this.checked
         })
       } else {
@@ -221,7 +221,7 @@ export default {
     'item.content': {
       handler (newVal, oldVal) {
         this.answer = newVal
-        if (newVal=='') {
+        if (newVal == '') {
           this.checked = false
         }
       },

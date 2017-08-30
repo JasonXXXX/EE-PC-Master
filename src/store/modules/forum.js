@@ -1,25 +1,27 @@
 import types from '@/store/types'
 import atypes from '@/store/action-types'
-import {loadFavorite, saveFavorite, deleteFavorite} from '@/common/util/cache'
+import { loadFavorite, saveFavorite, deleteFavorite } from '@/common/util/cache'
 
 const state = {
   forums: [],
   favoriteList: loadFavorite(),
-  forumState: 1
+  forumState: 1,
+  messageid: 0
 }
 
 const getters = {
   forums: state => state.forums,
   forumState: state => state.forumState,
   favoriteList: state => state.favoriteList,
+  messageid: state => state.messageid,
 }
 
 const actions = {
-  [atypes.SAVE_FAVORITE_LIST]({commit}, detail) {
+  [atypes.SAVE_FAVORITE_LIST]({ commit }, detail) {
     commit(types.SET_FAVORITE_LIST, saveFavorite(detail))
   },
 
-  [atypes.DELETE_FAVORITE_LIST]({commit}, detail) {
+  [atypes.DELETE_FAVORITE_LIST]({ commit }, detail) {
     commit(types.SET_FAVORITE_LIST, deleteFavorite(detail))
   }
 }
@@ -31,8 +33,8 @@ const mutations = {
       state.forums.push(Object.freeze(item))
     })
   },
-  [types.ADD_FORUM_NEWSDETAIL](state, {data}) {
-    if(!state.newsDetail) {
+  [types.ADD_FORUM_NEWSDETAIL](state, { data }) {
+    if (!state.newsDetail) {
       state.newsDetail = []
     }
     data.forEach(item => {
@@ -42,8 +44,11 @@ const mutations = {
   [types.SET_FAVORITE_LIST](state, list) {
     state.favoriteList = list
   },
-  [types.UPDATE_FORUM_STATE] (state, forumState) {
+  [types.UPDATE_FORUM_STATE](state, forumState) {
     state.forumState = forumState
+  },
+  [types.UPDATE_FORUM_MESSAGEID](state, messageid) {
+    state.messageid = messageid
   }
 }
 
