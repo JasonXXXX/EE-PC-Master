@@ -12,8 +12,7 @@
       <el-option v-for="item in months" :key="item" :label="item" :value="item">
       </el-option>
     </el-select>
-    <canvas id="canvas-threemonth"></canvas>
-    <!-- <canvas id="canvas-alltime"></canvas> -->
+    <canvas id="canvas"></canvas>
   </div>
 </template>
 
@@ -22,7 +21,6 @@
     flex: 1;
     margin: 0 4px;
     padding: 0 8px;
-    /* box-shadow: 1px 1px 8px #BBBBBB; */
   }
 
   .wrap-menu-item,
@@ -167,7 +165,7 @@ export default {
 
   },
   mounted () {
-    this.ctx = document.getElementById('canvas-threemonth').getContext('2d')
+    this.ctx = document.getElementById('canvas').getContext('2d')
     this.threeMonth()
   },
   methods: {
@@ -182,69 +180,90 @@ export default {
     threeMonth () {
       this.ctx.height = this.ctx.height
 
-      this.ctx = document.getElementById('canvas-threemonth').getContext('2d')
-
       const data = Handler.courseLastThreeMonths(this.courses)
       const now = new Date().getMonth()
-      Draw.drawChart(this.ctx, [(now - 1) + '月', now + '月', (now + 1) + '月'], data)
+      Draw.drawChart(this.ctx, [(now - 2) + '月', (now - 1) + '月', (now) + '月'], data)
     },
     allTime () {
-      this.ctx.height = this.ctx.height
+      // this.ctx.height = this.ctx.height
 
       const dl = this.getDataAndLabels(this.courses)
-      this.years = dl.labels
+      if (dl) {
+        if (dl.labels[0].includes('年')) {
+          this.years = dl.labels
+        } else if (dl.labels[0].includes('月')) {
+          this.year = '' + dl.data[0].date.getFullYear()
+          this.months = dl.labels
+        } else { }
+      } else { }
 
       Draw.drawChart(this.ctx, dl.labels, dl.data)
     },
     getDataAndLabels (dataset) {
       const m = Handler.metric(dataset)
-      const labels = Handler.renderLabels(dataset)
+      if (m) {
+        const labels = Handler.renderLabels(dataset)
 
-      let data
+        let data
 
-      switch (m.type) {
-        case 'month':
-          data = Handler.courseAllTime(dataset, m.type, labels.length, m.start)
-          break
-        case 'day-ellipse':
-          data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
-          break
-        case 'day':
-          data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
-          break
-        default:
-          data = Handler.courseAllTime(dataset, m.type, labels.length)
-          break
-      }
+        switch (m.type) {
+          case 'month':
+            data = Handler.courseAllTime(dataset, m.type, labels.length, m.start)
+            break
+          case 'day-ellipse':
+            data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
+            break
+          case 'day':
+            data = Handler.courseAllTime(dataset, m.type, labels.length, m.end)
+            break
+          default:
+            data = Handler.courseAllTime(dataset, m.type, labels.length)
+            break
+        }
 
-      return {
-        data: data,
-        labels: labels
+        return {
+          data: data,
+          labels: labels
+        }
+      } else {
+        return m
       }
     },
     handleYearChange (val) {
-      this.ctx.height = this.ctx.height
+      // this.ctx.height = this.ctx.height
 
       const y = parseInt(val.substr(0, val.indexOf('年')))
       const dataset = this.courses.filter(item => item.date.getFullYear() == y)
 
-      const dl = this.getDataAndLabels(dataset)
+      console.log(dataset)
 
-      this.months = dl.labels
-      this.month = ''
+      if (dataset.length) {
+        const dl = this.getDataAndLabels(dataset)
 
-      Draw.drawChart(this.ctx, dl.labels, dl.data)
+        this.months = dl.labels
+        this.month = ''
+
+        Draw.drawChart(this.ctx, dl.labels, dl.data)
+      } else {
+        this.$message(val + '没有学习课程的记录')
+      }
     },
     handleMonthChange (val) {
-      this.ctx.height = this.ctx.height
+      // this.ctx.height = this.ctx.height
 
       const y = parseInt(this.year.substr(0, this.year.indexOf('年')))
       const m = parseInt(val.substr(0, val.indexOf('月'))) - 1
       const dataset = this.courses.filter(item => (item.date.getFullYear() === y && item.date.getMonth() === m))
 
-      const dl = this.getDataAndLabels(dataset)
+      console.log(dataset)
 
-      Draw.drawChart(this.ctx, dl.labels, dl.data)
+      if (dataset.length) {
+        const dl = this.getDataAndLabels(dataset)
+
+        Draw.drawChart(this.ctx, dl.labels, dl.data)
+      } else {
+        this.$message(val + '没有学习课程的记录')
+      }
     }
   },
   computed: {

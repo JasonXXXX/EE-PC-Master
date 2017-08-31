@@ -6,7 +6,7 @@ import 'chart.js'
 
 const defaultChartType = 'bar'
 
-const Types = ['bar', 'radar', 'polarArea', 'pie', 'bubble']
+const Types = ['bar', 'polarArea', 'pie', 'bubble']
 
 const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
 
