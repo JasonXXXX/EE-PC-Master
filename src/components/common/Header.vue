@@ -13,7 +13,7 @@
           <el-menu-item class="wrap-menu-item" index="/me">
             <icon name="user-circle-o" class="wrap-icon"></icon>{{$common.strings.common_menu_me}}</el-menu-item>
         </el-menu>
-        <el-autocomplete class="wrap-search" placeholder="搜索" :trigger-on-focus="true" :fetch-suggestions="querySearchSuggestions" icon="search" @select="handleSearchSelect" v-model.trim="search"></el-autocomplete>
+        <el-autocomplete class="wrap-search" placeholder="搜索课程/资讯/教师" :trigger-on-focus="true" :fetch-suggestions="querySearchSuggestions" icon="search" @select="handleSearchSelect" v-model.trim="search"></el-autocomplete>
         <el-dropdown menu-align="end" @command="handleCommand">
           <span class="el-dropdown-link">
             <img class="wrap-user-img" :src="headimg">
@@ -98,6 +98,7 @@ import headimg from '@/assets/headimg.png'
 import { mapGetters } from 'vuex'
 import types from '@/store/types'
 import Storage from '@/common/util/storage'
+import Convert from '@/common/util/convert'
 
 import 'vue-awesome/icons/rss'
 import 'vue-awesome/icons/graduation-cap'
@@ -115,7 +116,7 @@ export default {
     }
   },
   created () {
-    this.initSearchSuggestions()
+    // this.initSearchSuggestions()
   },
   methods: {
     routerToHome () {
@@ -125,54 +126,30 @@ export default {
       this.$router.push(command)
     },
     initSearchSuggestions () {
-      this.$store.commit(types.ADD_SEARCH_RECORDS, JSON.parse(localStorage.getItem(Storage.search_record)) || [])
+      const s = localStorage.getItem(Storage.search_record)
+      if(s) {
+        this.$store.commit(types.ADD_SEARCH_RECORDS, JSON.parse(s))
+      }
 
       this.cbcourses.forEach(item => {
-        this.searchs.push({
-          value: '课程: ' + item.content,
+        this.$store.commit(types.ADD_SEARCH_SEARCH, {
+          value: '课程: ' + item.course_content,
           id: item.course_id
         })
       })
       this.forums.forEach(item => {
-        this.searchs.push({
-          value: '论坛: ' + item.title,
-          id: item.id
-        })
-      })
-      this.friends.forEach(item => {
-        this.searchs.push({
-          value: '好友: ' + item.friend_name,
-          id: item.friend_id
-        })
-      })
-      this.homeworkUndone.forEach(item => {
-        this.searchs.push({
-          value: '作业: ' + item.title,
-          id: item.id
-        })
-      })
-      this.homeworkDone.forEach(item => {
-        this.searchs.push({
-          value: '作业: ' + item.title,
-          id: item.id
-        })
-      })
-      this.notes.forEach(item => {
-        this.searchs.push({
-          value: '笔记: ' + item.title,
-          id: item.id
+        this.$store.commit(types.ADD_SEARCH_SEARCH, {
+          value: '资讯: ' + item.message_title,
+          id: item.id,
+          mark: item.mark
         })
       })
       this.teachers.forEach(item => {
-        this.searchs.push({
-          value: '教师: ' + item.name,
-          id: item.id
+        this.$store.commit(types.ADD_SEARCH_SEARCH, {
+          value: '教师: ' + item.teacher_name + ',' + Convert.convertSubNumber(item.teacher_mark),
+          id: item.teacherid
         })
       })
-      if (this.getPlan.content) {
-        this.searchs.push({
-          value: '计划: ' + this.getPlan.content
-        })
       }
     },
     querySearchSuggestions (queryString, cb) {
@@ -184,11 +161,73 @@ export default {
       return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) !== -1)
     },
     handleSearchSelect (value) {
-      if (value.value === '请输入关键字') {
+      // 处理搜索时的点击事件
+      this.$store.commit(types.ADD_SEARCH_RECORD, value)
+
+      const text = value.value
+      if (text === '请输入关键字') {
         this.search = ''
       } else {
-
+        if (text.startsWith('课程')) {
+          this.$store.commit(types.UPDATE_CBROOM_COURSE, this.courses.find(item => item.course_id==value.id))
+          this.$router.push('/coursedetail')
+        } else if (text.startsWith('资讯')) {
+          this.$store.commit(types.UPDATE_FORUM_MESSAGEID, value.id)
+          this.$router.push(value.mark===4? '/discoverdetail': 'newsdetail')
+        } else if (text.startsWith('教师')) {
+          this.$store.commit(types.UPDATE_TEACHER_TEACHERID, value.id)
+          this.$router.push('/teacherdetail')
+        }
       }
+    },
+    fetchTeachers () {
+      let params = new URLSearchParams()
+
+      params.append('submark', 0)
+      params.append('index', 0)
+
+      return this.$common.http.post(this.$common.api.TeacherList, params)
+        // .then(response => {
+        //   this.$store.commit(types.ADD_TEACHER_CHINA, response.data)
+        // })
+        // .catch(error => {
+        // })
+    },
+    fetchForums () {
+      let params = new URLSearchParams()
+
+      params.append('message_mark', this.forumState)
+      params.append('index', 0)
+
+      return this.$common.http.post(this.$common.api.MessageList, params)
+        // .then(response => {
+        //   this.$store.commit(types.ADD_FORUM_NEWS, response.data)
+        // })
+        // .catch(error => {
+        // })
+    },
+    fetchCourses () {
+      let params = new URLSearchParams()
+
+      params.append('index', 0)
+      params.append('course_mark', this.cbroomState)
+
+      return this.$common.http.post(this.$common.api.CourseList, params)
+        // .then(response => {
+        //   this.$store.commit(types.ADD_CBROOM_MICROLECTURE, response.data)
+        // })
+        // .catch(error => {
+        // })
+    },
+    fetchAll() {
+      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers()]
+      this.$common.http.all(fetchs).then(this.$common.http.spread((courses, forums, teachers) => {
+        this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses)
+        this.$store.commit(types.ADD_FORUM_NEWS, forums)
+        this.$store.commit(types.ADD_TEACHER_CHINA, teachers)
+
+        this.initSearchSuggestions()
+      })).catch(error => {})
     }
   },
   computed: {
@@ -196,11 +235,6 @@ export default {
       'headerSelected',
       'cbcourses',
       'forums',
-      'friends',
-      'homeworkUndone',
-      'homeworkDone',
-      'notes',
-      'getPlan',
       'teachers',
       'searchs'
     ])
@@ -211,26 +245,6 @@ export default {
       this.initSearchSuggestions()
     },
     cbcourses () {
-      this.searchs.splice(0, this.searchs.length - 1)
-      this.initSearchSuggestions()
-    },
-    friends () {
-      this.searchs.splice(0, this.searchs.length - 1)
-      this.initSearchSuggestions()
-    },
-    homeworkUndone () {
-      this.searchs.splice(0, this.searchs.length - 1)
-      this.initSearchSuggestions()
-    },
-    homeworkDone () {
-      this.searchs.splice(0, this.searchs.length - 1)
-      this.initSearchSuggestions()
-    },
-    notes () {
-      this.searchs.splice(0, this.searchs.length - 1)
-      this.initSearchSuggestions()
-    },
-    getPlan () {
       this.searchs.splice(0, this.searchs.length - 1)
       this.initSearchSuggestions()
     },

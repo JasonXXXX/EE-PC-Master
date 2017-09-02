@@ -64,10 +64,6 @@ export default {
 
       this.$common.http.post(this.$common.api.TeacherList, params)
         .then(response => {
-          if (this.$common.jsonUtil.jsonLength(response.data) < 5) {
-
-            this.allLoaded = true
-          }
           this.$store.commit(types.ADD_TEACHER_CHINA, response.data)
         })
         .catch(error => {
@@ -80,12 +76,12 @@ export default {
       'teachermark'
     ]),
     getChunkTeachers () {
-      let chunkArr = [],
+      const chunkArr = [],
         rols = 3,
         data = this.teachers.filter(item => item.submark == this.teachermark)
 
       for (let i = 0; i < data.length; i += rols) {
-        let tempArr = []
+        const tempArr = []
         for (let j = 0; j < rols; j++) {
           tempArr.push(data[i + j])
         }

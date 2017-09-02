@@ -15,5 +15,6 @@ export default {
   dbversion: 'dbversion',
   videourl: 'videourl',
   videopic: 'videopic',
-  search_record: 'search_record'
+  search_record: 'search_record',
+  searchs: 'searchs',
 }

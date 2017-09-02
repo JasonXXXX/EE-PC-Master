@@ -37,6 +37,11 @@ const router = new Router({
           component: resolve => require(['~/teacher/Teacher'], resolve)
         },
         {
+          path: 'teacherdetail',
+          name: 'TeacherDetail',
+          component: resolve => require(['~/teacher/TeacherDetail'], resolve)
+        },
+        {
           path: 'course',
           name: 'Course',
           component: resolve => require(['~/cbroom/Course'], resolve)

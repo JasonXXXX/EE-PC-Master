@@ -2,12 +2,14 @@ import types from '@/store/types'
 
 const state = {
   teachers: [],
-  teachermark: 1
+  teachermark: 1,
+  teacherid: 1,
 }
 
 const getters = {
   teachers: state => state.teachers,
-  teachermark: state => state.teachermark
+  teachermark: state => state.teachermark,
+  teacherid: state => state.teacherid,
 }
 
 const actions = {
@@ -22,6 +24,9 @@ const mutations = {
   },
   [types.UPDATE_TEACHER_TEACHERMARK](state, mark) {
     state.teachermark = mark
+  },
+  [types.UPDATE_TEACHER_TEACHERID](state, id) {
+    state.teacherid = id
   }
 }
 

@@ -2,12 +2,12 @@
   <transition name="el-zoom-in-top">
     <div class="wrap">
       <div class="wrap-summary">
-        <p class="wrap-summary-title" @click="routerToDetail">{{item.message_title}}</p>
+        <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
         <p class="wrap-summary-detail">
-          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.message_mark!=4"></i>
-          <span class="wrap-summary-detail-star_count" v-if="item.message_mark!=4">{{item.message_like}}</span>
-          <icon class="wrap-summary-detail-star_count" v-if="item.message_mark==4" name="commenting"></icon>
-          <span class="wrap-summary-detail-star_count" v-if="item.message_mark==4">{{item.message_like}}</span>
+          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark!=4"></i>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark!=4">{{item.message_like}}</span>
+          <icon class="wrap-summary-detail-star_count" v-if="item.mark==4" name="commenting"></icon>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==4">{{item.message_mark}}</span>
           <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
           <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
         </p>

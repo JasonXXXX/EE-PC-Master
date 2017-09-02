@@ -6,12 +6,12 @@
     </div>
     <video-player :video="video"></video-player>
     <div class="course-info">
-      <h3>{{this.course.course_content}}</h3>
+      <h3>{{course.course_content}}</h3>
       <p>
-        <span class="wrap-info-addtive" v-if="this.course.course_mark===1 || this.course.course_mark===2">{{$common.strings.cbroom_course_teacher}}: {{this.course.teacher_name}}</span>
-        <span class="wrap-info-addtive" v-if="this.course.course_mark===1">{{$common.strings.cbroom_course_duration}}: {{this.course.duration || '未知'}}</span>
-        <span class="wrap-info-addtive" v-if="this.course.course_mark===2">{{$common.strings.cbroom_course_fee}}:
-          <span class="info-fee">&yen;{{this.course.fee || '未定'}}</span>
+        <span class="wrap-info-addtive" v-if="course.course_mark===1 || course.course_mark===2">{{$common.strings.cbroom_course_teacher}}: {{course.teacher_name}}</span>
+        <span class="wrap-info-addtive" v-if="course.course_mark===1">{{$common.strings.cbroom_course_duration}}: {{course.duration || '未知'}}</span>
+        <span class="wrap-info-addtive" v-if="course.course_mark===2">{{$common.strings.cbroom_course_fee}}:
+          <span class="info-fee">&yen;{{course.fee || '未定'}}</span>
         </span>
       </p>
     </div>
