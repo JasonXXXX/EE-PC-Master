@@ -22,113 +22,113 @@
 </template>
 
 <style scoped>
-  .div {
-    padding: 8px;
-    text-align: left;
-    border-bottom: .5px solid #BDBDBD;
-    transition: all .8s ease;
-  }
+.div {
+  padding: 8px;
+  text-align: left;
+  border-bottom: .5px solid #BDBDBD;
+  transition: all .8s ease;
+}
 
-  .div:hover {
-    box-shadow: 2px 2px 16px #999999;
-  }
+.div:hover {
+  box-shadow: 2px 2px 16px #999999;
+}
 
-  .wrap {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-  }
+.wrap {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
 
-  .wrap-p {
-    flex: 1;
-    margin-right: 12px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-align: left;
-  }
+.wrap-p {
+  flex: 1;
+  margin-right: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
 
-  .wrap-input-div {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    margin: 0;
-    border-bottom: .5px solid #BDBDBD;
-  }
+.wrap-input-div {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 0;
+  border-bottom: .5px solid #BDBDBD;
+}
 
-  .wrap-input {
-    flex: 1;
-    font-size: 15px;
-    margin-right: 6px;
-    color: #3454BB;
-    outline: none;
-    border: none;
-  }
+.wrap-input {
+  flex: 1;
+  font-size: 15px;
+  margin-right: 6px;
+  color: #3454BB;
+  outline: none;
+  border: none;
+}
 
-  .wrap-content {
-    flex-grow: 1;
-    text-align: left;
-  }
+.wrap-content {
+  flex-grow: 1;
+  text-align: left;
+}
 
-  .content-problem {
-    display: block;
-    margin: 4px 0;
-    padding: 0;
-    color: #424242;
-    font-size: 17px;
-    text-overflow: ellipsis;
-  }
+.content-problem {
+  display: block;
+  margin: 4px 0;
+  padding: 0;
+  color: #424242;
+  font-size: 17px;
+  text-overflow: ellipsis;
+}
 
-  .content-time {
-    color: #A9A9A9;
-    font-size: 13px;
-  }
+.content-time {
+  color: #A9A9A9;
+  font-size: 13px;
+}
 
-  .wrap-ctrl {
-    display: flex;
-    align-items: flex-start;
-  }
+.wrap-ctrl {
+  display: flex;
+  align-items: flex-start;
+}
 
-  .wrap-ctrl-icon {
-    margin: 0 8px;
-    padding: 2px;
-    color: #989898;
-    transition: all .6s ease;
-  }
+.wrap-ctrl-icon {
+  margin: 0 8px;
+  padding: 2px;
+  color: #989898;
+  transition: all .6s ease;
+}
 
-  .wrap-ctrl-icon:hover,
-  .wrap-ctrl-icon:active {
-    color: #2155dC;
-    border-bottom: .5px solid #999999;
-  }
+.wrap-ctrl-icon:hover,
+.wrap-ctrl-icon:active {
+  color: #2155dC;
+  border-bottom: .5px solid #999999;
+}
 
-  .ctrl-check {
-    margin: 0 0 0 8px;
-  }
+.ctrl-check {
+  margin: 0 0 0 8px;
+}
 
-  .answer {
-    text-align: left;
-  }
+.answer {
+  text-align: left;
+}
 
-  .highlight {
-    margin: 4px 2px;
-    /* border: .5px solid #2155dC; */
-    box-shadow: 2px 2px 16px #999999;
-  }
+.highlight {
+  margin: 4px 2px;
+  /* border: .5px solid #2155dC; */
+  box-shadow: 2px 2px 16px #999999;
+}
 
-  .note-ta {
-    padding: 12px 8px;
-    width: 100%;
-    line-height: 24px;
-    font-size: 15px;
-    color: #747474;
-    outline: none;
-    border: none;
-  }
+.note-ta {
+  padding: 12px 8px;
+  width: 100%;
+  line-height: 24px;
+  font-size: 15px;
+  color: #747474;
+  outline: none;
+  border: none;
+}
 
-  .note-hint {
-    font-size: 12px;
-    color: #898989;
-  }
+.note-hint {
+  font-size: 12px;
+  color: #898989;
+}
 </style>
 
 <script>
@@ -138,36 +138,37 @@ import types from '@/store/types'
 export default {
   name: 'NoteItem',
   props: ['item'],
-  data () {
+  data() {
     return {
       checked: false,
-      note: this.item.title,
-      content: this.item.content || '',
+      note: this.item.note_title,
+      content: this.item.note_content || '',
       edit: false
     }
   },
   methods: {
-    handleChange (event) {
+    handleChange(event) {
       if (event.target.checked) {
         this.$store.commit(types.ADD_NOTE_SELECTED, this.item.id)
       } else {
         this.$store.commit(types.DELETE_NOTE_SELECTED, this.item.id)
       }
     },
-    handleEdit () {
+    handleEdit() {
       this.edit = true
     },
-    handleClose () {
+    handleClose() {
       this.edit = false
     },
-    handleSave () {
+    handleSave() {
       this.$confirm('确定更新笔记?', '确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'confirm'
       }).then(() => {
-        let params = new URLSearchParams()
+        const params = new URLSearchParams()
 
+        params.append('operate', 3)
         params.append('note_id', this.item.id || '')
         params.append('note_title', this.item.title)
         params.append('note_content', this.item.content)
@@ -198,18 +199,34 @@ export default {
       }).catch(() => {
       })
     },
-    hadnleDelete () {
+    hadnleDelete() {
       this.$confirm('确定删除该笔记?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.commit(types.DELETE_NOTE_NOTE, this.item.id)
+        const params = new URLSearchParams()
 
-        this.$message({
-          type: 'success',
-          message: '笔记已删除!'
-        })
+        params.append('operate', 2)
+        params.append('note_id', this.item.id || '')
+
+        this.$common.http.post(this.$common.api.StudentNoteUpdate, params)
+          .then(response => {
+            if (response.data.result === 'true') {
+              this.$store.commit(types.DELETE_NOTE_NOTE, this.item.id)
+
+              this.$message({
+                type: 'success',
+                message: '笔记已删除!'
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '删除失败,请重新删除!'
+              })
+            }
+          }).catch(error => {
+          })
       }).catch(() => {
       })
     }
@@ -220,7 +237,7 @@ export default {
     ])
   },
   watch: {
-    noteSelected () {
+    noteSelected() {
       if (this.noteSelected.length > 0) {
         this.noteSelected.every(item => {
           this.checked = item === this.item.id
@@ -231,7 +248,7 @@ export default {
       }
     },
     'item.title': {
-      handler (newVal, oldVal) {
+      handler(newVal, oldVal) {
         this.note = newVal
         if (newVal == '') {
           this.checked = false

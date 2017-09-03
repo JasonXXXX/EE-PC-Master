@@ -21,15 +21,30 @@ export default {
   },
   convertImageToBase64(file) {
     return new Promise((resolve, reject) => {
-      let reader = new FileReader()
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+
       reader.onloadend = e => {
+        console.log('获取图片成功')
         resolve(e.target.result)
       }
-      reader.readAsDataURL(file)
+
+      reader.onerror = e => {
+        reject('获取图片失败')
+      }
+
+      reader.onabort = e => {
+        reject('获取图片中断')
+      }
+
+      reader.onloadstart = e => {
+        console.log('开始获取图片')
+      }
+
     })
   },
   convertBase64ToImage(data) {
-    
+
   },
   scaleImage(imageData, quality) {
     return new Promise((resolve, reject) => {

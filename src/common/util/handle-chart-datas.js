@@ -57,7 +57,7 @@ export default {
     switch (m.type) {
       case 'year-ellipse':
         const year = new Date().getFullYear()
-        labels[0] = (year - 7) + '年及以前'
+        labels[0] = (year - 7) + '年及之前'
         labels[1] = (year - 6) + '年'
         labels[2] = (year - 5) + '年'
         labels[3] = (year - 4) + '年'
@@ -77,19 +77,18 @@ export default {
         }
         break
       case 'day-ellipse':
-        const day = m.end
-        labels[0] = (day - 11) + '号及以前'
-        labels[1] = (day - 10) + '号'
-        labels[2] = (day - 9) + '号'
-        labels[3] = (day - 8) + '号'
-        labels[4] = (day - 7) + '号'
-        labels[5] = (day - 6) + '号'
-        labels[6] = (day - 5) + '号'
-        labels[7] = (day - 4) + '号'
-        labels[8] = (day - 3) + '号'
-        labels[9] = (day - 2) + '号'
-        labels[10] = (day - 1) + '号'
-        labels[11] = day + '号'
+        labels[0] = (m.end - 11) + '号及之前'
+        labels[1] = (m.end - 10) + '号'
+        labels[2] = (m.end - 9) + '号'
+        labels[3] = (m.end - 8) + '号'
+        labels[4] = (m.end - 7) + '号'
+        labels[5] = (m.end - 6) + '号'
+        labels[6] = (m.end - 5) + '号'
+        labels[7] = (m.end - 4) + '号'
+        labels[8] = (m.end - 3) + '号'
+        labels[9] = (m.end - 2) + '号'
+        labels[10] = (m.end - 1) + '号'
+        labels[11] = m.end + '号'
         break
       case 'day':
         for (let i = 0; i <= m.end - m.start; i++) {
@@ -111,12 +110,12 @@ export default {
     result.fill(0)
 
     courses.forEach(item => {
-      if (nowYear === item.date.getFullYear() && nowMonth - item.date.getMonth() < 3) {
-        result[(item.date.getMonth() + 1) % 3]++
+      if (nowYear == item.date.getFullYear() && (nowMonth - item.date.getMonth() < 3)) {
+        result[(nowMonth - item.date.getMonth())]++
       }
     })
 
-    return result
+    return result.reverse()
   },
   courseAllTime(courses, type, len, start) {
     //返回全部的学习情况

@@ -27,52 +27,59 @@
 			</el-collapse-item>
 		</el-collapse>
 		<div class="wrap-upload">
-			<el-upload v-if="!headimgs.length" class="upload-demo" drag ref="upload" name="headimg" :action="$common.api.UpdateHeadimg" :file-list="headimgs" :data="payload" :auto-upload="false" :on-change="handleChange">
-				<i class="el-icon-upload wrap-upload-icon"></i>
-				<div class="el-upload__text">{{$common.strings.detail_upload_drag_hint}}
-					<em>{{$common.strings.detail_upload_click_text}}</em>
-				</div>
-				<div class="el-upload__tip" slot="tip">{{$common.strings.detail_upload_limit}}</div>
-			</el-upload>
-			<img class="wrap-upload-headimg" :src="headimg" v-if="headimgs.length">
-			<el-button class="wrap-submit" slot="trigger" size="medium" type="primary" v-if="headimgs.length" @click="handleSubmit">{{$common.strings.detail_upload_submit}}</el-button>
+			<img class="wrap-upload-headimg" :src="headimg">
+			<div v-if="!selected">
+				<el-button class="wrap-submit" slot="trigger" size="medium" v-if="!selected" @click="selectImage">修改头像
+					<i class="el-icon-edit el-icon--right"></i>
+				</el-button>
+				<input type="file" id="inputer" accept="image/png,image/jpg,image/jpeg" ref="inputer" hidden @change="handleChange">
+				<p class="wrap-hint">{{$common.strings.detail_upload_limit}}</p>
+			</div>
+			<el-button class="wrap-submit" slot="trigger" size="medium" v-if="selected" @click="handleCancle">取消</el-button>
+			<el-button class="wrap-submit" slot="trigger" size="medium" type="primary" v-if="selected" @click="handleSubmit">{{$common.strings.detail_upload_submit}}</el-button>
 		</div>
 	</div>
 </template>
 
 <style scoped>
-	.wrap-collapse {
-		flex: 1;
-	}
+.wrap-collapse {
+	flex: 1;
+}
 
-	.wrap-collapse-item {
-		text-align: left;
-	}
+.wrap-collapse-item {
+	text-align: left;
+}
 
-	.wrap-autocom {
-		width: 100%;
-	}
+.wrap-autocom {
+	width: 100%;
+}
 
-	.wrap-upload {
-		margin: 12px;
-	}
+.wrap-upload {
+	padding: 12px;
+}
 
-	.wrap-upload-icon {
-		overflow: hidden;
-	}
+.wrap-upload-icon {
+	overflow: hidden;
+}
 
-	.wrap-submit {
-		margin-top: 12px;
-	}
+.wrap-hint {
+	color: #BBBBBB;
+	font-size: 12px;
+}
 
-	.wrap-upload-headimg {
-		display: block;
-		width: 160px;
-		height: 160px;
-		margin: 12px;
-		padding: 12px 24px;
-		border: .5px dashed #AAAAAA;
-	}
+.wrap-submit {
+	margin-top: 12px;
+}
+
+.wrap-upload-headimg {
+	display: block;
+	width: 160px;
+	height: 160px;
+	margin: 12px auto;
+	padding: 12px 24px;
+	/*border: .5px dashed #AAAAAA;*/
+	box-shadow: 1px 1px 32px #AAAAAA;
+}
 </style>
 
 <script>
@@ -83,7 +90,7 @@ import Storage from '@/common/util/storage'
 import ImageUtil from '@/common/util/image'
 
 export default {
-	data () {
+	data() {
 		return {
 			activeName: 'base',
 			headimg: '',
@@ -128,11 +135,11 @@ export default {
 				{ "value": this.$common.strings.common_sub_geology },
 			],
 			uploadURL: '',
-			headimgs: [],
+			selected: false,
 			payload: {}
 		}
 	},
-	created () {
+	created() {
 		this.payload = {
 			'user': this.user.user,
 			'userid': this.user.userid
@@ -158,8 +165,10 @@ export default {
 
 			})
 	},
-	beforeRouteLeave (to, from, next) {
-		console.log(this.ifModified)
+	mounted() {
+		// 单独获取头像
+	},
+	beforeRouteLeave(to, from, next) {
 		if (this.ifModified) {
 			let params = new URLSearchParams()
 
@@ -228,45 +237,49 @@ export default {
 		}
 	},
 	methods: {
-		queryGenderSuggestions (queryString, cb) {
+		queryGenderSuggestions(queryString, cb) {
 			const suggestions = this.genderSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		querySubSuggestions (queryString, cb) {
+		querySubSuggestions(queryString, cb) {
 			const suggestions = this.subSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		queryGradeSuggestions (queryString, cb) {
+		queryGradeSuggestions(queryString, cb) {
 			const suggestions = this.gradeSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		handleGenderSelect (value) {
+		handleGenderSelect(value) {
 			this.markEdit()
 		},
-		handleGradeSelect (value) {
+		handleGradeSelect(value) {
 			this.markEdit()
 		},
-		handleSubSelect (value) {
+		handleSubSelect(value) {
 			this.markEdit()
 		},
-		createFilter (queryString) {
+		createFilter(queryString) {
 			return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) === 0)
 		},
-		handleChange (file, fileList) {
-			this.headimgs.push(file)
-			ImageUtil.convertImageToBase64(this.headimgs[0]).then(result => {
+		selectImage() {
+			this.$refs.inputer.click()
+		},
+		handleChange() {
+			this.selected = true
+			this.headimg = this.$refs.inputer.files[0]
+			ImageUtil.convertImageToBase64(this.headimg).then(result => {
 				this.headimg = result
 			}).catch(error => {
-
+				console.log(error)
 			})
 		},
-		handleSubmit () {
+		handleSubmit() {
 			// this.$refs.upload.submit()
 			let params = new URLSearchParams()
 
@@ -289,7 +302,11 @@ export default {
 					})
 				})
 		},
-		modify () {
+		handleCancle() {
+			this.selected = false
+			this.headimg = this.user.headimg
+		},
+		modify() {
 			let params = new URLSearchParams()
 
 			params.append('user', this.user.user)
@@ -318,12 +335,12 @@ export default {
 
 				})
 		},
-		markEdit () {
+		markEdit() {
 			this.ifModified = true
 		}
 	},
 	filters: {
-		genderFilter (value) {
+		genderFilter(value) {
 			return 1 === value ? '男' : '女'
 		}
 	},

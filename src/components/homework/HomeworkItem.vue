@@ -6,7 +6,7 @@
           <el-tooltip :disabled="edit" :content="'我的答案: '+item.work_content" placement="bottom" effect="light">
             <span class="content-problem">{{item.work_title}}</span>
           </el-tooltip>
-          <span class="content-time">{{item.uptime}}</span>
+          <span class="content-time">{{item.work_uptime}}</span>
         </div>
         <div class="wrap-ctrl">
           <i class="el-icon-edit wrap-ctrl-icon" v-if="!edit" @click="handleEdit"></i>
@@ -27,84 +27,84 @@
 </template>
 
 <style scoped>
-  .div {
-    border-bottom: .5px solid #BDBDBD;
-    padding: 12px 8px 12px 12px;
-    transition: height .3s ease;
-  }
+.div {
+  border-bottom: .5px solid #BDBDBD;
+  padding: 12px 8px 12px 12px;
+  transition: height .3s ease;
+}
 
-  .wrap {
-    display: flex;
-    align-items: center;
-  }
+.wrap {
+  display: flex;
+  align-items: center;
+}
 
-  .wrap-content {
-    flex-grow: 1;
-    text-align: left;
-  }
+.wrap-content {
+  flex-grow: 1;
+  text-align: left;
+}
 
-  .content-problem {
-    display: block;
-    margin: 4px 0;
-    padding: 0;
-    color: #424242;
-    font-size: 17px;
-    text-overflow: ellipsis;
-  }
+.content-problem {
+  display: block;
+  margin: 4px 0;
+  padding: 0;
+  color: #424242;
+  font-size: 17px;
+  text-overflow: ellipsis;
+}
 
-  .content-time {
-    color: #A9A9A9;
-    font-size: 13px;
-  }
+.content-time {
+  color: #A9A9A9;
+  font-size: 13px;
+}
 
-  .wrap-ctrl {
-    display: flex;
-    align-items: center;
-  }
+.wrap-ctrl {
+  display: flex;
+  align-items: center;
+}
 
-  .wrap-ctrl-icon {
-    margin: 0 8px;
-    padding: 2px;
-    color: #989898;
-    transition: all .6s ease;
-  }
+.wrap-ctrl-icon {
+  margin: 0 8px;
+  padding: 2px;
+  color: #989898;
+  transition: all .6s ease;
+}
 
-  .wrap-ctrl-icon:hover,
-  .wrap-ctrl-icon:active {
-    color: #2155dC;
-    border-bottom: .5px solid #999999;
-  }
+.wrap-ctrl-icon:hover,
+.wrap-ctrl-icon:active {
+  color: #2155dC;
+  border-bottom: .5px solid #999999;
+}
 
-  .ctrl-check {
-    margin: 0 0 0 8px;
-  }
+.ctrl-check {
+  margin: 0 0 0 8px;
+}
 
-  .answer {
-    text-align: left;
-  }
+.answer {
+  text-align: left;
+}
 
-  .highlight {
-    margin: 4px 2px;
-    /* border: .5px solid #2155dC; */
-    box-shadow: 2px 2px 16px #999999;
-  }
+.highlight {
+  margin: 4px 2px;
+  /* border: .5px solid #2155dC; */
+  box-shadow: 2px 2px 16px #999999;
+}
 
-  .answer-ta {
-    margin: 12px -12px 0 -12px;
-    padding: 12px;
-    width: 100%;
-    line-height: 24px;
-    font-size: 15px;
-    color: #747474;
-    outline: none;
-    border: none;
-    border-top: .5px solid #BDBDBD;
-  }
+.answer-ta {
+  margin: 12px -12px 0 -12px;
+  padding: 12px;
+  width: 100%;
+  line-height: 24px;
+  font-size: 15px;
+  color: #747474;
+  outline: none;
+  border: none;
+  border-top: .5px solid #BDBDBD;
+}
 
-  .answer-hint {
-    font-size: 12px;
-    color: #898989;
-  }
+.answer-hint {
+  font-size: 12px;
+  color: #898989;
+}
 </style>
 
 <script>
@@ -114,7 +114,7 @@ import types from '@/store/types'
 export default {
   name: 'HomeworkItem',
   props: ['item'],
-  data () {
+  data() {
     return {
       checked: false,
       edit: false,
@@ -122,20 +122,20 @@ export default {
     }
   },
   methods: {
-    handleChange (event) {
+    handleChange(event) {
       if (event.target.checked) {
         this.$store.commit(types.ADD_HOMEWORK_SELECTED, this.item.id)
       } else {
         this.$store.commit(types.DELETE_HOMEWORK_SELECTED, this.item.id)
       }
     },
-    handleEdit () {
+    handleEdit() {
       this.edit = true
     },
-    handleClose () {
+    handleClose() {
       this.edit = false
     },
-    handleSave () {
+    handleSave() {
       this.$confirm('确定更新答案?', '确认', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -143,8 +143,11 @@ export default {
       }).then(() => {
         let params = new URLSearchParams()
 
-        params.append('work_id', this.item.id)
+        // 其他参数不用传给后台
+        params.append('work_id', this.item.work_id)
+        // params.append('work_title', this.item.work_title)
         params.append('work_content', this.answer)
+        params.append('operate', 3)
 
         this.$common.http.post(this.$common.api.HomeworkUpdate, params).then(response => {
           if ('true' == response.data.result) {
@@ -166,23 +169,23 @@ export default {
             })
           }
         }).catch(error => {
-          //测试结果
-          let data = {
-            id: this.item.id,
-            content: this.answer,
-            uptime: this.$common.timeUtil.getDate()
-          }
-          this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
-          this.$message({
-            type: 'success',
-            message: this.$common.strings.homework_after_save_message
-          })
-          this.edit = false
+          // //测试结果
+          // let data = {
+          //   id: this.item.id,
+          //   content: this.answer,
+          //   uptime: this.$common.timeUtil.getDate()
+          // }
+          // this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
+          // this.$message({
+          //   type: 'success',
+          //   message: this.$common.strings.homework_after_save_message
+          // })
+          // this.edit = false
         })
       }).catch(() => {
       })
     },
-    hadnleDelete () {
+    hadnleDelete() {
       this.$confirm(this.$common.strings.homework_warning_message, this.$common.strings.dialog_warning_type, {
         confirmButtonText: this.$common.strings.dialog_button_yes,
         cancelButtonText: this.$common.strings.dialog_button_no,
@@ -208,7 +211,7 @@ export default {
     ])
   },
   watch: {
-    homeworkSelected () {
+    homeworkSelected() {
       if (this.homeworkSelected.length > 0) {
         this.homeworkSelected.every(item => {
           this.checked = item === this.item.id
@@ -219,7 +222,7 @@ export default {
       }
     },
     'item.content': {
-      handler (newVal, oldVal) {
+      handler(newVal, oldVal) {
         this.answer = newVal
         if (newVal == '') {
           this.checked = false

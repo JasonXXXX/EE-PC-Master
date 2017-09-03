@@ -150,7 +150,6 @@ export default {
           id: item.teacherid
         })
       })
-      }
     },
     querySearchSuggestions (queryString, cb) {
       const results = queryString ? this.searchs.filter(this.createFilter(queryString)) : this.searchs

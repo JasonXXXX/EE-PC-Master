@@ -1,27 +1,27 @@
 <template>
   <div>
-    <header class="header" v-if="homeworkDone.length">
+    <header class="header" v-if="getHomeworkDone.length">
       <el-checkbox v-model="selectall" @change="handleChange">{{$common.strings.homework_select_all}}</el-checkbox>
       <el-button class="header-delete" type="primary" size="small" :disabled="!homeworkSelected.length" @click="handleDeleteSelected">{{$common.strings.homework_clear_all}}</el-button>
     </header>
-    <homework-item v-for="item in homeworkDone" :key="item.id" :item="item"></homework-item>
-    <span class="config-no-list-hint" v-if="!homeworkDone.length">{{$common.strings.no_homework_hint}}</span>
+    <homework-item v-for="item in getHomeworkDone" :key="item.id" :item="item"></homework-item>
+    <span class="config-no-list-hint" v-if="!getHomeworkDone.length">{{$common.strings.no_homework_hint}}</span>
   </div>
 </template>
 
 <style scoped>
-  .header {
-    display: flex;
-    flex-direction: row-reverse;
-    margin: 4px 0;
-    padding: 4px 8px 8px 8px;
-    border-bottom: .5px solid #BDBDBD;
-  }
+.header {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 4px 0;
+  padding: 4px 8px 8px 8px;
+  border-bottom: .5px solid #BDBDBD;
+}
 
-  .header-delete {
-    margin: 0 12px 0 0;
-    padding: 4px 12px;
-  }
+.header-delete {
+  margin: 0 12px 0 0;
+  padding: 4px 12px;
+}
 </style>
 
 <script>
@@ -34,30 +34,30 @@ export default {
   components: {
     HomeworkItem
   },
-  data () {
+  data() {
     return {
       selectall: false,
       noneSelect: true
     }
   },
-  created () {
+  created() {
     this.$store.commit(types.UPDATE_HOMEWORK_ISDONE, true)
-    if (!this.donecalled) {
+    if (!this.donecalled && this.homeworkDone.length === 0) {
       this.fetchHomework()
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$store.commit(types.HOMEWORK_SELECT_NONE)
   },
   methods: {
-    handleChange (event) {
+    handleChange(event) {
       if (event.target.checked) {
         this.$store.commit(types.HOMEWORK_SELECT_ALL, false)
       } else {
         this.$store.commit(types.HOMEWORK_SELECT_NONE)
       }
     },
-    handleDeleteSelected () {
+    handleDeleteSelected() {
       this.$confirm($common.strings.homework_confirm_clear_all, $common.strings.dialog_warning_type, {
         confirmButtonText: $common.strings.dialog_button_yes,
         cancelButtonText: $common.strings.dialog_button_no,
@@ -68,7 +68,7 @@ export default {
             mark: false,
             id: item
           })
-        });
+        })
 
         this.$message({
           type: 'success',
@@ -77,7 +77,7 @@ export default {
       }).catch(() => {
       })
     },
-    fetchHomework () {
+    fetchHomework() {
       let params = new URLSearchParams()
 
       // isfinish为 1 表示已完成的作业
@@ -118,10 +118,13 @@ export default {
       'homeworkDone',
       'homeworkSelected',
       'donecalled'
-    ])
+    ]),
+    getHomeworkDone() {
+      return this.homeworkDone.filter(item => item.work_finish == 1)
+    }
   },
   watch: {
-    homeworkSelected () {
+    homeworkSelected() {
       this.selectall = this.homeworkSelected.length === this.homeworkDone.length
     }
   }

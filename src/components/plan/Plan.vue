@@ -13,56 +13,56 @@
 </template>
 
 <style lang="css" scoped>
-  .wrap {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-  }
+.wrap {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
 
-  .wrap-header {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    padding: 8px;
-    border-bottom: .5px solid #BDBDBD;
-  }
+.wrap-header {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 8px;
+  border-bottom: .5px solid #BDBDBD;
+}
 
-  .wrap-ctrl-icon {
-    margin: 0 8px;
-    padding: 2px;
-    color: #989898;
-    transition: all .6s ease;
-  }
+.wrap-ctrl-icon {
+  margin: 0 8px;
+  padding: 2px;
+  color: #989898;
+  transition: all .6s ease;
+}
 
-  .wrap-ctrl-icon:hover,
-  .wrap-ctrl-icon:active {
-    color: #2155dC;
-    border-bottom: .5px solid #999999;
-  }
+.wrap-ctrl-icon:hover,
+.wrap-ctrl-icon:active {
+  color: #2155dC;
+  border-bottom: .5px solid #999999;
+}
 
-  .wrap-time {
-    padding: 8px;
-    margin: 0;
-    font-size: 13px;
-    color: #999999;
-    text-align: left;
-  }
+.wrap-time {
+  padding: 8px;
+  margin: 0;
+  font-size: 13px;
+  color: #999999;
+  text-align: left;
+}
 
-  .wrap-content {
-    padding: 8px;
-    font-size: 15px;
-    color: #424242;
-    outline: none;
-    border: none;
-  }
+.wrap-content {
+  padding: 8px;
+  font-size: 15px;
+  color: #424242;
+  outline: none;
+  border: none;
+}
 
-  .wrap-hint {
-    margin: 0;
-    padding: 0 8px;
-    color: #B9B9B9;
-    font-size: 12px;
-    text-align: left;
-  }
+.wrap-hint {
+  margin: 0;
+  padding: 0 8px;
+  color: #B9B9B9;
+  font-size: 12px;
+  text-align: left;
+}
 </style>
 
 <script>
@@ -71,7 +71,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'Plan',
-  data () {
+  data() {
     return {
       time: '',
       content: '',
@@ -79,15 +79,15 @@ export default {
       error: false
     }
   },
-  created () {
+  created() {
     if (this.getPlanDraft.time) {
       this.time = this.getPlanDraft.time
       this.content = this.getPlanDraft.content
     } else if (!this.getPlan.time) {
       //如果在vuex中还没有计划内容，则进行初始化
-      this.$common.http.get(this.$common.api.PlanInfo + '?studentid=' + this.user.userid)
+      this.$common.http.get(this.$common.api.PlanInfo + '?student_id=' + this.user.userid)
         .then(response => {
-          if ('null' === this.$common.jsonUtil.jsonLength(response.data.length)) {
+          if ('null' === response.data) {
             this.time = this.$common.timeUtil.getDate()
             this.content = ''
           } else {
@@ -138,14 +138,14 @@ export default {
     }
   },
   methods: {
-    handleChange () {
+    handleChange() {
       this.mark = true
     },
-    handleEmpty () {
+    handleEmpty() {
       this.content = ''
       this.mark = true
     },
-    handleSave () {
+    handleSave() {
       let params = new URLSearchParams()
 
       params.append('plan_id', this.getPlan.id)
@@ -285,7 +285,7 @@ export default {
   },
   watch: {
     content() {
-      this.mark = !(this.content==='出错啦 :(')
+      this.mark = !(this.content === '出错啦 :(')
     }
   },
   computed: {

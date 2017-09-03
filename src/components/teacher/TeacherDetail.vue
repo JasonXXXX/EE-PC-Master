@@ -1,5 +1,9 @@
 <template>
   <div class="config-wrap">
+    <div class="wrap-img">
+      <img class="headimg" :src="detail.headimg">
+      <span class="name">{{detail.name}}</span>
+    </div>
     <el-collapse class="wrap-collapse" v-model.trim="activeName" accordion>
       <el-collapse-item class="wrap-collapse-item" title="教师信息" name="info">
         <table class="wrap-table" cellpadding="8px" border="1">
@@ -35,7 +39,7 @@
             <td>序号</td>
             <td>内容</td>
           </tr>
-          <tr v-for="(item, index) in detail.certifications">
+          <tr v-for="(item, index) in detail.certifications" :key="item.id">
             <td>{{index + 1}}</td>
             <td>{{item.title}}</td>
           </tr>
@@ -48,7 +52,7 @@
             <td>内容</td>
             <td>评分</td>
           </tr>
-          <tr v-for="(item, index) in detail.evaluations">
+          <tr v-for="(item, index) in detail.evaluations" :key="item.id">
             <td>{{index + 1}}</td>
             <td>{{item.content}}</td>
             <td>{{item.evaluation}}</td>
@@ -63,7 +67,7 @@
             <td>开始时间</td>
             <td>结束时间</td>
           </tr>
-          <tr v-for="(item, index) in detail.careers">
+          <tr v-for="(item, index) in detail.careers" :key="item.id">
             <td>{{index + 1}}</td>
             <td>{{item.content}}</td>
             <td>{{item.start}}</td>
@@ -76,15 +80,33 @@
 </template>
 
 <style scoped>
-  .wrap-collapse-item {
-    padding: 8px;
-  }
+.wrap-image {
+  text-align: center;
+}
+
+.headimg {
+  display: block;
+  margin: 12px;
+  width: 160px;
+  height: 160px;
+  box-shadow: 1px 1px 32px #BBBBBB;
+}
+
+.name {
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.wrap-collapse-item {
+  padding: 8px;
+}
 </style>
 
 <script>
 import types from '@/store/types'
 import { mapGetters } from 'vuex'
 import Convert from '@/common/util/convert.js'
+import Server from '@/common/data/server.js'
 import Logo from '@/assets/logo.png'
 
 export default {
@@ -102,28 +124,32 @@ export default {
         teachername: '',
         submarkname: '',
         gender: '',
-        headimg: ''
+        headimg: Logo
       },
       activeName: 'info'
     }
   },
-  created () {
+  created() {
     this.fetchteacherDetail()
+  },
+  mounted() {
+    // 单独获取头像
   },
   methods: {
     fetchteacherDetail() {
-      this.$common.http.get(this.$common.api.TeacherInfo+'?teacherid='+this.teacherid)
+      this.$common.http.get(this.$common.api.TeacherInfo + '?teacherid=' + this.teacherid)
         .then(response => {
           this.detail.address = response.data.address
           this.detail.careers = response.data.careers
           this.detail.certifications = response.data.certifications
           this.detail.evaluations = response.data.evaluations
-          this.detail.headimg = response.data.headimg
           this.detail.phone = response.data.phone
           this.detail.submark = response.data.submark
           this.detail.introduce = response.data.introduce
           this.detail.submark_name = Convert.convertSubNumber(response.data.submark)
           this.detail.gender = Convert.convertGenderNumber(response.data.gender)
+          // 获取头像
+          this.detail.headimg = 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/image/userheadimg/user' + this.teacherid + '.png'
         })
         .catch(error => {
           //测试数据

@@ -4,22 +4,26 @@ export default {
 
   //作业列表
   HomeworkList: 'HomeworkListServletMobile',
+  //作业列表(含答案)
+  HomeworkFinishList: 'HomeworkfinishInfoServletMobile',
   //已完成的某个作业的具体详情
   HomeworkFinishInfo: 'HomeworkfinishMessageServletMobile',
   //未完成的某个作业的详情
   HomeworkUnfinishInfo: 'HomeworkunfinishMessageServletMobile',
   //增加更新/作业
-  HomeworkUpdate: 'HomeworkUpdateServletMobile',
+  HomeworkUpdate: 'HomeworkServletMobile',
   //获取学生学习计划
-  PlanInfo: 'StudyplanMessageServletMobile',
+  PlanInfo: 'StudyplanInfoServletMobile',
   //增加/更新学生学习计划
   StudyPlanUpdate: 'StudyplanServletMobile',
   //获取学生课程记录列表
   StudentCourseRecordList: 'RecordcourseListServletMobile',
   //获得学生好友列表
   StudentFriendList: 'FriendListServletMobile',
+  //删除学生好友
+  StudentFriendDelete: 'FriendServletUpdateMobile',
   //学生笔记列表
-  StudentNoteList: 'StudentnoteListServletMobile',
+  StudentNoteList: 'StudentNoteListServletMobile',
   //获取学生笔记详情
   StudentNoteInfo: 'StudenntnoteMessageServletMobile',
   //更新/添加笔记

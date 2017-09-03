@@ -19,53 +19,54 @@
 </template>
 
 <style>
-  .wrap-player {
-    flex-direction: column;
-    padding: 8px;
-    width: 100%;
-    height: auto;
-  }
+.wrap-player {
+  flex-direction: column;
+  padding: 8px;
+  width: 100%;
+  height: auto;
+}
 
-  .wrap-collapse {
-    display: flex;
-    align-items: center;
-    padding: 8px 16px;
-    margin: 4px 0;
-    width: fit-content;
-    color: #DDDDDD;
-    border-bottom: 1px solid transparent;
-    transition: all .6s ease;
-  }
+.wrap-collapse {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  margin: 4px 0;
+  width: fit-content;
+  color: #DDDDDD;
+  border-bottom: 1px solid transparent;
+  transition: all .6s ease;
+}
 
-  .wrap-collapse:hover {
-    color: #424242;
-    border-bottom: 1px solid #BDBDBD;
-  }
+.wrap-collapse:hover {
+  color: #424242;
+  border-bottom: 1px solid #BDBDBD;
+}
 
-  .wrap-info-addtive {
-    display: inline-block;
-    padding: 0;
-    margin: 0 8px 0 0;
-    color: #989898;
-    font-size: 14px;
-  }
+.wrap-info-addtive {
+  display: inline-block;
+  padding: 0;
+  margin: 0 8px 0 0;
+  color: #989898;
+  font-size: 14px;
+}
 
-  .info-fee {
-    color: #4276FF;
-  }
+.info-fee {
+  color: #4276FF;
+}
 </style>
 
 <script>
 import { mapGetters } from 'vuex'
 import VideoPlayer from './VideoPlayer'
 import Storage from '@/common/util/storage'
+import Server from '@/common/data/server'
 
 export default {
   name: 'CourseDetail',
-  data () {
+  data() {
     return {
       video: {
-        src: 'http://localhost:8080/TestServer/video.mp4',
+        src: 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/video/course/' + this.course.course_content + '.mp4',
         id: this.course.course_id,
         text: this.course.course_content
       }
@@ -74,13 +75,13 @@ export default {
   components: {
     VideoPlayer
   },
-  create () {
+  create() {
   },
   methods: {
-    playHappened () {
+    playHappened() {
 
     },
-    handleBack () {
+    handleBack() {
       this.$router.back()
     }
   },
