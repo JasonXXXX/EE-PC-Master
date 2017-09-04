@@ -149,7 +149,8 @@ import 'vue-awesome/icons/star-o'
 import 'vue-awesome/icons/star'
 import 'vue-awesome/icons/commenting-o'
 import CommentItem from './ForumCommentItem'
-import Convert from '@/common/util/convert.js'
+import Convert from '@/common/util/convert'
+import Cache from '@/common/util/cache'
 
 export default {
   data () {
@@ -158,7 +159,6 @@ export default {
         comment_views: [],
         // comment_name: '',
         content: '',
-        id: 0,
         mark: 1,
         message_mark: 0,
         send_time: '',
@@ -234,9 +234,15 @@ export default {
       }
       return 'glyphicon-heart-empty'
     },
-    isFavorite (detail) {
-      const index = this.favoriteList.findIndex((item) => {
-        return item.id == detail.id && item.mark == detail.mark
+    isFavorite () {
+      const index = this.likes.findIndex((item) => {
+        return item == this.messageid
+      })
+      return index > -1
+    },
+    isStarred () {
+      const index = this.stars.findIndex((item) => {
+        return item == this.messageid
       })
       return index > -1
     },
@@ -245,7 +251,6 @@ export default {
         .then(response => {
           this.detail.comment_views = response.data.comment_views
           this.detail.content = response.data.content
-          this.detail.id = response.data.id
           this.detail.mark = response.data.mark
           this.detail.message_mark = response.data.message_mark
           this.detail.send_time = response.data.send_time
@@ -322,28 +327,44 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'favoriteList',
       'messageid',
-      'user'
+      'user',
+      'stars',
+      'likes'
     ])
   },
   watch: {
     'like': (newVal, oldVal) => {
       if ('heart' == newVal) {
-        const params = new URLSearchParams()
+        this.$store.commit(types.ADD_LIKE, this.messageid)
 
+        const params = new URLSearchParams()
         params.append('operate', 1)
-        params.append('user_mark', this.user.user)
+        // params.append('user_mark', this.user.user)
         params.append('like_message_id', this.messageid)
-        params.append('like_user_id', this.user.userid)
+        // params.append('like_user_id', this.user.userid)
 
         this.$common.http.post(this.$common.api.AddMessageLike, params).then(response => {
+        }).catch(error => {
+          this.$store.commit(types.DELETE_LIKE, this.messageid)
+        })
+      } else {
+        this.$store.commit(types.DELETE_LIKE, this.messageid)
+        const params = new URLSearchParams()
 
-        }).catch(error => { })
+        params.append('operate', 2)
+        params.append('like_message_id', this.messageid)
+
+        this.$common.http.post(this.$common.api.AddMessageLike, params).then(response => {
+        }).catch(error => {
+          this.$store.commit(types.ADD_LIKE, this.messageid)
+
+        })
       }
     },
     'star': (newVal, oldVal) => {
       if ('star' === newVal) {
+        this.$store.commit(types.ADD_STAR, this.messageid)
         const params = new URLSearchParams()
 
         params.append('operate', 1)
@@ -352,8 +373,22 @@ export default {
         params.append('mark_user_id', this.user.userid)
 
         this.$common.http.post(this.$common.api.AddMessageStar, params).then(response => {
+        }).catch(error => {
+          this.$store.commit(types.DELETE_STAR, this.messageid)
+        })
+      } else {
+        this.$store.commit(types.DELETE_STAR, this.messageid)
+        const params = new URLSearchParams()
 
-        }).catch(error => { })
+        params.append('operate', 2)
+        params.append('user_mark', this.user.user)
+        params.append('mark_message_id', this.messageid)
+        params.append('mark_user_id', this.user.userid)
+
+        this.$common.http.post(this.$common.api.AddMessageStar, params).then(response => {
+        }).catch(error => {
+          this.$store.commit(types.ADD_STAR, this.messageid)
+        })
       }
     }
   }

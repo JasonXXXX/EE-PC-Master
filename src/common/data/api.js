@@ -58,6 +58,8 @@ export default {
   AddMessageLike: 'MessagelikeServletMobile',
   //增加收藏
   AddMessageStar: 'MessagestarServletMobile',
+  //修改密码
+  UpdatePassword: 'PasswordUpdateServletMobile',
   //课程视频上传
   CourseVideoUpload: '',
 }

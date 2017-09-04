@@ -17,4 +17,6 @@ export default {
   videopic: 'videopic',
   search_record: 'search_record',
   searchs: 'searchs',
+  stars: 'stars',
+  likes: 'likes',
 }
