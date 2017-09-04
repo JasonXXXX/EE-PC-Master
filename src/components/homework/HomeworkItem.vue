@@ -144,8 +144,7 @@ export default {
         let params = new URLSearchParams()
 
         // 其他参数不用传给后台
-        params.append('work_id', this.item.work_id)
-        // params.append('work_title', this.item.work_title)
+        params.append('homework_id', this.item.work_id)
         params.append('work_content', this.answer)
         params.append('operate', 3)
 

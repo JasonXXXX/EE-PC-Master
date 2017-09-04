@@ -18,6 +18,8 @@ export default {
   StudyPlanUpdate: 'StudyplanServletMobile',
   //获取学生课程记录列表
   StudentCourseRecordList: 'RecordcourseListServletMobile',
+  //增加学生课程学习记录
+  AddStudyRecord: 'RecordcourseServletMobile',
   //获得学生好友列表
   StudentFriendList: 'FriendListServletMobile',
   //删除学生好友

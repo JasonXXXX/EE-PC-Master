@@ -16,6 +16,8 @@
       <!-- <el-button type="primary" @click="routerToVideoUpload">{{$common.strings.video_upload_button}}</el-button> -->
       <span class="config-no-list-hint" v-if="!getCourses.length">{{$common.strings.cbroom_no_course_hint}}</span>
       <course-item v-for="item in getCourses" :key="item.course_id" :item="item"></course-item>
+
+      <el-pagination layout="prev, pager, next" :total="notes.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
@@ -51,7 +53,9 @@ export default {
   name: 'Forum',
   data () {
     return {
-      hasItems: false
+      hasItems: false,
+      pageSize: 10,
+      currentPage: 1
     }
   },
   created () {
@@ -85,6 +89,9 @@ export default {
         })
         .catch(error => {
         })
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
     }
   },
   computed: {
@@ -93,7 +100,8 @@ export default {
       'cbcourses'
     ]),
     getCourses () {
-      return this.cbcourses.filter(item => item.course_mark == this.cbroomState)
+      const data = this.cbcourses.filter(item => item.course_mark == this.cbroomState)
+      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
     }
   },
   watch: {

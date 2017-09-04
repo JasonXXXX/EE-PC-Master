@@ -43,7 +43,7 @@ export default {
   created() {
     this.$store.commit(types.UPDATE_HOMEWORK_ISDONE, true)
     if (!this.donecalled && this.homeworkDone.length === 0) {
-      this.fetchHomework()
+      this.fetchFinishedHomework()
     }
   },
   beforeDestroy() {
@@ -77,8 +77,8 @@ export default {
       }).catch(() => {
       })
     },
-    fetchHomework() {
-      let params = new URLSearchParams()
+    fetchFinishedHomework() {
+      const params = new URLSearchParams()
 
       // isfinish为 1 表示已完成的作业
       params.append('isfinish', 1)

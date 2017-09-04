@@ -20,19 +20,19 @@ import * as wordCountLimit from './data/word-count-limit'
 const BASEURL = 'http://' + server.ip + ':' + server.port + '/' + server.server + '/'
 //自定义axios对象，使用这个进行联网
 const http = axios.create({
-  headers: {
-    'Accept': 'application/json,text/plain',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Content-Language': 'zh-CN',
-  },
+  // headers: {
+  //   'Accept': 'application/json,text/plain',
+  //   'Content-Type': 'application/x-www-form-urlencoded',
+  //   'Content-Language': 'zh-CN',
+  // },
   baseURL: BASEURL,
   timeout: 5000,
-  withCredentials: true
+  withCredentials: false
 })
 // http request 拦截器
 http.interceptors.request.use(function (config) {
   console.log('拦截发送的请求')
-  if (config.url.includes(api.AddMessageLike) || config.url.includes(api.AddMessageStar)) {
+  if (config.url.includes(api.AddMessageLike) || config.url.includes(api.AddMessageStar) || config.url.includes(api.AddStudyRecord)) {
 
   } else {
     store.commit(types.UPDATE_LOADING, true)

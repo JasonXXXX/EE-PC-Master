@@ -19,6 +19,7 @@
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
 import Pic from '@/assets/html.jpg'
 import Database from '@/common/util/database'
 
@@ -45,6 +46,22 @@ export default {
   },
   methods: {
     handleClick () {
+      if (this.courseLearned.find(item => item.course_id===this.video.id) || this.courseLearning.find(item => item.course_id===this.video.id)) {
+
+      } else {
+        const params = new URLSearchParams()
+        params.append('operate', 1)
+        params.append('record_course_id', this.video.id)
+        params.append('record_student_id', this.user.userid)
+        params.append('record_finish', 2)
+        params.append('record_grade', 12)
+
+        this.$common.http.post(this.$common.api.AddStudyRecord, params).then(response => {
+          if (response.data === '1') {
+            console.log('增加课程学习记录成功')
+          } else {}
+        })
+      }
       if (!this.player.paused) {
         this.player.pause()
         Database.init(true, Database.db.store_course).then(() => {
@@ -66,6 +83,12 @@ export default {
         message: this.video.error_text || '视频加载出错啦'
       })
     }
+  },
+  computed: {
+    ...mapGetters([
+      'courseLearned',
+      'courseLearning',
+    ])
   }
 }
 </script>

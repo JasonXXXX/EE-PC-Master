@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     fetchFinishedCourses() {
-      let params = new URLSearchParams()
+      const params = new URLSearchParams()
       params.append('student_id', this.user.userid)
       params.append('index', this.courseLearned.length)
       params.append('isdone', 2)

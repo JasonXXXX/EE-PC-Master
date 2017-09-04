@@ -218,12 +218,29 @@ export default {
       // .catch(error => {
       // })
     },
+    fetchFinishedCourses() {
+      const params = new URLSearchParams()
+      params.append('student_id', this.user.userid)
+      params.append('index', this.courseLearned.length)
+      params.append('isdone', 2)
+
+      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
+    },
+    fetchUnfinishedCourses() {
+      let params = new URLSearchParams()
+      params.append('student_id', this.user.userid)
+      params.append('index', this.courseLearning.length)
+      params.append('isdone', 1)
+      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
+    },
     fetchAll () {
-      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers()]
-      this.$common.http.all(fetchs).then(this.$common.http.spread((courses, forums, teachers) => {
+      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers(), this.fetchFinishedCourses(), this.fetchUnfinishedCourses()]
+      this.$common.http.all(fetchs).then(this.$common.http.spread((courses, forums, teachers, finishC, unfinishC) => {
         this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses)
         this.$store.commit(types.ADD_FORUM_NEWS, forums)
         this.$store.commit(types.ADD_TEACHER_CHINA, teachers)
+        this.$store.commit(types.ADD_COURSE_LEARNED, finishC.data)
+        this.$store.commit(types.ADD_COURSE_LEARNING, unfinishC.data)
 
         this.initSearchSuggestions()
       })).catch(error => { })

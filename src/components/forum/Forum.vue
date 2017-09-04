@@ -11,6 +11,8 @@
     <div :class="['config-wrap-view', {'config-no-border':!getForums.length}]">
       <span class="config-no-list-hint" v-if="!getForums.length">{{$common.strings.forum_no_list_hint}}</span>
       <forum-item v-for="item in getForums" :key="item.id" :item="item"></forum-item>
+
+      <el-pagination layout="prev, pager, next" :total="notes.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
@@ -29,7 +31,9 @@ export default {
   name: 'Forum',
   data () {
     return {
-      hasItems: false
+      hasItems: false,
+      pageSize: 10,
+      currentPage: 1
     }
   },
   created () {
@@ -51,7 +55,7 @@ export default {
     fetchForums () {
       let params = new URLSearchParams()
 
-      params.append('message_mark', this.forumState)
+      params.append('message_mark', 0)
       params.append('index', this.getForums.length)
 
       this.$common.http.post(this.$common.api.MessageList, params)
@@ -60,6 +64,9 @@ export default {
         })
         .catch(error => {
         })
+    },
+    handleCurrentChange (page) {
+      this.currentPage = page
     }
   },
   computed: {
@@ -69,7 +76,8 @@ export default {
       'favoriteList'
     ]),
     getForums () {
-      return this.forums.filter(item => item.mark === this.forumState)
+      const data = this.forums.filter(item => item.message_mark === this.forumState)
+      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
     }
   },
   watch: {
