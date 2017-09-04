@@ -251,73 +251,72 @@ export default {
           this.detail.send_time = response.data.send_time
           this.detail.sender_name = Convert.convertName(response.data.sender_mark, response.data.sender_id)
           this.detail.title = response.data.title
-          // this.detail.comment_name = Convert.convertName(response.data.comment_views.sender_mark , response.data.comment_views.sender_id)
         })
         .catch(error => {
           //测试数据
-          let newsDetail = {
-            comment_views: [{
-              comment_tocomment_id: 1,
-              content: "好厉害！瞬间就明白了都，希望作者多多出这样的良心文章!!!坐等更新~",
-              id: 1,
-              send_time: "2017-04-18",
-              name: 'Jason',
-              sender_id: 1,
-              sender_mark: 2
-            }, {
-              comment_tocomment_id: 2,
-              content: "新技能get！",
-              id: 2,
-              send_time: "2017-04-20",
-              name: 'Jason',
-              sender_id: 2,
-              sender_mark: 2
-            }, {
-              comment_tocomment_id: 1,
-              content: "好厉害！瞬间就明白了都，希望作者多多出这样的良心文章",
-              id: 1,
-              send_time: "2017-04-18",
-              name: 'Jason',
-              sender_id: 1,
-              sender_mark: 2
-            }, {
-              comment_tocomment_id: 2,
-              content: "新技能get！",
-              id: 2,
-              send_time: "2017-04-20",
-              name: 'Jason',
-              sender_id: 2,
-              sender_mark: 2
-            }, {
-              comment_tocomment_id: 3,
-              content: "见解独到，佩服佩服",
-              id: 3,
-              send_time: "2017-04-25",
-              name: 'Jason',
-              sender_id: 3,
-              sender_mark: 2
-            }
-            ],
-            content: "我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。那么，我们可以在 vue-router 的路由路径中使用『动态路径参数』（dynamic segment）来达到这个效果.一个『路径参数』使用冒号 : 标记。当匹配到一个路由时，参数值会被设置到 this.$route.params，可以在每个组件内使用。于是，我们可以更新 User 的模板，输出当前用户的 ID .提醒一下，当使用路由参数时，例如从 /user/foo 导航到 user/bar，原来的组件实例会被复用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会再被调用。",
-            id: 2,
-            mark: 1,
-            message_mark: 2,
-            send_time: "2017-1-2",
-            sender_id: 1,
-            sender_mark: 1,
-            title: "6660分钟vue快速入门"
-          }
-          this.detail.comment_views = newsDetail.comment_views
-          this.detail.content = newsDetail.content
-          this.detail.id = newsDetail.id
-          this.detail.mark = newsDetail.mark
-          this.detail.message_mark = newsDetail.message_mark
-          this.detail.send_time = newsDetail.send_time
-          this.detail.sender_name = Convert.convertName(newsDetail.sender_mark, newsDetail.sender_id)
-          this.detail.title = newsDetail.title
+          // let newsDetail = {
+          //   comment_views: [{
+          //     comment_tocomment_id: 1,
+          //     content: "好厉害！瞬间就明白了都，希望作者多多出这样的良心文章!!!坐等更新~",
+          //     id: 1,
+          //     send_time: "2017-04-18",
+          //     name: 'Jason',
+          //     sender_id: 1,
+          //     sender_mark: 2
+          //   }, {
+          //     comment_tocomment_id: 2,
+          //     content: "新技能get！",
+          //     id: 2,
+          //     send_time: "2017-04-20",
+          //     name: 'Jason',
+          //     sender_id: 2,
+          //     sender_mark: 2
+          //   }, {
+          //     comment_tocomment_id: 1,
+          //     content: "好厉害！瞬间就明白了都，希望作者多多出这样的良心文章",
+          //     id: 1,
+          //     send_time: "2017-04-18",
+          //     name: 'Jason',
+          //     sender_id: 1,
+          //     sender_mark: 2
+          //   }, {
+          //     comment_tocomment_id: 2,
+          //     content: "新技能get！",
+          //     id: 2,
+          //     send_time: "2017-04-20",
+          //     name: 'Jason',
+          //     sender_id: 2,
+          //     sender_mark: 2
+          //   }, {
+          //     comment_tocomment_id: 3,
+          //     content: "见解独到，佩服佩服",
+          //     id: 3,
+          //     send_time: "2017-04-25",
+          //     name: 'Jason',
+          //     sender_id: 3,
+          //     sender_mark: 2
+          //   }
+          //   ],
+          //   content: "我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。那么，我们可以在 vue-router 的路由路径中使用『动态路径参数』（dynamic segment）来达到这个效果.一个『路径参数』使用冒号 : 标记。当匹配到一个路由时，参数值会被设置到 this.$route.params，可以在每个组件内使用。于是，我们可以更新 User 的模板，输出当前用户的 ID .提醒一下，当使用路由参数时，例如从 /user/foo 导航到 user/bar，原来的组件实例会被复用。因为两个路由都渲染同个组件，比起销毁再创建，复用则显得更加高效。不过，这也意味着组件的生命周期钩子不会再被调用。",
+          //   id: 2,
+          //   mark: 1,
+          //   message_mark: 2,
+          //   send_time: "2017-1-2",
+          //   sender_id: 1,
+          //   sender_mark: 1,
+          //   title: "6660分钟vue快速入门"
+          // }
+          // this.detail.comment_views = newsDetail.comment_views
+          // this.detail.content = newsDetail.content
+          // this.detail.id = newsDetail.id
+          // this.detail.mark = newsDetail.mark
+          // this.detail.message_mark = newsDetail.message_mark
+          // this.detail.send_time = newsDetail.send_time
+          // this.detail.sender_name = Convert.convertName(newsDetail.sender_mark, newsDetail.sender_id)
+          // this.detail.title = newsDetail.title
           // this.detail.comment_name = Convert.convertName(newsDetail.comment_views.sender_mark , newsDetail.comment_views.sender_id)
 
-        });
+        })
     },
 
   },
@@ -330,8 +329,32 @@ export default {
   },
   watch: {
     'like': (newVal, oldVal) => {
+      if ('heart' == newVal) {
+        const params = new URLSearchParams()
+
+        params.append('operate', 1)
+        params.append('user_mark', this.user.user)
+        params.append('like_message_id', this.messageid)
+        params.append('like_user_id', this.user.userid)
+
+        this.$common.http.post(this.$common.api.AddMessageLike, params).then(response => {
+
+        }).catch(error => { })
+      }
     },
     'star': (newVal, oldVal) => {
+      if ('star' === newVal) {
+        const params = new URLSearchParams()
+
+        params.append('operate', 1)
+        params.append('user_mark', this.user.user)
+        params.append('mark_message_id', this.messageid)
+        params.append('mark_user_id', this.user.userid)
+
+        this.$common.http.post(this.$common.api.AddMessageStar, params).then(response => {
+
+        }).catch(error => { })
+      }
     }
   }
 }

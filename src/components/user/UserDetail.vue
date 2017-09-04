@@ -1,38 +1,41 @@
 <template>
 	<div class="config-wrap">
-		<el-collapse class="wrap-collapse" v-model.trim="activeName" accordion>
-			<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_base_info" name="base">
-				<el-input :placeholder="$common.strings.detail_placeholder_name" icon="information" :autofocus="true" @change="markEdit" v-model.trim="name">
-				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_tel" icon="warning" @change="markEdit" v-model.trim="tel">
-				</el-input>
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_gender" :fetch-suggestions="queryGenderSuggestions" icon="minus" @select="handleGenderSelect" v-model.trim="gender">
-				</el-autocomplete>
-				<el-input :placeholder="$common.strings.detail_placeholder_address" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="address">
-				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_ID" icon="more" @change="markEdit" v-model.trim="ID">
-				</el-input>
-				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parentname" icon="information" @change="markEdit" v-model.trim="parentname">
-				</el-input>
-				<el-input :placeholder="$common.strings.detail_placeholder_intro" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="intro">
-				</el-input>
-				<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parenttel" icon="warning" @change="markEdit" v-model.trim="parenttel">
-				</el-input>
-			</el-collapse-item>
-			<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_site_info" name="site">
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_sub" :fetch-suggestions="querySubSuggestions" icon="document" @select="handleSubSelect" v-model.trim="sub">
-				</el-autocomplete>
-				<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_grade" :fetch-suggestions="queryGradeSuggestions" icon="document" @select="handleGradeSelect" v-model.trim="grade">
-				</el-autocomplete>
-			</el-collapse-item>
-		</el-collapse>
+		<div class="wrap-main">
+			<el-collapse class="wrap-collapse" v-model.trim="activeName" accordion>
+				<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_base_info" name="base">
+					<el-input :placeholder="$common.strings.detail_placeholder_name" icon="information" :autofocus="true" @change="markEdit" v-model.trim="name">
+					</el-input>
+					<el-input :placeholder="$common.strings.detail_placeholder_tel" icon="warning" @change="markEdit" v-model.trim="tel">
+					</el-input>
+					<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_gender" :fetch-suggestions="queryGenderSuggestions" icon="minus" @select="handleGenderSelect" v-model.trim="gender">
+					</el-autocomplete>
+					<el-input :placeholder="$common.strings.detail_placeholder_address" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="address">
+					</el-input>
+					<el-input :placeholder="$common.strings.detail_placeholder_ID" icon="more" @change="markEdit" v-model.trim="ID">
+					</el-input>
+					<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parentname" icon="information" @change="markEdit" v-model.trim="parentname">
+					</el-input>
+					<el-input :placeholder="$common.strings.detail_placeholder_intro" icon="menu" :autosize="{ minRows: 1, maxRows: 3}" @change="markEdit" v-model.trim="intro">
+					</el-input>
+					<el-input v-if="user.user===2" :placeholder="$common.strings.detail_placeholder_parenttel" icon="warning" @change="markEdit" v-model.trim="parenttel">
+					</el-input>
+				</el-collapse-item>
+				<el-collapse-item class="wrap-collapse-item" :title="$common.strings.detail_site_info" name="site">
+					<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_sub" :fetch-suggestions="querySubSuggestions" icon="document" @select="handleSubSelect" v-model.trim="sub">
+					</el-autocomplete>
+					<el-autocomplete class="wrap-autocom" :placeholder="$common.strings.detail_placeholder_grade" :fetch-suggestions="queryGradeSuggestions" icon="document" @select="handleGradeSelect" v-model.trim="grade">
+					</el-autocomplete>
+				</el-collapse-item>
+			</el-collapse>
+			<el-button class="wrap-save" slot="trigger" size="medium" type="primary" @click="save">保存</el-button>
+		</div>
 		<div class="wrap-upload">
 			<img class="wrap-upload-headimg" :src="headimg">
 			<div v-if="!selected">
 				<el-button class="wrap-submit" slot="trigger" size="medium" v-if="!selected" @click="selectImage">修改头像
 					<i class="el-icon-edit el-icon--right"></i>
 				</el-button>
-				<input type="file" id="inputer" accept="image/png,image/jpg,image/jpeg" ref="inputer" hidden @change="handleChange">
+				<input type="file" id="inputer" accept="image/png" ref="inputer" hidden @change="handleChange">
 				<p class="wrap-hint">{{$common.strings.detail_upload_limit}}</p>
 			</div>
 			<el-button class="wrap-submit" slot="trigger" size="medium" v-if="selected" @click="handleCancle">取消</el-button>
@@ -42,44 +45,49 @@
 </template>
 
 <style scoped>
-.wrap-collapse {
-	flex: 1;
-}
+	.wrap-main {
+		flex: 1;
+		text-align: right;
+	}
 
-.wrap-collapse-item {
-	text-align: left;
-}
+	.wrap-save {
+		margin: 8px 8px 0 0;
+	}
 
-.wrap-autocom {
-	width: 100%;
-}
+	.wrap-collapse-item {
+		text-align: left;
+	}
 
-.wrap-upload {
-	padding: 12px;
-}
+	.wrap-autocom {
+		width: 100%;
+	}
 
-.wrap-upload-icon {
-	overflow: hidden;
-}
+	.wrap-upload {
+		padding: 12px;
+	}
 
-.wrap-hint {
-	color: #BBBBBB;
-	font-size: 12px;
-}
+	.wrap-upload-icon {
+		overflow: hidden;
+	}
 
-.wrap-submit {
-	margin-top: 12px;
-}
+	.wrap-hint {
+		color: #BBBBBB;
+		font-size: 12px;
+	}
 
-.wrap-upload-headimg {
-	display: block;
-	width: 160px;
-	height: 160px;
-	margin: 12px auto;
-	padding: 12px 24px;
-	/*border: .5px dashed #AAAAAA;*/
-	box-shadow: 1px 1px 32px #AAAAAA;
-}
+	.wrap-submit {
+		margin-top: 12px;
+	}
+
+	.wrap-upload-headimg {
+		display: block;
+		width: 160px;
+		height: 160px;
+		margin: 12px auto;
+		padding: 12px 24px;
+		/*border: .5px dashed #AAAAAA;*/
+		box-shadow: 1px 1px 32px #AAAAAA;
+	}
 </style>
 
 <script>
@@ -90,7 +98,7 @@ import Storage from '@/common/util/storage'
 import ImageUtil from '@/common/util/image'
 
 export default {
-	data() {
+	data () {
 		return {
 			activeName: 'base',
 			headimg: '',
@@ -139,7 +147,7 @@ export default {
 			payload: {}
 		}
 	},
-	created() {
+	created () {
 		this.payload = {
 			'user': this.user.user,
 			'userid': this.user.userid
@@ -149,29 +157,30 @@ export default {
 		this.intro = this.user.intro
 		this.name = this.user.name
 
-		let params = new URLSearchParams()
+		const params = new URLSearchParams()
 		params.append('studentid', this.user.userid)
 		this.$common.http.post(this.$common.api.UserInfo, params)
 			.then(response => {
 				this.tel = response.data.tel
 				this.address = response.data.address
-				this.ID = response.data.ID
-				this.parentname = response.data.parentname
-				this.parenttel = response.data.parenttel
-				this.grade = Convert.convertGradeNumber(response.data.grade)
-				this.sub = Convert.convertSubNumber(response.data.sub)
+				this.ID = response.data.id_number
+				this.parentname = response.data.parent_name
+				this.parenttel = response.data.parent_tel
+				this.grade = Convert.convertGradeNumber(response.data.grade_mark)
+				this.sub = Convert.convertSubNumber(response.data.subject_mark)
 				this.gender = Convert.convertGender(response.data.gender)
 			}).catch(error => {
 
 			})
 	},
-	mounted() {
+	mounted () {
 		// 单独获取头像
 	},
-	beforeRouteLeave(to, from, next) {
+	beforeRouteLeave (to, from, next) {
 		if (this.ifModified) {
-			let params = new URLSearchParams()
+			const params = new URLSearchParams()
 
+			params.append('operate', 3)
 			params.append('user', this.user.user)
 			params.append('userid', this.user.userid)
 			params.append('name', this.name)
@@ -237,40 +246,40 @@ export default {
 		}
 	},
 	methods: {
-		queryGenderSuggestions(queryString, cb) {
+		queryGenderSuggestions (queryString, cb) {
 			const suggestions = this.genderSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		querySubSuggestions(queryString, cb) {
+		querySubSuggestions (queryString, cb) {
 			const suggestions = this.subSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		queryGradeSuggestions(queryString, cb) {
+		queryGradeSuggestions (queryString, cb) {
 			const suggestions = this.gradeSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		handleGenderSelect(value) {
+		handleGenderSelect (value) {
 			this.markEdit()
 		},
-		handleGradeSelect(value) {
+		handleGradeSelect (value) {
 			this.markEdit()
 		},
-		handleSubSelect(value) {
+		handleSubSelect (value) {
 			this.markEdit()
 		},
-		createFilter(queryString) {
+		createFilter (queryString) {
 			return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) === 0)
 		},
-		selectImage() {
+		selectImage () {
 			this.$refs.inputer.click()
 		},
-		handleChange() {
+		handleChange () {
 			this.selected = true
 			this.headimg = this.$refs.inputer.files[0]
 			ImageUtil.convertImageToBase64(this.headimg).then(result => {
@@ -279,9 +288,9 @@ export default {
 				console.log(error)
 			})
 		},
-		handleSubmit() {
+		handleSubmit () {
 			// this.$refs.upload.submit()
-			let params = new URLSearchParams()
+			const params = new URLSearchParams()
 
 			params.append('user', this.user.user)
 			params.append('userid', this.user.userid)
@@ -302,18 +311,22 @@ export default {
 					})
 				})
 		},
-		handleCancle() {
+		handleCancle () {
 			this.selected = false
 			this.headimg = this.user.headimg
 		},
-		modify() {
-			let params = new URLSearchParams()
+		markEdit () {
+			this.ifModified = true
+		},
+		save () {
+			const params = new URLSearchParams()
 
+			params.append('operate', 3)
 			params.append('user', this.user.user)
 			params.append('userid', this.user.userid)
 			params.append('name', this.name)
 			params.append('tel', this.tel)
-			params.append('gender', this.gender)
+			params.append('gender', Convert.convertMark(this.gender))
 			params.append('address', this.address)
 			params.append('intro', this.intro)
 			params.append('grademark', Convert.convertMark(this.grademark))
@@ -331,17 +344,18 @@ export default {
 						name: this.name,
 						intro: this.intro
 					})
-				}).catch(error => {
+					this.$message({
+						type: 'success',
+						message: this.$common.strings.detail_after_save
+					})
 
+					this.ifModified = false
+				}).catch(error => {
+					this.$message({
+						type: 'error',
+						message: '保存失败,请重新保存'
+					})
 				})
-		},
-		markEdit() {
-			this.ifModified = true
-		}
-	},
-	filters: {
-		genderFilter(value) {
-			return 1 === value ? '男' : '女'
 		}
 	},
 	computed: {

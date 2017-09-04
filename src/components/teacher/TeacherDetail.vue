@@ -80,26 +80,26 @@
 </template>
 
 <style scoped>
-.wrap-image {
-  text-align: center;
-}
+  .wrap-image {
+    text-align: center;
+  }
 
-.headimg {
-  display: block;
-  margin: 12px;
-  width: 160px;
-  height: 160px;
-  box-shadow: 1px 1px 32px #BBBBBB;
-}
+  .headimg {
+    display: block;
+    margin: 12px;
+    width: 160px;
+    height: 160px;
+    box-shadow: 1px 1px 32px #BBBBBB;
+  }
 
-.name {
-  display: inline-block;
-  margin-top: 8px;
-}
+  .name {
+    display: inline-block;
+    margin-top: 8px;
+  }
 
-.wrap-collapse-item {
-  padding: 8px;
-}
+  .wrap-collapse-item {
+    padding: 8px;
+  }
 </style>
 
 <script>
@@ -110,7 +110,7 @@ import Server from '@/common/data/server.js'
 import Logo from '@/assets/logo.png'
 
 export default {
-  data() {
+  data () {
     return {
       detail: {
         address: '',
@@ -129,14 +129,15 @@ export default {
       activeName: 'info'
     }
   },
-  created() {
+  created () {
     this.fetchteacherDetail()
   },
-  mounted() {
+  mounted () {
     // 单独获取头像
+    this.detail.headimg = 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/image/userheadimg/teacher' + this.teacherid + '.png'
   },
   methods: {
-    fetchteacherDetail() {
+    fetchteacherDetail () {
       this.$common.http.get(this.$common.api.TeacherInfo + '?teacherid=' + this.teacherid)
         .then(response => {
           this.detail.address = response.data.address
@@ -148,8 +149,6 @@ export default {
           this.detail.introduce = response.data.introduce
           this.detail.submark_name = Convert.convertSubNumber(response.data.submark)
           this.detail.gender = Convert.convertGenderNumber(response.data.gender)
-          // 获取头像
-          this.detail.headimg = 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/image/userheadimg/user' + this.teacherid + '.png'
         })
         .catch(error => {
           //测试数据

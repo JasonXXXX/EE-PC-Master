@@ -57,7 +57,7 @@ export default {
       this.$store.commit(types.UPDATE_TEACHER_TEACHERMARK, parseInt(index))
     },
     fetchTeacher () {
-      let params = new URLSearchParams()
+      const params = new URLSearchParams()
 
       params.append('submark', this.teachermark)
       params.append('index', this.getLength)

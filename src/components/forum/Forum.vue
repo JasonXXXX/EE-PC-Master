@@ -4,7 +4,7 @@
       <el-menu :default-active="forumState.toString()" class="el-menu-vertical-demo config-wrap-tab" @select="handleSelect">
         <el-menu-item index="1">
           <i class="el-icon-menu"></i>{{$common.strings.forum_menu_news}}</el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="2">
           <i class="el-icon-information"></i>{{$common.strings.forum_menu_discover}}</el-menu-item>
       </el-menu>
     </transition>
@@ -69,11 +69,7 @@ export default {
       'favoriteList'
     ]),
     getForums () {
-      if (this.forumState === 4) {
-        return this.forums.length ? this.forums.filter(item => item.mark === 4) : []
-      } else {
-        return this.forums.length ? this.forums.filter(item => item.mark !== 4) : []
-      }
+      return this.forums.filter(item => item.mark === this.forumState)
     }
   },
   watch: {

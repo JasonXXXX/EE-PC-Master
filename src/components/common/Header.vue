@@ -116,7 +116,7 @@ export default {
     }
   },
   created () {
-    // this.initSearchSuggestions()
+    this.fetchAll()
   },
   methods: {
     routerToHome () {
@@ -127,7 +127,7 @@ export default {
     },
     initSearchSuggestions () {
       const s = localStorage.getItem(Storage.search_record)
-      if(s) {
+      if (s) {
         this.$store.commit(types.ADD_SEARCH_RECORDS, JSON.parse(s))
       }
 
@@ -168,11 +168,11 @@ export default {
         this.search = ''
       } else {
         if (text.startsWith('课程')) {
-          this.$store.commit(types.UPDATE_CBROOM_COURSE, this.courses.find(item => item.course_id==value.id))
+          this.$store.commit(types.UPDATE_CBROOM_COURSE, this.courses.find(item => item.course_id == value.id))
           this.$router.push('/coursedetail')
         } else if (text.startsWith('资讯')) {
           this.$store.commit(types.UPDATE_FORUM_MESSAGEID, value.id)
-          this.$router.push(value.mark===4? '/discoverdetail': 'newsdetail')
+          this.$router.push(value.mark === 4 ? '/discoverdetail' : 'newsdetail')
         } else if (text.startsWith('教师')) {
           this.$store.commit(types.UPDATE_TEACHER_TEACHERID, value.id)
           this.$router.push('/teacherdetail')
@@ -186,11 +186,11 @@ export default {
       params.append('index', 0)
 
       return this.$common.http.post(this.$common.api.TeacherList, params)
-        // .then(response => {
-        //   this.$store.commit(types.ADD_TEACHER_CHINA, response.data)
-        // })
-        // .catch(error => {
-        // })
+      // .then(response => {
+      //   this.$store.commit(types.ADD_TEACHER_CHINA, response.data)
+      // })
+      // .catch(error => {
+      // })
     },
     fetchForums () {
       let params = new URLSearchParams()
@@ -199,11 +199,11 @@ export default {
       params.append('index', 0)
 
       return this.$common.http.post(this.$common.api.MessageList, params)
-        // .then(response => {
-        //   this.$store.commit(types.ADD_FORUM_NEWS, response.data)
-        // })
-        // .catch(error => {
-        // })
+      // .then(response => {
+      //   this.$store.commit(types.ADD_FORUM_NEWS, response.data)
+      // })
+      // .catch(error => {
+      // })
     },
     fetchCourses () {
       let params = new URLSearchParams()
@@ -212,13 +212,13 @@ export default {
       params.append('course_mark', this.cbroomState)
 
       return this.$common.http.post(this.$common.api.CourseList, params)
-        // .then(response => {
-        //   this.$store.commit(types.ADD_CBROOM_MICROLECTURE, response.data)
-        // })
-        // .catch(error => {
-        // })
+      // .then(response => {
+      //   this.$store.commit(types.ADD_CBROOM_MICROLECTURE, response.data)
+      // })
+      // .catch(error => {
+      // })
     },
-    fetchAll() {
+    fetchAll () {
       const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers()]
       this.$common.http.all(fetchs).then(this.$common.http.spread((courses, forums, teachers) => {
         this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses)
@@ -226,7 +226,7 @@ export default {
         this.$store.commit(types.ADD_TEACHER_CHINA, teachers)
 
         this.initSearchSuggestions()
-      })).catch(error => {})
+      })).catch(error => { })
     }
   },
   computed: {

@@ -4,10 +4,10 @@
       <div class="wrap-summary">
         <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
         <p class="wrap-summary-detail">
-          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark!=4"></i>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark!=4">{{item.message_like}}</span>
-          <icon class="wrap-summary-detail-star_count" v-if="item.mark==4" name="commenting"></icon>
-          <span class="wrap-summary-detail-star_count" v-if="item.mark==4">{{item.message_mark}}</span>
+          <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark==forumState"></i>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==forumState">{{item.message_like}}</span>
+          <icon class="wrap-summary-detail-star_count" v-if="item.mark==forumState" name="commenting"></icon>
+          <span class="wrap-summary-detail-star_count" v-if="item.mark==forumState">{{item.message_mark}}</span>
           <span class="wrap-summary-detail-author_time">{{item.sender_name}}</span>
           <span class="wrap-summary-detail-author_time">{{item.send_time}}</span>
         </p>
@@ -63,6 +63,7 @@
 </style>
 
 <script>
+import { mapGetters } from 'vuex'
 import 'vue-awesome/icons/commenting'
 import types from '@/store/types'
 
@@ -73,6 +74,14 @@ export default {
     routerToDetail () {
       this.$store.commit(types.UPDATE_FORUM_MESSAGEID, this.item.message_id)
       this.$router.push('/' + (this.item.message_mark == 1 ? 'news' : 'discover'))
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'forumState',
+    ]),
+    getForums () {
+      return this.forums.filter(item => item.mark === this.forumState)
     }
   }
 }

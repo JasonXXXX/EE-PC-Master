@@ -24,12 +24,12 @@
     height: 100vh;
     width: 100%;
   }
-  
+
   .wrap-img {
     width: 100%;
     height: 100%;
   }
-  
+
   .wrap-login {
     position: absolute;
     top: 200px;
@@ -37,7 +37,7 @@
     text-align: right;
     padding-right: 48px;
   }
-  
+
   .wrap-form {
     margin: 8px 48px 8px auto;
     padding: 12px 48px;
@@ -48,7 +48,7 @@
     box-shadow: 2px 2px 12px #999999;
     transition: all .8s ease;
   }
-  
+
   .wrap-form:hover {
     opacity: .9;
   }
@@ -88,7 +88,7 @@ export default {
 
         this.$common.http.post(this.$common.api.Login, params)
           .then(response => {
-            if ('[]' != response.data) {
+            if ('false' !== response.data) {
               localStorage.setItem('user', this.user)
               localStorage.setItem('userid', response.data.id)
               localStorage.setItem('name', response.data.name)
@@ -122,13 +122,26 @@ export default {
               })
             }
           }).catch(error => {
+            this.$confirm('该邮箱好像不存在,是否进行注册', '确认', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'confirm'
+            }).then(() => {
+              sessionStorage.setItem('register-email', this.email)
+              sessionStorage.setItem('register-password', this.password)
+
+              this.register()
+            }).catch(() => { })
           })
 
-      } else {
-        this.$message('请填写正确的邮箱')
+      } else if ('' === this.email) {
         this.register()
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请填写正确的邮箱'
+        })
       }
-
     },
     test (value, regex) {
       return regex.test(value)

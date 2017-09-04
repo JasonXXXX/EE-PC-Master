@@ -33,9 +33,9 @@ export default {
   //用户登录
   Login: 'LoginServletMobile',
   //获取个人详细信息
-  UserInfo: 'GetstudentMessageServletMobile',
+  UserInfo: 'StudentInfoServletMobile',
   //个人信息修改
-  InfoUpdate: 'StudentUpdateServletMobile',
+  InfoUpdate: 'StudentServletMobile',
   //修改头像
   UpdateHeadimg: 'UploadHeadimg',
   //教师列表
@@ -43,7 +43,7 @@ export default {
   //教师详情
   TeacherInfo: 'TeacherInfoServletMobile',
   //资讯，我想说列表
-  MessageList: 'messageListServletMobile',
+  MessageList: 'MessageListServletMobile',
   //资讯，我想说详细信息
   MessageInfo: 'MessageInfoServletMobile',
   //收藏
@@ -54,6 +54,10 @@ export default {
   MicrocourseInfo: 'MicrocourseInfoServletMobile',
   //课程信息列表
   CurriculumInfo: 'WebcastcourseInfoServletMobile',
+  //增加点赞
+  AddMessageLike: 'MessagelikeServletMobile',
+  //增加收藏
+  AddMessageStar: 'MessagestarServletMobile',
   //课程视频上传
-  CourseVideoUpload: ''
+  CourseVideoUpload: '',
 }

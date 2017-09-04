@@ -53,7 +53,6 @@
 
   .collapse-nav {
     text-align: left;
-    overflow: hidden;
   }
 
   .no-border {

@@ -14,7 +14,7 @@
           <el-radio-button label="学生"></el-radio-button>
         </el-radio-group>
       </el-carousel-item>
-  
+
       <el-carousel-item>
         <h3>请认真完成以下信息</h3>
         <el-form class="wrap-form" label-position="top" label-width="80px">
@@ -32,7 +32,7 @@
           </el-form-item>
         </el-form>
       </el-carousel-item>
-  
+
       <el-carousel-item>
         <h3>这部分信息也可以以后再填</h3>
         <el-form class="wrap-form" label-position="top" label-width="80px">
@@ -50,7 +50,7 @@
           </el-form-item>
         </el-form>
       </el-carousel-item>
-  
+
       <el-carousel-item>
         <h3>请继续完善信息,或直接注册</h3>
         <el-form class="wrap-form" label-position="top" label-width="80px">
@@ -69,7 +69,7 @@
         </el-form>
         <el-button type="primary" @click="register">注册</el-button>
       </el-carousel-item>
-  
+
     </el-carousel>
   </div>
 </template>
@@ -81,24 +81,24 @@
     height: 100vh;
     text-align: center;
   }
-  
+
   .wrap-header {
     margin-top: 12px;
   }
-  
+
   .wrap-content {
     flex: 1;
   }
-  
+
   .wrap-user {
     margin-top: 48px;
   }
-  
+
   .wrap-form {
     margin: 0 auto;
     width: 40%;
   }
-  
+
   .wrap-form-item {
     margin: 4px 0;
     width: 100%;
@@ -122,9 +122,9 @@ export default {
       IDmaxlength: 18,
       user: '学生',
       name: '',
-      email: '',
-      password: '',
-      confirmpassword: '',
+      email: sessionStorage.getItem('register-email') || '',
+      password: sessionStorage.getItem('register-password') || '',
+      confirmpassword: sessionStorage.getItem('register-password') || '',
       tel: '',
       address: '',
       intro: '',
@@ -166,7 +166,8 @@ export default {
     }
   },
   mounted () {
-    // document.getElementById('wrap').style.height = window.innerHeight + 'px'
+    sessionStorage.removeItem('register-email')
+    sessionStorage.removeItem('register-password')
   },
   methods: {
     handleChange (newIndex, oldIndex) {
@@ -229,7 +230,7 @@ export default {
 
       this.$common.http.post(this.$common.api.Register, params)
         .then(response => {
-          if ('[]' == response.data) {
+          if ('false' == response.data) {
             this.$message({
               type: 'warning',
               message: '注册失败,请重新注册'

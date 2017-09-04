@@ -32,7 +32,11 @@ const http = axios.create({
 // http request 拦截器
 http.interceptors.request.use(function (config) {
   console.log('拦截发送的请求')
-  store.commit(types.UPDATE_LOADING, true)
+  if (config.url.includes(api.AddMessageLike) || config.url.includes(api.AddMessageStar)) {
+
+  } else {
+    store.commit(types.UPDATE_LOADING, true)
+  }
   //发送请求之前添加token参数
   if (config.data) {
     //给每个请求添加用户登录的token
