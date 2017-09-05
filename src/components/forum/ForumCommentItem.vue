@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="wrap-author">
       <img :src="img" class="author-img">
-      <span class="author-name">{{comment.name}}</span>
+      <span class="author-name">{{comment.name || ''}}</span>
       <span class="author-name">{{comment.send_time}}</span>
     </div>
     <p class="wrap-content">{{comment.content}}</p>
@@ -46,14 +46,18 @@
 
 <script>
 import img from '@/assets/headimg.png'
+import Server from '@/common/data/server'
 
 export default {
   name: 'ForumCommentItem',
   props: ['comment'],
   data () {
     return {
-      img: img
+      img: ''
     }
+  },
+  created () {
+    this.img = 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/image/userheadimg/' + (this.comment.sender_mark===2? 'student': 'teacher') + this.comment.sender_id + '.png'
   }
 }
 </script>

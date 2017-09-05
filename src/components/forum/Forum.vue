@@ -11,8 +11,6 @@
     <div :class="['config-wrap-view', {'config-no-border':!getForums.length}]">
       <span class="config-no-list-hint" v-if="!getForums.length">{{$common.strings.forum_no_list_hint}}</span>
       <forum-item v-for="item in getForums" :key="item.id" :item="item"></forum-item>
-
-      <el-pagination layout="prev, pager, next" :total="notes.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
@@ -31,14 +29,12 @@ export default {
   name: 'Forum',
   data () {
     return {
-      hasItems: false,
-      pageSize: 10,
-      currentPage: 1
+      hasItems: false
     }
   },
   created () {
     this.$store.commit(types.UPDATE_HEADER_SELECTED, '/forum')
-    if (this.getForums.length < 1) {
+    if (this.getForums.length < 1 && !this.configNet) {
       this.fetchForums()
     }
   },
@@ -55,29 +51,26 @@ export default {
     fetchForums () {
       let params = new URLSearchParams()
 
-      params.append('message_mark', 0)
+      params.append('message_mark', this.forumState)
       params.append('index', this.getForums.length)
 
-      this.$common.http.post(this.$common.api.MessageList, params)
+      this.$common.http.get(this.$common.api.MessageList+"?message_mark="+this.forumState+"&index="+this.getForums.length)
         .then(response => {
           this.$store.commit(types.ADD_FORUM_NEWS, response.data)
         })
         .catch(error => {
         })
-    },
-    handleCurrentChange (page) {
-      this.currentPage = page
     }
   },
   computed: {
     ...mapGetters([
       'forumState',
       'forums',
-      'favoriteList'
+      'favoriteList',
+      'configNet'
     ]),
     getForums () {
-      const data = this.forums.filter(item => item.message_mark === this.forumState)
-      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
+      return this.forums.filter(item => item.message_mark === this.forumState)
     }
   },
   watch: {

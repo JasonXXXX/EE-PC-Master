@@ -9,7 +9,7 @@ const state = {
 const getters = {
   cbcourses: state => state.cbcourses,
   cbroomState: state => state.cbroomState,
-  course: state => state.course
+  course: state => state.course,
 }
 
 const actions = {

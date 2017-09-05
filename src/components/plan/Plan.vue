@@ -87,7 +87,7 @@ export default {
       //如果在vuex中还没有计划内容，则进行初始化
       this.$common.http.get(this.$common.api.PlanInfo + '?student_id=' + this.user.userid)
         .then(response => {
-          if ('null' === response.data) {
+          if (!response.data) {
             this.time = this.$common.timeUtil.getDate()
             this.content = ''
           } else {
@@ -156,12 +156,13 @@ export default {
       params.append('plan_send_time', this.$common.timeUtil.getDate())
 
       this.$common.http.post(this.$common.api.StudyPlanUpdate, params).then(response => {
-        if (1 === response.data.result) {
+        if (response.data) {
+          this.$message('已保存')
           this.$store.commit(types.UPDATE_PLAN, {
             time: this.$common.timeUtil.getDate(),
             content: this.content
           })
-          this.$router.go(-1)
+          this.mark = false
         } else {
           this.$confirm(this.$common.strings.plan_save_draft, this.$common.strings.dialog_warning_type, {
             confirmButtonText: this.$common.strings.dialog_button_yes,

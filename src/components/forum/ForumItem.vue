@@ -2,7 +2,7 @@
   <transition name="el-zoom-in-top">
     <div class="wrap">
       <div class="wrap-summary">
-        <p class="wrap-summary-title" @click="routerToDetail">{{item.title}}</p>
+        <p class="wrap-summary-title" @click="routerToDetail">{{item.message_title}}</p>
         <p class="wrap-summary-detail">
           <i class="el-icon-star-on wrap-summary-detail-star_count" v-if="item.mark==forumState"></i>
           <span class="wrap-summary-detail-star_count" v-if="item.mark==forumState">{{item.message_like}}</span>

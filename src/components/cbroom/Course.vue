@@ -16,8 +16,6 @@
       <!-- <el-button type="primary" @click="routerToVideoUpload">{{$common.strings.video_upload_button}}</el-button> -->
       <span class="config-no-list-hint" v-if="!getCourses.length">{{$common.strings.cbroom_no_course_hint}}</span>
       <course-item v-for="item in getCourses" :key="item.course_id" :item="item"></course-item>
-
-      <el-pagination layout="prev, pager, next" :total="notes.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
@@ -53,14 +51,12 @@ export default {
   name: 'Forum',
   data () {
     return {
-      hasItems: false,
-      pageSize: 10,
-      currentPage: 1
+      hasItems: false
     }
   },
   created () {
     this.$store.commit(types.UPDATE_HEADER_SELECTED, '/course')
-    if (this.getCourses.length < 1) {
+    if (this.getCourses.length < 1 && !this.configNet) {
       this.fetchCourses()
     }
   },
@@ -89,19 +85,16 @@ export default {
         })
         .catch(error => {
         })
-    },
-    handleCurrentChange (page) {
-      this.currentPage = page
     }
   },
   computed: {
     ...mapGetters([
       'cbroomState',
-      'cbcourses'
+      'cbcourses',
+      'configNet'
     ]),
     getCourses () {
-      const data = this.cbcourses.filter(item => item.course_mark == this.cbroomState)
-      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
+      return this.cbcourses.filter(item => item.course_mark == this.cbroomState)
     }
   },
   watch: {

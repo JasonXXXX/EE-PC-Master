@@ -48,7 +48,7 @@ export default {
   },
   created () {
     this.$store.commit(types.UPDATE_HEADER_SELECTED, '/teacher')
-    if (this.teachers.length < 1) {
+    if (this.teachers.length < 1 && !this.configNet) {
       this.fetchTeacher()
     }
   },
@@ -73,7 +73,8 @@ export default {
   computed: {
     ...mapGetters([
       'teachers',
-      'teachermark'
+      'teachermark',
+      'configNet'
     ]),
     getChunkTeachers () {
       const chunkArr = [],
@@ -82,7 +83,7 @@ export default {
 
       for (let i = 0; i < data.length; i += rols) {
         const tempArr = []
-        for (let j = 0; j < rols; j++) {
+        for (let j = 0; j < rols && (i+j)<data.length; j++) {
           tempArr.push(data[i + j])
         }
         chunkArr.push(tempArr)

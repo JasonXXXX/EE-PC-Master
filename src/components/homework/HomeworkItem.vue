@@ -3,8 +3,8 @@
     <div :class="['div', {highlight:edit}]">
       <div class="wrap">
         <div class="wrap-content">
-          <el-tooltip :disabled="edit" :content="'我的答案: '+item.work_content" placement="bottom" effect="light">
-            <span class="content-problem">{{item.work_title}}</span>
+          <el-tooltip :disabled="edit" :content="'我的答案: '+item.work_anser" placement="bottom" effect="light">
+            <span class="content-problem">{{item.work_content}}</span>
           </el-tooltip>
           <span class="content-time">{{item.work_uptime}}</span>
         </div>
@@ -118,7 +118,7 @@ export default {
     return {
       checked: false,
       edit: false,
-      answer: this.item.work_content
+      answer: this.item.work_anser
     }
   },
   methods: {
@@ -144,12 +144,14 @@ export default {
         let params = new URLSearchParams()
 
         // 其他参数不用传给后台
-        params.append('homework_id', this.item.work_id)
-        params.append('work_content', this.answer)
-        params.append('operate', 3)
+        params.append('studentwork_homework_id', this.item.work_id)
+        // params.append('work_title', this.item.work_title)
+        params.append('studentwork_content', this.answer)
+        params.append('operate', this.isdone? 3: 1)
 
-        this.$common.http.post(this.$common.api.HomeworkUpdate, params).then(response => {
-          if ('true' == response.data.result) {
+        this.$common.http.post(this.$common.api.StudentworkUpdate, params).then(response => {
+          // console.log(response.data)
+          if (response.data) {
             let data = {
               id: this.item.id,
               content: this.answer,
@@ -168,18 +170,6 @@ export default {
             })
           }
         }).catch(error => {
-          // //测试结果
-          // let data = {
-          //   id: this.item.id,
-          //   content: this.answer,
-          //   uptime: this.$common.timeUtil.getDate()
-          // }
-          // this.$store.commit(types.UPDATE_HOMEWORK_HOMEWORKS, data)
-          // this.$message({
-          //   type: 'success',
-          //   message: this.$common.strings.homework_after_save_message
-          // })
-          // this.edit = false
         })
       }).catch(() => {
       })
@@ -206,7 +196,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'homeworkSelected'
+      'homeworkSelected',
+      'isdone'
     ])
   },
   watch: {

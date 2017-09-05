@@ -4,4 +4,5 @@ export default {
   user: state => state.user,
   loading: state => state.loading,
   meState: state => state.meState,
+  configNet: state => state.configNet,
 }

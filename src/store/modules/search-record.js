@@ -27,7 +27,7 @@ const mutations = {
     }
 
     const recordsstr = JSON.stringify(state.records)
-    console.log(records)
+    console.log(recordsstr)
     localStorage.setItem(Storage.search_record, recordsstr)
   },
   [types.ADD_SEARCH_RECORDS](state, records) {

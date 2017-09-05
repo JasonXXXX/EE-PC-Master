@@ -39,7 +39,7 @@
 				<p class="wrap-hint">{{$common.strings.detail_upload_limit}}</p>
 			</div>
 			<el-button class="wrap-submit" slot="trigger" size="medium" v-if="selected" @click="handleCancle">取消</el-button>
-			<el-button class="wrap-submit" slot="trigger" size="medium" type="primary" v-if="selected" @click="handleSubmit">{{$common.strings.detail_upload_submit}}</el-button>
+			<el-button class="wrap-submit" slot="trigger" size="medium" type="primary" v-if="selected" @click="handleSubmitHeadimg">{{$common.strings.detail_upload_submit}}</el-button>
 		</div>
 	</div>
 </template>
@@ -158,9 +158,11 @@ export default {
 		this.name = this.user.name
 
 		const params = new URLSearchParams()
-		params.append('studentid', this.user.userid)
+		params.append('student_id', this.user.userid)
 		this.$common.http.post(this.$common.api.UserInfo, params)
 			.then(response => {
+				this.name = response.data.student_name
+				this.intro = response.data.intro
 				this.tel = response.data.tel
 				this.address = response.data.address
 				this.ID = response.data.id_number
@@ -168,7 +170,7 @@ export default {
 				this.parenttel = response.data.parent_tel
 				this.grade = Convert.convertGradeNumber(response.data.grade_mark)
 				this.sub = Convert.convertSubNumber(response.data.subject_mark)
-				this.gender = Convert.convertGender(response.data.gender)
+				this.gender = response.data.gender===1? '男': '女'
 			}).catch(error => {
 
 			})
@@ -231,7 +233,7 @@ export default {
 								next()
 							}).catch(error => {
 								this.$message({
-									type: 'success',
+									type: 'warning',
 									message: this.$common.strings.detail_fail_and_leave
 								})
 								next()
@@ -288,8 +290,7 @@ export default {
 				console.log(error)
 			})
 		},
-		handleSubmit () {
-			// this.$refs.upload.submit()
+		handleSubmitHeadimg () {
 			const params = new URLSearchParams()
 
 			params.append('user', this.user.user)
@@ -323,7 +324,7 @@ export default {
 
 			params.append('operate', 3)
 			params.append('user', this.user.user)
-			params.append('userid', this.user.userid)
+			params.append('student_id', this.user.userid)
 			params.append('name', this.name)
 			params.append('tel', this.tel)
 			params.append('gender', Convert.convertMark(this.gender))
