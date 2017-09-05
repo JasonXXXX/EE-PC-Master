@@ -42,8 +42,8 @@ export default {
   },
   created() {
     this.$store.commit(types.UPDATE_HOMEWORK_ISDONE, false)
-    if (!this.undonecalled && this.homeworkDone.length === 0) {
-      this.fetchUnfinishHomework()
+    if (this.homeworkDone.length === 0) {
+      this.fetchHomework()
     }
   },
   beforeDestroy() {
@@ -78,38 +78,19 @@ export default {
 
       })
     },
-    fetchUnfinishHomework() {
+    fetchHomework() {
       let params = new URLSearchParams()
 
-      // isfinish为 2 表示未完成的作业
       params.append('isfinish', 2)
       params.append('index', this.homeworkUndone.length)
       params.append('student_id', this.user.userid)
 
       this.$common.http.post(this.$common.api.HomeworkList, params)
         .then(response => {
-          this.$store.commit(types.UPDATE_HOMEWORK_UNDONECALLED, true)
+          // this.$store.commit(types.UPDATE_HOMEWORK_UNDONECALLED, true)
           this.$store.commit(types.ADD_HOMEWORK_DONE, response.data)
         })
         .catch(error => {
-          //以下是测试数据
-          // let works = [{
-          //   id: 1,
-          //   title: '2用React Natve做一个app',
-          //   content: '',
-          //   uptime: '2014-12-03'
-          // }, {
-          //   id: 2,
-          //   title: '2用React Natve做一个app',
-          //   content: '',
-          //   uptime: '2014-12-03'
-          // }, {
-          //   id: 3,
-          //   title: '2用React Natve做一个app',
-          //   content: '',
-          //   uptime: '2014-12-03'
-          // }]
-          // this.$store.commit(types, works)
         })
     }
   },
@@ -118,10 +99,9 @@ export default {
       'user',
       'homeworkDone',
       'homeworkSelected',
-      'undonecalled'
     ]),
     getHomeworkUndone() {
-      return this.homeworkDone.filter(item => item.work_finish == 2)
+      return this.homeworkDone.filter(item => !item.work_anser.length)
     }
   },
   watch: {

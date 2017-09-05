@@ -6,7 +6,8 @@
     </div>
     <video-player :video="video"></video-player>
     <div class="course-info">
-      <h3>{{course.course_content}}</h3>
+      <h3>{{course.course_title}}</h3>
+      <h4>{{course.course_content}}</h4>
       <p>
         <span class="wrap-info-addtive" v-if="course.course_mark===1 || course.course_mark===2">{{$common.strings.cbroom_course_teacher}}: {{course.teacher_name}}</span>
         <span class="wrap-info-addtive" v-if="course.course_mark===1">{{$common.strings.cbroom_course_duration}}: {{course.duration || '未知'}}</span>
@@ -58,7 +59,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import VideoPlayer from './VideoPlayer'
-import Storage from '@/common/util/storage'
 import Server from '@/common/data/server'
 
 export default {
@@ -66,9 +66,9 @@ export default {
   data() {
     return {
       video: {
-        src: 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/video/course/' + this.course.course_content + '.mp4',
-        id: this.course.course_id,
-        text: this.course.course_content
+        src: '',
+        id: '',
+        text: ''
       }
     }
   },
@@ -76,6 +76,10 @@ export default {
     VideoPlayer
   },
   create() {
+    this.src = 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/video/course/' + this.course.course_title + '.mp4',
+    this.id = this.course.course_id
+    this.text = this.course.course_title
+    console.log('此课程视频url = ', this.src)
   },
   methods: {
     playHappened() {

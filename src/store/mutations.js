@@ -27,6 +27,12 @@ export default {
   [types.UPDATE_USER_USER](state, user) {
     state.user.user = user
   },
+  [types.UPDATE_USER_ALL](state, user) {
+    state.user = user
+  },
+  [types.UPDATE_CONFIGNET](state, net) {
+    state.configNet = net
+  },
   [types.UPDATE_USER_BASE](state, base) {
     state.user.name = base.name
     state.user.email = base.email

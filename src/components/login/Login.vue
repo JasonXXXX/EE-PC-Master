@@ -3,6 +3,10 @@
     <img class="wrap-img" :src="bg">
     <div class="wrap-login">
       <el-form class="wrap-form" label-position="top" label-width="80px">
+        <el-radio-group v-model="useriden">
+          <el-radio-button label="教师"></el-radio-button>
+          <el-radio-button label="学生"></el-radio-button>
+        </el-radio-group>
         <el-form-item label="邮箱">
           <el-tooltip :content="emailValid" :manual="true" :value="tipVisible">
             <el-input v-model="email" type="email" placeholder="邮箱"></el-input>
@@ -56,6 +60,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import types from '@/store/types'
+
+import Rongyun from '@/common/util/rongyun'
+
 import Bg from '@/assets/bg.jpg'
 
 export default {
@@ -65,14 +73,12 @@ export default {
       minlength: 6,
       maxlength: 16,
       useriden: '学生',
-      email: '',
-      password: '',
+      email: '963321510@qq.com',
+      password: '123456',
       bg: Bg,
       emailValid: '格式不对',
       tipVisible: false
     }
-  },
-  components: {
   },
   created () {
 
@@ -80,17 +86,32 @@ export default {
   methods: {
     login () {
       if (this.test(this.email, new RegExp('[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[a-zA-Z]+'))) {
-        let params = new URLSearchParams()
-
-        params.append('user', this.user.user)
+        const params = new URLSearchParams()
+        params.append('user', this.useriden==='学生'? 2: 1)
         params.append('email', this.email)
         params.append('password', this.password)
 
         this.$common.http.post(this.$common.api.Login, params)
           .then(response => {
-            if ('false' !== response.data) {
-              localStorage.setItem('user', this.user)
-              localStorage.setItem('userid', response.data.id)
+            //联网成功但登录失败
+            if (response.data == null) {
+              this.$confirm('该邮箱好像不存在,是否进行注册', '确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'confirm'
+              }).then(() => {
+                sessionStorage.setItem('register-user', this.useriden==='学生'? 2: 1)
+                sessionStorage.setItem('register-email', this.email)
+                sessionStorage.setItem('register-password', this.password)
+
+                this.register()
+              }).catch(() => { })
+              
+            } else {
+              this.$message('登录成功')
+
+              localStorage.setItem('user', this.useriden==='学生'? 2: 1)
+              localStorage.setItem('userid', response.data.student_id || response.data.teacher_id)
               localStorage.setItem('name', response.data.name)
               localStorage.setItem('headimg', response.data.headimg)
               localStorage.setItem('email', response.data.email)
@@ -98,9 +119,9 @@ export default {
               localStorage.setItem('intro', response.data.intro)
               localStorage.setItem('token', response.data.token)
 
-              this.$store.commit(types.UPDATE_USER_USER, {
-                user: this.user,
-                userid: response.data.id,
+              this.$store.commit(types.UPDATE_USER_ALL, {
+                user: this.useriden==='学生'? 2: 1,
+                userid: response.data.student_id || response.data.teacher_id,
                 name: response.data.name,
                 headimg: response.data.headimg,
                 email: response.data.email,
@@ -108,30 +129,17 @@ export default {
                 token: response.data.token,
               })
 
-              this.$message('登录成功')
-
               Rongyun.setListenAndconnectRongyun()
 
               //跳转到主页面
               this.$router.replace('/')
-            } else {
-              //联网成功但登录失败
-              this.$message({
-                type: 'warning',
-                message: '登录失败,请重新登录'
-              })
             }
           }).catch(error => {
-            this.$confirm('该邮箱好像不存在,是否进行注册', '确认', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'confirm'
-            }).then(() => {
-              sessionStorage.setItem('register-email', this.email)
-              sessionStorage.setItem('register-password', this.password)
-
-              this.register()
-            }).catch(() => { })
+            console.log(error)
+            this.$message({
+              type: 'warning',
+              message: '登录失败,请重新登录'
+            })
           })
 
       } else if ('' === this.email) {

@@ -20,6 +20,8 @@ const mutations = {
   [types.ADD_TEACHER_CHINA] (state, teachers) {
     teachers.forEach(item => {
       state.teachers.push(Object.freeze(item))
+
+      state.teachers = Array.from(new Set(state.teachers))
     })
   },
   [types.UPDATE_TEACHER_TEACHERMARK](state, mark) {

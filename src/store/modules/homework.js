@@ -10,6 +10,7 @@ const state = {
 }
 
 const getters = {
+  isdone: state => state.isdone,
   homeworkDone: state => state.homeworkDone,
   homeworkUndone: state => state.homeworkUndone,
   undonecalled: state => state.undonecalled,
@@ -63,7 +64,7 @@ const mutations = {
     if(!state.isdone) {
       for(let i=0; i<state.homeworkUndone.length; i++) {
         if(state.homeworkUndone[i].id===homework.id) {
-          state.homeworkUndone[i].content = homework.content
+          state.homeworkUndone[i].work_anser = homework.content
           state.homeworkUndone[i].uptime = homework.uptime
           console.log('原完成作业数:'+state.homeworkDone.length)
           state.homeworkDone.unshift(state.homeworkUndone[i])

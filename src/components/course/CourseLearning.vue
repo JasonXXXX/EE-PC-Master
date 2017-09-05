@@ -41,6 +41,9 @@ export default {
       params.append('isdone', 1)
       this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
         .then(response => {
+          if (this.$common.jsonUtil.jsonLength(response.data) < 5) {
+            this.allLoaded = true
+          }
           this.$store.commit(types.ADD_COURSE_LEARNING, response.data)
         })
         .catch(error => {

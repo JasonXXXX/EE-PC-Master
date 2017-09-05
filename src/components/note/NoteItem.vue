@@ -9,7 +9,7 @@
           <i class="el-icon-delete wrap-ctrl-icon" @click="hadnleDelete"></i>
           <el-checkbox class="ctrl-check" v-model="checked" @change="handleChange"></el-checkbox>
         </div>
-        <p class="wrap-p" v-if="!edit">{{item.title}}</p>
+        <p class="wrap-p" v-if="!edit">{{note || '默认标题'}}</p>
       </div>
       <div class="wrap-input-div" v-if="edit">
         <input class="wrap-input" v-model.trim="note" :maxlength="$common.wordCountLimit.notetitle">
@@ -30,7 +30,7 @@
 }
 
 .div:hover {
-  box-shadow: 2px 2px 16px #999999;
+  box-shadow: 1px 1px 16px #BDBDBD;
 }
 
 .wrap {
@@ -149,9 +149,9 @@ export default {
   methods: {
     handleChange(event) {
       if (event.target.checked) {
-        this.$store.commit(types.ADD_NOTE_SELECTED, this.item.id)
+        this.$store.commit(types.ADD_NOTE_SELECTED, this.item.note_id)
       } else {
-        this.$store.commit(types.DELETE_NOTE_SELECTED, this.item.id)
+        this.$store.commit(types.DELETE_NOTE_SELECTED, this.item.note_id)
       }
     },
     handleEdit() {
@@ -169,18 +169,18 @@ export default {
         const params = new URLSearchParams()
 
         params.append('operate', 3)
-        params.append('note_id', this.item.id || '')
-        params.append('note_title', this.item.title)
-        params.append('note_content', this.item.content)
+        params.append('note_id', this.item.note_id)
+        params.append('note_title', this.note)
+        params.append('note_content', this.content)
 
         this.$common.http.post(this.$common.api.StudentNoteUpdate, params)
           .then(response => {
-            if (0 !== response.data.result) {
+            if (response.data) {
               //返回不为0，则为成功后的id
               let data = {
-                id: response.data.result,
-                title: this.item.title,
-                content: this.item.content,
+                id: this.item.note_id,
+                title: this.note,
+                content: this.content,
                 set_time: this.$common.timeUtil.getDate()
               }
               this.$store.commit(types.UPDATE_NOTE_NOTES, data)
@@ -208,12 +208,12 @@ export default {
         const params = new URLSearchParams()
 
         params.append('operate', 2)
-        params.append('note_id', this.item.id || '')
+        params.append('note_id', this.item.note_id)
 
         this.$common.http.post(this.$common.api.StudentNoteUpdate, params)
           .then(response => {
-            if (response.data.result === 'true') {
-              this.$store.commit(types.DELETE_NOTE_NOTE, this.item.id)
+            if (response.data) {
+              this.$store.commit(types.DELETE_NOTE_NOTE, this.item.note_id)
 
               this.$message({
                 type: 'success',
@@ -240,14 +240,14 @@ export default {
     noteSelected() {
       if (this.noteSelected.length > 0) {
         this.noteSelected.every(item => {
-          this.checked = item === this.item.id
+          this.checked = item === this.item.note_id
           return !this.checked
         })
       } else {
         this.checked = false
       }
     },
-    'item.title': {
+    'item.note_title': {
       handler(newVal, oldVal) {
         this.note = newVal
         if (newVal == '') {

@@ -42,8 +42,8 @@ export default {
   },
   created() {
     this.$store.commit(types.UPDATE_HOMEWORK_ISDONE, true)
-    if (!this.donecalled && this.homeworkDone.length === 0) {
-      this.fetchFinishedHomework()
+    if (this.homeworkDone.length === 0) {
+      this.fetchHomework()
     }
   },
   beforeDestroy() {
@@ -77,8 +77,8 @@ export default {
       }).catch(() => {
       })
     },
-    fetchFinishedHomework() {
-      const params = new URLSearchParams()
+    fetchHomework() {
+      let params = new URLSearchParams()
 
       // isfinish为 1 表示已完成的作业
       params.append('isfinish', 1)
@@ -87,28 +87,10 @@ export default {
 
       this.$common.http.post(this.$common.api.HomeworkList, params)
         .then(response => {
-          this.$store.commit(types.UPDATE_HOMEWORK_DONECALLED, true)
+          // this.$store.commit(types.UPDATE_HOMEWORK_DONECALLED, true)
           this.$store.commit(types.ADD_HOMEWORK_DONE, response.data)
         })
         .catch(error => {
-          //以下是测试数据
-          // let works = [{
-          //   id: 1,
-          //   title: '使用framework 7做一个app',
-          //   content: '1利用vue.js做一个简单的页面跳转',
-          //   uptime: '2014-12-03'
-          // }, {
-          //   id: 2,
-          //   title: '使用framework 7做一个app',
-          //   content: '1利用vue.js做一个简单的页面跳转',
-          //   uptime: '2014-12-03'
-          // }, {
-          //   id: 3,
-          //   title: '使用framework 7做一个app',
-          //   content: '1利用vue.js做一个简单的页面跳转',
-          //   uptime: '2014-12-03'
-          // }]
-          // this.$store.commit(types.ADD_HOMEWORK_DONE, works)
         })
     }
   },
@@ -117,10 +99,9 @@ export default {
       'user',
       'homeworkDone',
       'homeworkSelected',
-      'donecalled'
     ]),
     getHomeworkDone() {
-      return this.homeworkDone.filter(item => item.work_finish == 1)
+      return this.homeworkDone.filter(item => item.work_anser.length)
     }
   },
   watch: {

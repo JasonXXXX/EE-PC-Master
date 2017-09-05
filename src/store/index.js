@@ -7,6 +7,7 @@ import actions from './actions'
 import modules from './modules'
 
 import Storage from '@/common/util/storage'
+import Server from '@/common/data/server'
 import imgUrl from '@/assets/logo.png'
 
 Vue.use(Vuex)
@@ -23,8 +24,9 @@ const state = {
     password: localStorage.getItem(Storage.password) || '',
     name: localStorage.getItem(Storage.name) || '默认名',
     intro: localStorage.getItem(Storage.intro) || '优质学习，在线互动',
-    headimg: localStorage.getItem(Storage.headimg) || imgUrl
-  }
+    headimg: localStorage.getItem(Storage.headimg) || 'http://' + Server.ip + ':' + Server.port + '/' + Server.server + '/image/userheadimg/' + ((localStorage.getItem(Storage.user) || 2)===2? 'student': 'teacher') + (localStorage.getItem(Storage.userid) || 2) + '.png'
+  },
+  configNet: true
 }
 
 export default new Vuex.Store({

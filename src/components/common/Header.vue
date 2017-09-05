@@ -93,8 +93,10 @@
 </style>
 
 <script>
+import Axios from 'axios'
+
 import logo from '@/assets/icon.png'
-import headimg from '@/assets/headimg.png'
+import Headimg from '@/assets/headimg.png'
 import { mapGetters } from 'vuex'
 import types from '@/store/types'
 import Storage from '@/common/util/storage'
@@ -110,12 +112,13 @@ export default {
   data () {
     return {
       logo: logo,
-      headimg: headimg,
+      headimg: Headimg,
       activeIndex: 'detail',
       search: '',
     }
   },
   created () {
+    this.headimg = this.user.headimg
     this.fetchAll()
   },
   methods: {
@@ -147,7 +150,7 @@ export default {
       this.teachers.forEach(item => {
         this.$store.commit(types.ADD_SEARCH_SEARCH, {
           value: '教师: ' + item.teacher_name + ',' + Convert.convertSubNumber(item.teacher_mark),
-          id: item.teacherid
+          id: item.teacher_id
         })
       })
     },
@@ -168,11 +171,11 @@ export default {
         this.search = ''
       } else {
         if (text.startsWith('课程')) {
-          this.$store.commit(types.UPDATE_CBROOM_COURSE, this.courses.find(item => item.course_id == value.id))
+          this.$store.commit(types.UPDATE_CBROOM_COURSE, this.cbcourses.find(item => item.course_id == value.id))
           this.$router.push('/coursedetail')
         } else if (text.startsWith('资讯')) {
           this.$store.commit(types.UPDATE_FORUM_MESSAGEID, value.id)
-          this.$router.push(value.mark === 4 ? '/discoverdetail' : 'newsdetail')
+          this.$router.push(value.mark === 4 ? '/discover' : 'news')
         } else if (text.startsWith('教师')) {
           this.$store.commit(types.UPDATE_TEACHER_TEACHERID, value.id)
           this.$router.push('/teacherdetail')
@@ -186,61 +189,33 @@ export default {
       params.append('index', 0)
 
       return this.$common.http.post(this.$common.api.TeacherList, params)
-      // .then(response => {
-      //   this.$store.commit(types.ADD_TEACHER_CHINA, response.data)
-      // })
-      // .catch(error => {
-      // })
     },
     fetchForums () {
       let params = new URLSearchParams()
 
-      params.append('message_mark', this.forumState)
+      params.append('message_mark', 0)
       params.append('index', 0)
 
       return this.$common.http.post(this.$common.api.MessageList, params)
-      // .then(response => {
-      //   this.$store.commit(types.ADD_FORUM_NEWS, response.data)
-      // })
-      // .catch(error => {
-      // })
     },
     fetchCourses () {
       let params = new URLSearchParams()
 
       params.append('index', 0)
-      params.append('course_mark', this.cbroomState)
+      params.append('course_mark', 0)
 
       return this.$common.http.post(this.$common.api.CourseList, params)
-      // .then(response => {
-      //   this.$store.commit(types.ADD_CBROOM_MICROLECTURE, response.data)
-      // })
-      // .catch(error => {
-      // })
-    },
-    fetchFinishedCourses() {
-      const params = new URLSearchParams()
-      params.append('student_id', this.user.userid)
-      params.append('index', this.courseLearned.length)
-      params.append('isdone', 2)
-
-      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
-    },
-    fetchUnfinishedCourses() {
-      let params = new URLSearchParams()
-      params.append('student_id', this.user.userid)
-      params.append('index', this.courseLearning.length)
-      params.append('isdone', 1)
-      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
     },
     fetchAll () {
-      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers(), this.fetchFinishedCourses(), this.fetchUnfinishedCourses()]
-      this.$common.http.all(fetchs).then(this.$common.http.spread((courses, forums, teachers, finishC, unfinishC) => {
-        this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses)
-        this.$store.commit(types.ADD_FORUM_NEWS, forums)
-        this.$store.commit(types.ADD_TEACHER_CHINA, teachers)
-        this.$store.commit(types.ADD_COURSE_LEARNED, finishC.data)
-        this.$store.commit(types.ADD_COURSE_LEARNING, unfinishC.data)
+      this.$store.commit(types.UPDATE_CONFIGNET, true)
+
+      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers()]
+      Axios.all(fetchs).then(Axios.spread((courses, forums, teachers) => {
+        this.$store.commit(types.UPDATE_CONFIGNET, false)
+        
+        this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses.data)
+        this.$store.commit(types.ADD_FORUM_NEWS, forums.data)
+        this.$store.commit(types.ADD_TEACHER_CHINA, teachers.data)
 
         this.initSearchSuggestions()
       })).catch(error => { })
@@ -248,11 +223,13 @@ export default {
   },
   computed: {
     ...mapGetters([
+      'user',
       'headerSelected',
       'cbcourses',
       'forums',
       'teachers',
-      'searchs'
+      'searchs',
+      'records'
     ])
   },
   watch: {

@@ -35,8 +35,8 @@ const mutations = {
   //修改全局保存的notes数组，更新修改的那个笔记
   [types.UPDATE_NOTE_NOTES](state, note) {
     for (let i = 0; i < state.notes.length; i++) {
-      if (note.id === state.notes[i].id) {
-        state.notes[i].title = note.title
+      if (note.note_id === state.notes[i].id) {
+        state.notes[i].note_title = note.title
         state.notes[i].set_time = note.set_time
         state.notes[i].content = note.content
         return;
@@ -52,7 +52,7 @@ const mutations = {
   },
   //添加笔记
   [types.UPDATE_ADD_NOTE](state, note) {
-    state.notes.unshift(note)
+    state.notes.push(note)
   },
 
   [types.DELETE_NOTE_SELECTED] (state, id) {
@@ -69,7 +69,7 @@ const mutations = {
   },
   [types.DELETE_NOTE_NOTE] (state, id) {
     state.notes.every((item, index, arr) => {
-      if (item.id === id) {
+      if (item.note_id === id) {
         arr.splice(index, 1)
         return false
       }

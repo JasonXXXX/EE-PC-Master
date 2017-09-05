@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="wrap-info">
-        <p class="wrap-info-title" @click="routerToCourseDetail">{{item.course_content}}</p>
+        <p class="wrap-info-title" @click="routerToCourseDetail">{{item.course_title}}</p>
         <span class="wrap-info-addtive" v-if="item.course_mark===1 || item.course_mark===2">{{$common.strings.cbroom_course_teacher}}: {{item.teacher_name}}</span>
         <span class="wrap-info-addtive" v-if="item.course_mark===1">{{$common.strings.cbroom_course_duration}}: {{item.duration || '未知'}}</span>
         <span class="wrap-info-addtive" v-if="item.course_mark===2">{{$common.strings.cbroom_course_fee}}:
@@ -105,6 +105,7 @@
 </style>
 
 <script>
+import types from '@/store/types'
 import 'vue-awesome/icons/play-circle-o'
 import Img from '@/assets/html.jpg'
 
@@ -118,7 +119,7 @@ export default {
   },
   methods: {
     routerToCourseDetail () {
-      this.$store.commit(types.UPDATE_CBROOM_COURSE, item)
+      this.$store.commit(types.UPDATE_CBROOM_COURSE, this.item)
       this.$router.push('/coursedetail')
     }
   }
