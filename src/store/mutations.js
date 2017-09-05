@@ -20,6 +20,7 @@ export default {
       intro: '优质学习，在线互动',
       headimg: imgUrl
     }
+    console.log('用户数据已清空/还原')
   },
   [types.UPDATE_ME_MESTATE](state, meState) {
     state.meState = meState

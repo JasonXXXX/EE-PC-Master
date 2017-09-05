@@ -39,7 +39,9 @@ export default {
   //个人信息修改
   InfoUpdate: 'StudentServletMobile',
   //修改头像
-  UpdateHeadimg: 'UploadHeadimg',
+  UpdateHeadimg: 'UploadHeadimgServlet',
+  //下载头像
+  DownloadHeadimg: 'DownloadHeadimgServlet',
   //教师列表
   TeacherList: 'TeacherListServletMobile',
   //教师详情

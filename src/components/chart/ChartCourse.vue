@@ -155,6 +155,18 @@ export default {
         {
           date: new Date('2017-08-26')
         },
+        {
+          date: new Date('2017-09-13')
+        },
+        {
+          date: new Date('2017-09-14')
+        },
+        {
+          date: new Date('2017-09-22')
+        },
+        {
+          date: new Date('2017-09-26')
+        },
       ],
       year: '',
       years: [],
@@ -173,16 +185,6 @@ export default {
   methods: {
     updateCanvas() {
       document.getElementById('canvas-all').height = document.getElementById('canvas').height
-
-      // const container = this.$refs.container
-
-      // container.removeChild(document.getElementById('canvas'))
-
-      // const canvas = document.createElement('canvas')
-      // canvas.id = 'canvas'
-      // container.appendChild(canvas)
-
-      // this.ctx = document.getElementById('canvas').getContext('2d')
     },
     handleSelect(select) {
       this.activeIndex = select

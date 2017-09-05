@@ -20,26 +20,26 @@
 </template>
 
 <style scoped>
-  .myCanvas {
-    height: 100%;
-    width: 100%;
-  }
+.myCanvas {
+  height: 100%;
+  width: 100%;
+}
 
-  .wrap {
-    text-align: left;
-  }
+.wrap {
+  text-align: left;
+}
 
-  .wrap-menu {
-    margin: 4px 0 4px 8px;
-    height: fit-content;
-  }
+.wrap-menu {
+  margin: 4px 0 4px 8px;
+  height: fit-content;
+}
 </style>
 
 <script>
 export default {
   name: 'Chart',
   methods: {
-    handleSelect (value) {
+    handleSelect(value) {
       switch (value) {
         case 'course':
           this.$router.push('/chart/course')

@@ -29,8 +29,10 @@ const mutations = {
   },
   //清空数组
   [types.CLEAR_CBROOM_CBROOM](state) {
-    state.cbcourses.splice(0,state.cbcourses.length)
+    state.cbcourses.splice(0, state.cbcourses.length)
     state.cbroomState = 1
+    state.course = null
+    console.log('在线课程已清空')
   },
   [types.UPDATE_CBROOM_COURSE](state, course) {
     state.course = course

@@ -17,7 +17,7 @@ const actions = {
 
 const mutations = {
   //给数组添加元素
-  [types.ADD_TEACHER_CHINA] (state, teachers) {
+  [types.ADD_TEACHER_CHINA](state, teachers) {
     teachers.forEach(item => {
       state.teachers.push(Object.freeze(item))
 
@@ -29,6 +29,12 @@ const mutations = {
   },
   [types.UPDATE_TEACHER_TEACHERID](state, id) {
     state.teacherid = id
+  },
+  [types.CLEAR_TEACHER_ALL](state, id) {
+    state.teacherid = 1
+    state.teachermark = 1
+    state.teachers.splice(0, state.teachers.length)
+    console.log('教师已清空')
   }
 }
 

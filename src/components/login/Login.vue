@@ -22,40 +22,40 @@
 </template>
 
 <style scoped>
-  .wrap {
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    width: 100%;
-  }
+.wrap {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
 
-  .wrap-img {
-    width: 100%;
-    height: 100%;
-  }
+.wrap-img {
+  width: 100%;
+  height: 100%;
+}
 
-  .wrap-login {
-    position: absolute;
-    top: 200px;
-    width: 100%;
-    text-align: right;
-    padding-right: 48px;
-  }
+.wrap-login {
+  position: absolute;
+  top: 200px;
+  width: 100%;
+  text-align: right;
+  padding-right: 48px;
+}
 
-  .wrap-form {
-    margin: 8px 48px 8px auto;
-    padding: 12px 48px;
-    width: fit-content;
-    background-color: #FFFFFF;
-    opacity: .6;
-    border-radius: 8px;
-    box-shadow: 2px 2px 12px #999999;
-    transition: all .8s ease;
-  }
+.wrap-form {
+  margin: 8px 48px 8px auto;
+  padding: 12px 48px;
+  width: fit-content;
+  background-color: #FFFFFF;
+  opacity: .6;
+  border-radius: 8px;
+  box-shadow: 2px 2px 12px #999999;
+  transition: all .8s ease;
+}
 
-  .wrap-form:hover {
-    opacity: .9;
-  }
+.wrap-form:hover {
+  opacity: .9;
+}
 </style>
 
 <script>
@@ -68,26 +68,26 @@ import Bg from '@/assets/bg.jpg'
 
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
       minlength: 6,
       maxlength: 16,
       useriden: '学生',
-      email: '963321510@qq.com',
-      password: '123456',
+      email: '',
+      password: '',
       bg: Bg,
       emailValid: '格式不对',
       tipVisible: false
     }
   },
-  created () {
+  created() {
 
   },
   methods: {
-    login () {
+    login() {
       if (this.test(this.email, new RegExp('[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[a-zA-Z]+'))) {
         const params = new URLSearchParams()
-        params.append('user', this.useriden==='学生'? 2: 1)
+        params.append('user', this.useriden === '学生' ? 2 : 1)
         params.append('email', this.email)
         params.append('password', this.password)
 
@@ -100,17 +100,17 @@ export default {
                 cancelButtonText: '取消',
                 type: 'confirm'
               }).then(() => {
-                sessionStorage.setItem('register-user', this.useriden==='学生'? 2: 1)
+                sessionStorage.setItem('register-user', this.useriden === '学生' ? 2 : 1)
                 sessionStorage.setItem('register-email', this.email)
                 sessionStorage.setItem('register-password', this.password)
 
                 this.register()
               }).catch(() => { })
-              
+
             } else {
               this.$message('登录成功')
 
-              localStorage.setItem('user', this.useriden==='学生'? 2: 1)
+              localStorage.setItem('user', this.useriden === '学生' ? 2 : 1)
               localStorage.setItem('userid', response.data.student_id || response.data.teacher_id)
               localStorage.setItem('name', response.data.name)
               localStorage.setItem('headimg', response.data.headimg)
@@ -120,7 +120,7 @@ export default {
               localStorage.setItem('token', response.data.token)
 
               this.$store.commit(types.UPDATE_USER_ALL, {
-                user: this.useriden==='学生'? 2: 1,
+                user: this.useriden === '学生' ? 2 : 1,
                 userid: response.data.student_id || response.data.teacher_id,
                 name: response.data.name,
                 headimg: response.data.headimg,
@@ -151,10 +151,10 @@ export default {
         })
       }
     },
-    test (value, regex) {
+    test(value, regex) {
       return regex.test(value)
     },
-    register () {
+    register() {
       this.$router.push('/register')
     }
   },

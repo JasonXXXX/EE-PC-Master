@@ -75,35 +75,35 @@
 </template>
 
 <style scoped>
-  .wrap {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    text-align: center;
-  }
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  text-align: center;
+}
 
-  .wrap-header {
-    margin-top: 12px;
-  }
+.wrap-header {
+  margin-top: 12px;
+}
 
-  .wrap-content {
-    flex: 1;
-  }
+.wrap-content {
+  flex: 1;
+}
 
-  .wrap-user {
-    margin-top: 48px;
-  }
+.wrap-user {
+  margin-top: 48px;
+}
 
-  .wrap-form {
-    margin: 0 auto;
-    width: 40%;
-  }
+.wrap-form {
+  margin: 0 auto;
+  width: 40%;
+}
 
-  .wrap-form-item {
-    margin: 4px 0;
-    width: 100%;
-    text-align: left;
-  }
+.wrap-form-item {
+  margin: 4px 0;
+  width: 100%;
+  text-align: left;
+}
 </style>
 
 <script>
@@ -112,7 +112,7 @@ import Convert from '@/common/util/convert'
 
 export default {
   name: 'Register',
-  data () {
+  data() {
     return {
       indicator: 'always',
       step: 1,
@@ -165,12 +165,15 @@ export default {
       ]
     }
   },
-  mounted () {
+  created() {
+    console.log('Register创建')
+  },
+  mounted() {
     sessionStorage.removeItem('register-email')
     sessionStorage.removeItem('register-password')
   },
   methods: {
-    handleChange (newIndex, oldIndex) {
+    handleChange(newIndex, oldIndex) {
       switch ((oldIndex + 1)) {
         case 1:
           if (newIndex === 3) {
@@ -212,7 +215,7 @@ export default {
           break
       }
     },
-    register () {
+    register() {
       this.$store.commit(types.UPDATE_USER_LAST, {
         gender: Convert.convertGender(this.gender),
         grade: Convert.convertMark(this.grade),
@@ -256,28 +259,28 @@ export default {
         }).catch(error => {
         })
     },
-    test (value, regex) {
+    test(value, regex) {
       return regex.test(value)
     },
-    queryGenderSuggestions (queryString, cb) {
+    queryGenderSuggestions(queryString, cb) {
       const suggestions = this.genderSuggestions
       const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
-    querySubSuggestions (queryString, cb) {
+    querySubSuggestions(queryString, cb) {
       const suggestions = this.subSuggestions
       const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
-    queryGradeSuggestions (queryString, cb) {
+    queryGradeSuggestions(queryString, cb) {
       const suggestions = this.gradeSuggestions
       const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
-    createFilter (queryString) {
+    createFilter(queryString) {
       return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) === 0)
     },
   }

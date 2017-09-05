@@ -8,15 +8,19 @@
           <i class="el-icon-information"></i>{{$common.strings.forum_menu_discover}}</el-menu-item>
       </el-menu>
     </transition>
-    <div :class="['config-wrap-view', {'config-no-border':!getForums.length}]">
+    <div :class="['config-wrap-view', 'wrap', {'config-no-border':!getForums.length}]">
       <span class="config-no-list-hint" v-if="!getForums.length">{{$common.strings.forum_no_list_hint}}</span>
       <forum-item v-for="item in getForums" :key="item.id" :item="item"></forum-item>
+
+      <el-pagination layout="prev, pager, next" :total="getForums.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
 
 <style scoped>
-
+.wrap {
+  text-align: right;
+}
 </style>
 
 <script>
@@ -27,12 +31,14 @@ import ForumItem from './ForumItem'
 
 export default {
   name: 'Forum',
-  data () {
+  data() {
     return {
-      hasItems: false
+      hasItems: false,
+      pageSize: 10,
+      currentPage: 1
     }
   },
-  created () {
+  created() {
     this.$store.commit(types.UPDATE_HEADER_SELECTED, '/forum')
     if (this.getForums.length < 1 && !this.configNet) {
       this.fetchForums()
@@ -42,24 +48,27 @@ export default {
     ForumItem
   },
   methods: {
-    handleSelect (index) {
+    handleSelect(index) {
       this.$store.commit(types.UPDATE_FORUM_STATE, parseInt(index))
       if (this.getForums.length < 1) {
         this.fetchForums()
       }
     },
-    fetchForums () {
+    fetchForums() {
       let params = new URLSearchParams()
 
       params.append('message_mark', this.forumState)
       params.append('index', this.getForums.length)
 
-      this.$common.http.get(this.$common.api.MessageList+"?message_mark="+this.forumState+"&index="+this.getForums.length)
+      this.$common.http.get(this.$common.api.MessageList + "?message_mark=" + this.forumState + "&index=" + this.getForums.length)
         .then(response => {
           this.$store.commit(types.ADD_FORUM_NEWS, response.data)
         })
         .catch(error => {
         })
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page
     }
   },
   computed: {
@@ -69,11 +78,10 @@ export default {
       'favoriteList',
       'configNet'
     ]),
-    getForums () {
-      return this.forums.filter(item => item.message_mark === this.forumState)
+    getForums() {
+      const data = this.forums.filter(item => item.message_mark === this.forumState)
+      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
     }
-  },
-  watch: {
   }
 }
 </script>

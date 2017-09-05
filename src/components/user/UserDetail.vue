@@ -45,49 +45,49 @@
 </template>
 
 <style scoped>
-	.wrap-main {
-		flex: 1;
-		text-align: right;
-	}
+.wrap-main {
+	flex: 1;
+	text-align: right;
+}
 
-	.wrap-save {
-		margin: 8px 8px 0 0;
-	}
+.wrap-save {
+	margin: 8px 8px 0 0;
+}
 
-	.wrap-collapse-item {
-		text-align: left;
-	}
+.wrap-collapse-item {
+	text-align: left;
+}
 
-	.wrap-autocom {
-		width: 100%;
-	}
+.wrap-autocom {
+	width: 100%;
+}
 
-	.wrap-upload {
-		padding: 12px;
-	}
+.wrap-upload {
+	padding: 12px;
+}
 
-	.wrap-upload-icon {
-		overflow: hidden;
-	}
+.wrap-upload-icon {
+	overflow: hidden;
+}
 
-	.wrap-hint {
-		color: #BBBBBB;
-		font-size: 12px;
-	}
+.wrap-hint {
+	color: #BBBBBB;
+	font-size: 12px;
+}
 
-	.wrap-submit {
-		margin-top: 12px;
-	}
+.wrap-submit {
+	margin-top: 12px;
+}
 
-	.wrap-upload-headimg {
-		display: block;
-		width: 160px;
-		height: 160px;
-		margin: 12px auto;
-		padding: 12px 24px;
-		/*border: .5px dashed #AAAAAA;*/
-		box-shadow: 1px 1px 32px #AAAAAA;
-	}
+.wrap-upload-headimg {
+	display: block;
+	width: 160px;
+	height: 160px;
+	margin: 12px auto;
+	padding: 12px 24px;
+	/*border: .5px dashed #AAAAAA;*/
+	box-shadow: 1px 1px 32px #AAAAAA;
+}
 </style>
 
 <script>
@@ -98,7 +98,7 @@ import Storage from '@/common/util/storage'
 import ImageUtil from '@/common/util/image'
 
 export default {
-	data () {
+	data() {
 		return {
 			activeName: 'base',
 			headimg: '',
@@ -147,7 +147,7 @@ export default {
 			payload: {}
 		}
 	},
-	created () {
+	created() {
 		this.payload = {
 			'user': this.user.user,
 			'userid': this.user.userid
@@ -170,15 +170,15 @@ export default {
 				this.parenttel = response.data.parent_tel
 				this.grade = Convert.convertGradeNumber(response.data.grade_mark)
 				this.sub = Convert.convertSubNumber(response.data.subject_mark)
-				this.gender = response.data.gender===1? '男': '女'
+				this.gender = response.data.gender === 1 ? '男' : '女'
 			}).catch(error => {
 
 			})
 	},
-	mounted () {
+	mounted() {
 		// 单独获取头像
 	},
-	beforeRouteLeave (to, from, next) {
+	beforeRouteLeave(to, from, next) {
 		if (this.ifModified) {
 			const params = new URLSearchParams()
 
@@ -248,40 +248,40 @@ export default {
 		}
 	},
 	methods: {
-		queryGenderSuggestions (queryString, cb) {
+		queryGenderSuggestions(queryString, cb) {
 			const suggestions = this.genderSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		querySubSuggestions (queryString, cb) {
+		querySubSuggestions(queryString, cb) {
 			const suggestions = this.subSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		queryGradeSuggestions (queryString, cb) {
+		queryGradeSuggestions(queryString, cb) {
 			const suggestions = this.gradeSuggestions
 			const results = queryString ? suggestions.filter(this.createFilter(queryString)) : suggestions
 			// 调用 callback 返回建议列表的数据
 			cb(results)
 		},
-		handleGenderSelect (value) {
+		handleGenderSelect(value) {
 			this.markEdit()
 		},
-		handleGradeSelect (value) {
+		handleGradeSelect(value) {
 			this.markEdit()
 		},
-		handleSubSelect (value) {
+		handleSubSelect(value) {
 			this.markEdit()
 		},
-		createFilter (queryString) {
+		createFilter(queryString) {
 			return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) === 0)
 		},
-		selectImage () {
+		selectImage() {
 			this.$refs.inputer.click()
 		},
-		handleChange () {
+		handleChange() {
 			this.selected = true
 			this.headimg = this.$refs.inputer.files[0]
 			ImageUtil.convertImageToBase64(this.headimg).then(result => {
@@ -290,12 +290,12 @@ export default {
 				console.log(error)
 			})
 		},
-		handleSubmitHeadimg () {
+		handleSubmitHeadimg() {
 			const params = new URLSearchParams()
 
 			params.append('user', this.user.user)
 			params.append('userid', this.user.userid)
-			params.append('headimg', this.headimg)
+			params.append('headimg', this.headimg.substr(15))
 
 			this.$common.http.post(this.$common.api.UpdateHeadimg, params)
 				.then(response => {
@@ -312,14 +312,14 @@ export default {
 					})
 				})
 		},
-		handleCancle () {
+		handleCancle() {
 			this.selected = false
 			this.headimg = this.user.headimg
 		},
-		markEdit () {
+		markEdit() {
 			this.ifModified = true
 		},
-		save () {
+		save() {
 			const params = new URLSearchParams()
 
 			params.append('operate', 3)

@@ -27,7 +27,7 @@ export default {
     CourseItem
   },
   created() {
-    if (this.courseLearning.length === 0) {
+    if (this.courseLearning.length === 0 && !this.configNet) {
       //该列表写暂无内容，进行访问
       this.fetchUnfinishedCourses()
     }
@@ -47,28 +47,14 @@ export default {
           this.$store.commit(types.ADD_COURSE_LEARNING, response.data)
         })
         .catch(error => {
-          //测试数据
-          // let courses = [{
-          //   courseid: 1,
-          //   title: '如何学好vue这个框架',
-          //   teacher: 'jason',
-          //   date: '2017-04-23',
-          //   course_image: img
-          // }, {
-          //   courseid: 2,
-          //   title: '如何学好react这个框架',
-          //   teacher: 'jason',
-          //   date: '2017-04-23',
-          //   course_image: img
-          // }]
-          // this.$store.commit(types.ADD_COURSE_LEARNING, courses)
         })
     }
   },
   computed: {
     ...mapGetters([
       'user',
-      'courseLearning'
+      'courseLearning',
+      'configNet'
     ])
   }
 }

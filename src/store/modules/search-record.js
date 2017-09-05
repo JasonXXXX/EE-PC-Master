@@ -39,8 +39,13 @@ const mutations = {
       state.searchs.splice(0, 1)
     }
   },
-  [types.ADD_SEARCH_SEARCH] (state, search) {
+  [types.ADD_SEARCH_SEARCH](state, search) {
     state.searchs.push(Object.freeze(search))
+  },
+  [types.CLEAR_SEARCH_ALL](state, search) {
+    state.searchs.splice(0, state.searchs.length)
+    state.records.splice(0, state.records.length)
+    console.log('搜索记录已清空')
   }
 }
 

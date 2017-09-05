@@ -164,7 +164,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (store.getters.user.userid === 0 && to.path !== '/login') {
+  console.log('现在进入的路径是', to.path)
+  if (store.getters.user.userid === 0 && to.path !== '/login' && to.path !== '/register') {
     next('/login')
   } else {
     next()

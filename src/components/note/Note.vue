@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrap">
     <header class="header">
       <el-checkbox v-model="selectall" @change="handleSelectAll">全选</el-checkbox>
       <el-button class="header-delete" type="primary" size="small" :disabled="!noteSelected.length" @click="handleDeleteSelected">删除所选</el-button>
@@ -20,10 +20,16 @@
       </div>
     </el-dialog>
     <note-item v-for="item in notes" :key="item.note_id" :item="item"></note-item>
+
+    <el-pagination layout="prev, pager, next" :total="notes.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
   </div>
 </template>
 
 <style scoped>
+.wrap {
+  text-align: right;
+}
+
 .header {
   display: flex;
   flex-direction: row-reverse;
@@ -60,7 +66,9 @@ export default {
         title: '',
         content: '',
         settime: ''
-      }
+      },
+      pageSize: 8,
+      currentPage: 1
     }
   },
   components: {
@@ -73,6 +81,7 @@ export default {
   },
   methods: {
     handleSelectAll(event) {
+      console.log(this.selectall)
       if (this.selectall) {
         this.$store.commit(types.NOTE_SELECT_ALL)
       } else {
@@ -94,7 +103,7 @@ export default {
           this.noteSelected.forEach(item => {
             this.$store.commit(types.DELETE_NOTE_NOTE, item)
           })
-  
+
           this.$message({
             type: 'success',
             message: '已删除!'
@@ -107,7 +116,7 @@ export default {
       })
     },
     fetchNotes() {
-      this.$common.http.get(this.$common.api.StudentNoteList+"?student_id="+this.user.userid+"&index="+this.notes.length)
+      this.$common.http.get(this.$common.api.StudentNoteList + "?student_id=" + this.user.userid + "&index=" + this.notes.length)
         .then(response => {
           if (this.$common.jsonUtil.jsonLength(response.data) > 0) {
             this.$store.commit(types.ADD_NOTE_NOTES, response.data)
@@ -154,13 +163,16 @@ export default {
         }).catch(error => {
         })
     },
-    deleteRequest (id) {
+    deleteRequest(id) {
       const params = new URLSearchParams()
 
       params.append('operate', 2)
       params.append('note_id', id)
 
       return this.$common.http.post(this.$common.api.StudentNoteUpdate, params)
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page
     }
   },
   computed: {
@@ -168,7 +180,10 @@ export default {
       'user',
       'notes',
       'noteSelected'
-    ])
+    ]),
+    getCurrentPageNotes() {
+      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < this.notes.length ? this.notes.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : this.notes.slice(this.pageSize * (this.currentPage - 1))
+    }
   },
   watch: {
     noteSelected(newVal, oldVal) {

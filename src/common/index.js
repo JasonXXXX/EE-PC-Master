@@ -26,7 +26,7 @@ const http = axios.create({
     'Content-Language': 'zh-CN',
   },
   baseURL: BASEURL,
-  timeout: 5000,
+  timeout: 50,
   withCredentials: false
 })
 // http request 拦截器

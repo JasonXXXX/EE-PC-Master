@@ -82,7 +82,7 @@ export default {
       let params = new URLSearchParams()
 
       params.append('isfinish', 2)
-      params.append('index', this.homeworkUndone.length)
+      params.append('index', this.homeworkDone.length)
       params.append('student_id', this.user.userid)
 
       this.$common.http.post(this.$common.api.HomeworkList, params)
@@ -106,7 +106,7 @@ export default {
   },
   watch: {
     homeworkSelected() {
-      this.selectall = this.homeworkSelected.length === this.homeworkUndone.length
+      this.selectall = this.homeworkSelected.length === this.homeworkDone.length
     }
   }
 }

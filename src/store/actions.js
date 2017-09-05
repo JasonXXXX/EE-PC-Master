@@ -7,12 +7,16 @@ export default {
   [atypes.LOGOUT](context) {
     return new Promise((resolve, reject) => {
       //清空内存缓存
+      context.commit(types.CLEAR_FORUM_ALL)
+      context.commit(types.CLEAR_TEACHER_ALL)
+      context.commit(types.CLEAR_CBROOM_CBROOM)
       context.commit(types.CLEAR_COURSE_COURSES)
       context.commit(types.CLEAR_FRIEND_FRIENDS)
       context.commit(types.CLEAR_HOMEWORK_HOMEWORKS)
       context.commit(types.CLEAR_NOTE_NOTES)
       context.commit(types.CLEAR_PLAN_PLAN)
       context.commit(types.CLEAR_CHAT_CHATS)
+      context.commit(types.CLEAR_SEARCH_ALL)
       context.commit(types.CLEAR)
       //清空本地storage内容
       let keys = Object.getOwnPropertyNames(Storage)

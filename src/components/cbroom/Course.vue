@@ -6,36 +6,41 @@
           <icon class="wrap-nav-icon" name="play-circle"></icon>
           <span>{{$common.strings.cbroom_menu_micro}}</span>
         </el-menu-item>
-        <el-menu-item class="wrap-nav" index="2">
-          <icon class="wrap-nav-icon" name="youtube-play"></icon>
-          <span>{{$common.strings.cbroom_menu_live}}</span>
-        </el-menu-item>
+        <!-- <el-menu-item class="wrap-nav" index="2">
+                <icon class="wrap-nav-icon" name="youtube-play"></icon>
+                <span>{{$common.strings.cbroom_menu_live}}</span>
+              </el-menu-item> -->
       </el-menu>
     </transition>
-    <div class="config-wrap-view" :class="{ 'config-no-border':!getCourses.length }">
-      <!-- <el-button type="primary" @click="routerToVideoUpload">{{$common.strings.video_upload_button}}</el-button> -->
+    <div class="config-wrap-view wrap" :class="{ 'config-no-border':!getCourses.length }">
       <span class="config-no-list-hint" v-if="!getCourses.length">{{$common.strings.cbroom_no_course_hint}}</span>
       <course-item v-for="item in getCourses" :key="item.course_id" :item="item"></course-item>
+
+      <el-pagination layout="prev, pager, next" :total="cbcourses.length" :page-size="pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .wrap-nav {
-    display: flex;
-    align-items: center;
-  }
+.wrap {
+  text-align: right;
+}
 
-  .wrap-nav-icon {
-    margin-right: 6px;
-  }
+.wrap-nav {
+  display: flex;
+  align-items: center;
+}
 
-  .no-border {
-    border: none;
-    display: block;
-    text-align: left;
-    box-shadow: 0px 0px 0px #FFFFFF;
-  }
+.wrap-nav-icon {
+  margin-right: 6px;
+}
+
+.no-border {
+  border: none;
+  display: block;
+  text-align: left;
+  box-shadow: 0px 0px 0px #FFFFFF;
+}
 </style>
 
 <script>
@@ -49,12 +54,14 @@ import 'vue-awesome/icons/youtube-play'
 
 export default {
   name: 'Forum',
-  data () {
+  data() {
     return {
-      hasItems: false
+      hasItems: false,
+      pageSize: 10,
+      currentPage: 1
     }
   },
-  created () {
+  created() {
     this.$store.commit(types.UPDATE_HEADER_SELECTED, '/course')
     if (this.getCourses.length < 1 && !this.configNet) {
       this.fetchCourses()
@@ -64,16 +71,16 @@ export default {
     CourseItem
   },
   methods: {
-    routerToVideoUpload () {
+    routerToVideoUpload() {
       this.$router.push('/videoupload')
     },
-    handleSelect (index) {
+    handleSelect(index) {
       this.$store.commit(types.UPDATE_CBROOM_ISDONE, parseInt(index))
       if (this.getCourses.length < 1) {
         this.fetchCourses()
       }
     },
-    fetchCourses () {
+    fetchCourses() {
       let params = new URLSearchParams()
 
       params.append('index', this.getCourses.length)
@@ -85,6 +92,9 @@ export default {
         })
         .catch(error => {
         })
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page
     }
   },
   computed: {
@@ -93,11 +103,10 @@ export default {
       'cbcourses',
       'configNet'
     ]),
-    getCourses () {
-      return this.cbcourses.filter(item => item.course_mark == this.cbroomState)
+    getCourses() {
+      const data = this.cbcourses.filter(item => item.course_mark == this.cbroomState)
+      return (this.pageSize * (this.currentPage - 1) + this.pageSize) < data.length ? data.slice(this.pageSize * (this.currentPage - 1), this.pageSize * (this.currentPage - 1) + this.pageSize) : data.slice(this.pageSize * (this.currentPage - 1))
     }
-  },
-  watch: {
   }
 }
 </script>

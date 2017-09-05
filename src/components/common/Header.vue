@@ -32,64 +32,65 @@
 </template>
 
 <style scoped>
-  .header {
-    width: 100%;
-    padding: 0;
-    background-color: #324157;
-    box-shadow: 1px 2px 8px #BBBBBB;
-  }
+.header {
+  width: 100%;
+  padding: 0;
+  background-color: #324157;
+  box-shadow: 1px 2px 8px #BBBBBB;
+}
 
-  .logo {
-    height: 60px;
-    width: 60px;
-  }
+.logo {
+  height: 60px;
+  width: 60px;
+}
 
-  .wrap-user-img {
-    height: 48px;
-    width: 48px;
-    border-radius: 8px;
-    background-color: #FFFFFF;
-  }
+.wrap-user-img {
+  height: 48px;
+  width: 48px;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
 
-  .wrap {
-    display: flex;
-    align-items: center;
-    margin: 0 auto;
-    width: 100%;
-    max-width: 1024px;
-  }
+.wrap {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1024px;
+}
 
-  .wrap-icon {
-    margin-right: 6px;
-  }
+.wrap-icon {
+  margin-right: 6px;
+}
 
-  .wrap-menu {
-    flex: 1;
-    margin-top: 16px;
-  }
+.wrap-menu {
+  flex: 1;
+  margin-top: 16px;
+}
 
-  .wrap-user {
-    margin-top: 16px;
-    overflow-x: hidden;
-  }
+.wrap-user {
+  margin-top: 16px;
+  overflow-x: hidden;
+}
 
-  .wrap-menu-item {
-    display: flex;
-    align-items: center;
-    overflow-y: hidden;
-  }
+.wrap-menu-item {
+  display: flex;
+  align-items: center;
+  overflow-y: hidden;
+}
 
-  .wrap-user {
-    overflow: hidden;
-  }
+.wrap-user {
+  overflow: hidden;
+}
 
-  .dropdown-item {
-    padding: 0 24px;
-  }
+.dropdown-item {
+  padding: 0 24px;
+}
 
-  .wrap-search {
-    margin: 0 12px;
-  }
+.wrap-search {
+  margin: 0 12px;
+}
 </style>
 
 <script>
@@ -109,7 +110,7 @@ import 'vue-awesome/icons/user-circle-o'
 
 export default {
   name: 'Header',
-  data () {
+  data() {
     return {
       logo: logo,
       headimg: Headimg,
@@ -117,18 +118,18 @@ export default {
       search: '',
     }
   },
-  created () {
+  created() {
     this.headimg = this.user.headimg
     this.fetchAll()
   },
   methods: {
-    routerToHome () {
+    routerToHome() {
       this.$router.push('/')
     },
-    handleCommand (command) {
+    handleCommand(command) {
       this.$router.push(command)
     },
-    initSearchSuggestions () {
+    initSearchSuggestions() {
       const s = localStorage.getItem(Storage.search_record)
       if (s) {
         this.$store.commit(types.ADD_SEARCH_RECORDS, JSON.parse(s))
@@ -154,15 +155,15 @@ export default {
         })
       })
     },
-    querySearchSuggestions (queryString, cb) {
+    querySearchSuggestions(queryString, cb) {
       const results = queryString ? this.searchs.filter(this.createFilter(queryString)) : this.searchs
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
-    createFilter (queryString) {
+    createFilter(queryString) {
       return suggestions => (suggestions.value.indexOf(queryString.toLowerCase()) !== -1)
     },
-    handleSearchSelect (value) {
+    handleSearchSelect(value) {
       // 处理搜索时的点击事件
       this.$store.commit(types.ADD_SEARCH_RECORD, value)
 
@@ -182,7 +183,7 @@ export default {
         }
       }
     },
-    fetchTeachers () {
+    fetchTeachers() {
       let params = new URLSearchParams()
 
       params.append('submark', 0)
@@ -190,7 +191,7 @@ export default {
 
       return this.$common.http.post(this.$common.api.TeacherList, params)
     },
-    fetchForums () {
+    fetchForums() {
       let params = new URLSearchParams()
 
       params.append('message_mark', 0)
@@ -198,7 +199,7 @@ export default {
 
       return this.$common.http.post(this.$common.api.MessageList, params)
     },
-    fetchCourses () {
+    fetchCourses() {
       let params = new URLSearchParams()
 
       params.append('index', 0)
@@ -206,16 +207,33 @@ export default {
 
       return this.$common.http.post(this.$common.api.CourseList, params)
     },
-    fetchAll () {
+    fetchFinishedCourses() {
+      const params = new URLSearchParams()
+      params.append('student_id', this.user.userid)
+      params.append('index', 0)
+      params.append('isdone', 2)
+
+      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
+    },
+    fetchUnfinishedCourses() {
+      let params = new URLSearchParams()
+      params.append('student_id', this.user.userid)
+      params.append('index', 0)
+      params.append('isdone', 1)
+      return this.$common.http.post(this.$common.api.StudentCourseRecordList, params)
+    },
+    fetchAll() {
       this.$store.commit(types.UPDATE_CONFIGNET, true)
 
-      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers()]
+      const fetchs = [this.fetchCourses(), this.fetchForums(), this.fetchTeachers(), this.fetchFinishedCourses(), this.fetchUnfinishedCourses()]
       Axios.all(fetchs).then(Axios.spread((courses, forums, teachers) => {
         this.$store.commit(types.UPDATE_CONFIGNET, false)
-        
-        this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses.data)
-        this.$store.commit(types.ADD_FORUM_NEWS, forums.data)
-        this.$store.commit(types.ADD_TEACHER_CHINA, teachers.data)
+
+        this.$store.commit(types.ADD_CBROOM_MICROLECTURE, courses)
+        this.$store.commit(types.ADD_FORUM_NEWS, forums)
+        this.$store.commit(types.ADD_TEACHER_CHINA, teachers)
+        this.$store.commit(types.ADD_COURSE_LEARNED, finishC.data)
+        this.$store.commit(types.ADD_COURSE_LEARNING, unfinishC.data)
 
         this.initSearchSuggestions()
       })).catch(error => { })
@@ -233,15 +251,15 @@ export default {
     ])
   },
   watch: {
-    forums () {
+    forums() {
       this.searchs.splice(0, this.searchs.length - 1)
       this.initSearchSuggestions()
     },
-    cbcourses () {
+    cbcourses() {
       this.searchs.splice(0, this.searchs.length - 1)
       this.initSearchSuggestions()
     },
-    teachers () {
+    teachers() {
       this.searchs.splice(0, this.searchs.length - 1)
       this.initSearchSuggestions()
     }

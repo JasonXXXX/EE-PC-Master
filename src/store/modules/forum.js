@@ -1,10 +1,12 @@
 import types from '@/store/types'
 import atypes from '@/store/action-types'
-import { loadFavorite, saveFavorite, deleteFavorite } from '@/common/util/cache'
+import Cache from '@/common/util/cache'
+import Storage from '@/common/util/storage'
 
 const state = {
   forums: [],
-  favoriteList: loadFavorite(),
+  stars: Cache.initStars(),
+  likes: Cache.initLikes(),
   forumState: 1,
   messageid: 0
 }
@@ -12,7 +14,8 @@ const state = {
 const getters = {
   forums: state => state.forums,
   forumState: state => state.forumState,
-  favoriteList: state => state.favoriteList,
+  stars: state => state.stars,
+  likes: state => state.likes,
   messageid: state => state.messageid,
 }
 
@@ -27,6 +30,15 @@ const actions = {
 }
 
 const mutations = {
+  //清空
+  [types.CLEAR_FORUM_ALL](state) {
+    state.forums.splice(0, state.forums.length)
+    state.stars.splice(0, state.stars.length)
+    state.likes.splice(0, state.likes.length)
+    state.forumState = 1
+    state.messageid = 0
+    console.log('论坛资讯已清空')
+  },
   //给数组添加元素
   [types.ADD_FORUM_NEWS](state, forums) {
     forums.forEach(item => {
@@ -49,7 +61,43 @@ const mutations = {
   },
   [types.UPDATE_FORUM_MESSAGEID](state, messageid) {
     state.messageid = messageid
-  }
+  },
+  [types.ADD_STAR](state, id) {
+    state.stars.push(id)
+    state.stars = Array.from(new Set(state.stars))
+
+    localStorage.setItem(Storage.stars, state.stars.join('-'))
+  },
+  [types.ADD_LIKE](state, id) {
+    state.likes.push(id)
+    state.likes = Array.from(new Set(state.likes))
+
+    localStorage.setItem(Storage.likes, state.likes.join('-'))
+  },
+  [types.DELETE_STAR](state, id) {
+    state.stars.every((item, index, arr) => {
+      if (item == id) {
+        arr.splice(index, 1)
+        return false
+      } else {
+        return true
+      }
+    })
+
+    localStorage.setItem(Storage.stars, state.stars.join('-'))
+  },
+  [types.DELETE_LIKE](state, id) {
+    state.likes.every((item, index, arr) => {
+      if (item == id) {
+        arr.splice(index, 1)
+        return false
+      } else {
+        return true
+      }
+    })
+
+    localStorage.setItem(Storage.likes, state.likes.join('-'))
+  },
 }
 
 export default {
